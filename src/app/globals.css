@@ -3,9 +3,9 @@
 @tailwind utilities;
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
+  --foreground-rgb: 255, 255, 255;
+  --background-start-rgb: 0, 0, 0;
+  --background-end-rgb: 0, 0, 0;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -17,17 +17,124 @@
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
+  color: white;
+  background: rgb(17, 24, 39); /* Tailwind's 'gray-900' */
+  font-family: 'Roboto', sans-serif;
 }
 
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
+}
+
+/* Smaller Purple Themed Button */
+.button-purple {
+  align-items: center;
+  appearance: none;
+  background-clip: padding-box;
+  background-color: initial;
+  background-image: none;
+  border-style: none;
+  box-sizing: border-box;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  flex-direction: row;
+  flex-shrink: 0;
+  font-family: Eina01, sans-serif;
+  font-size: 14px; /* Reduced font size */
+  font-weight: 800;
+  justify-content: center;
+  line-height: 20px; /* Adjusted line-height */
+  margin: 0;
+  min-height: 48px; /* Reduced height */
+  outline: none;
+  overflow: visible;
+  padding: 12px 20px; /* Reduced padding */
+  pointer-events: auto;
+  position: relative;
+  text-align: center;
+  text-decoration: none;
+  text-transform: none;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: middle;
+  width: auto;
+  word-break: keep-all;
+  z-index: 0;
+}
+
+@media (min-width: 768px) {
+  .button-purple {
+    padding: 14px 24px; /* Slightly larger padding on larger screens */
+  }
+}
+
+.button-purple:before,
+.button-purple:after {
+  border-radius: 40px; /* Adjusted for smaller size */
+}
+
+.button-purple:before {
+  background-image: linear-gradient(92.83deg, #7b5fff 0%, #6435c9 100%);
+  content: "";
+  display: block;
+  height: 100%;
+  left: 0;
+  overflow: hidden;
+  position: absolute;
+  top: 0;
+  width: 100%;
+  z-index: -2;
+}
+
+.button-purple:after {
+  background-color: initial;
+  background-image: linear-gradient(#43218c 0%, #22006e 100%);
+  bottom: 3px;
+  content: "";
+  display: block;
+  left: 3px;
+  overflow: hidden;
+  position: absolute;
+  right: 3px;
+  top: 3px;
+  transition: all 100ms ease-out;
+  z-index: -1;
+}
+
+.button-purple:hover:not(:disabled):before {
+  background: linear-gradient(92.83deg, #7b5fff 0%, #6435c9 100%);
+}
+
+.button-purple:hover:not(:disabled):after {
+  bottom: 0;
+  left: 0;
+  right: 0;
+  top: 0;
+  transition-timing-function: ease-in;
+  opacity: 0;
+}
+
+.button-purple:active:not(:disabled) {
+  color: #ccc;
+}
+
+.button-purple:active:not(:disabled):before {
+  background-image: linear-gradient(0deg, rgba(0, 0, 0, .2), rgba(0, 0, 0, .2)), linear-gradient(92.83deg, #7b5fff 0%, #6435c9 100%);
+}
+
+.button-purple:active:not(:disabled):after {
+  background-image: linear-gradient(#43218c 0%, #22006e 100%);
+  bottom: 3px;
+  left: 3px;
+  right: 3px;
+  top: 3px;
+}
+
+.button-purple:disabled {
+  cursor: default;
+  opacity: .24;
 }
