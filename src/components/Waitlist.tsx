@@ -32,7 +32,7 @@ export default function Waitlist() {
                     Join Waitlist
                 </button>
             </form>
-            {message && <p className="mt-4 text-green-500">{message}</p>}
+            {message && <p className="mt-4 text-white">{message}</p>}
         </div>
     );
 }
