@@ -12,7 +12,7 @@ const Navbar = () => {
                     <div className="flex justify-center items-center">
                         <Image
                             src={logo}
-                            className="hidden sm:block h-10 w-10 ml-8"
+                            className="block h-10 w-10 ml-4 sm:ml-8"
                             alt="Logo"
                         />
                         <Link
