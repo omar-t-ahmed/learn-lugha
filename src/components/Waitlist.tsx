@@ -10,24 +10,38 @@ export default function Waitlist() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Form submitted"); // Check if form submission is triggered
-
+        console.log("Form submitted");
+    
         try {
-            console.log("Attempting to add to Firestore"); // Check before Firestore call
-
+            console.log("Attempting to add to Firestore");
+    
             // Add the email to Firestore
             const docRef = await addDoc(collection(db, "waitlist"), {
                 email: email,
-                timestamp: new Date(), // Optionally, you can store the timestamp for when the email was added
+                timestamp: new Date(),
             });
             console.log("Document successfully written with ID: ", docRef.id);
-
-            // Show confirmation message
-            setMessage("Thank you! You've been added to the waitlist.");
+    
+            // Send the confirmation email via the API route
+            const response = await fetch('/api/sendEmail', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ email }),
+            });
+    
+            const data = await response.json();
+    
+            if (data.success) {
+                setMessage("Thank you! You've been added to the waitlist.");
+            } else {
+                setMessage("There was an error sending the confirmation email.");
+            }
+    
             setEmail(""); // Clear the email field after submission
-
+    
         } catch (error) {
-            // Type guard to check if the error is an instance of Error
             if (error instanceof Error) {
                 console.error("Error adding document: ", error.message);
                 setMessage("There was an error. Please try again.");
@@ -37,6 +51,7 @@ export default function Waitlist() {
             }
         }
     };
+    
 
     return (
         <div className="max-w-md mx-auto p-10 rounded-md shadow-md">
