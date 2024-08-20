@@ -74,7 +74,8 @@ body {
 
 .button-purple:before,
 .button-purple:after {
-  border-radius: 40px; /* Adjusted for smaller size */
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px; /* Adjusted for smaller size */
 }
 
 .button-purple:before {
