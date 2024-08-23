@@ -4,6 +4,7 @@ import Navbar from "@/components/Navbar";
 export default function FAQ() {
   return (
     <div className="min-h-screen flex flex-col items-center bg-gradient-to-br from-black via-black to-purple-700 text-white">
+      <Navbar />
       <main className="flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-6 py-10">
         <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-8">
           Frequently Asked Questions
@@ -24,7 +25,7 @@ export default function FAQ() {
           <div className="bg-gray-900 p-4 rounded-lg shadow-md">
             <h2 className="text-xl font-bold text-purple-500">When will LearnLugha be available?</h2>
             <p className="mt-2">
-              We're currently in the final stages of development and plan to launch soon. By joining the waitlist, you'll be among the first to know when we go live.
+              We&apos;re currently in the final stages of development and plan to launch soon. By joining the waitlist, you&apos;ll be among the first to know when we go live.
             </p>
           </div>
           <div className="bg-gray-900 p-4 rounded-lg shadow-md">
