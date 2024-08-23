@@ -80,7 +80,7 @@ export default function Waitlist() {
                     </button>
                 </div>
             </form>
-            {message && <p className="mt-4 text-white">{message}</p>}
+            {message && <p className="mt-4 text-white text-center">{message}</p>}
         </div>
     );
 }
