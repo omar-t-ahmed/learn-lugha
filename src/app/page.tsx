@@ -9,7 +9,11 @@ export default function Home() {
       <main className="flex flex-grow flex-col md:flex-row items-center justify-between w-full max-w-7xl mx-auto px-6">
         <div className="flex flex-col justify-center flex-1 text-center md:text-left">
           <h1 className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text text-white leading-8">
-            Accelerate Your <span className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-indigo-600">Arabic Language Learning</span> Journey
+            Accelerate Your{" "}
+            <span className="text-4xl md:text-6xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-indigo-600">
+              Arabic Language Learning
+            </span>{" "}
+            Journey
           </h1>
           <p className="mt-4 md:mt-6 text-md md:text-lg text-gray-400">
             Experience the future of language learning with AI-driven lessons.
@@ -27,7 +31,9 @@ export default function Home() {
         </div>
       </main>
       <footer className="mb-5">
-        <p className="text-center text-gray-400">© 2024 LearnLugha. All rights reserved.</p>
+        <p className="text-center text-gray-400">
+          © 2024 LearnLugha. All rights reserved.
+        </p>
       </footer>
     </div>
   );
