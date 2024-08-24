@@ -4,7 +4,6 @@ import Navbar from "@/components/Navbar";
 export default function FAQ() {
   return (
     <div className="min-h-screen flex flex-col items-center bg-gradient-to-br from-black via-black to-purple-700 text-white">
-      <Navbar />
       <main className="flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-6 py-10">
         <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-8">
           Frequently Asked Questions
