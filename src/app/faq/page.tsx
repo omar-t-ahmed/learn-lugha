@@ -21,7 +21,7 @@ export default function FAQ() {
             </AccordionTrigger>
             <AccordionContent className="p-4 rounded-lg mt-2 text-lg">
               <p className="mt-2">
-                LearnLugha is more than just a language learning app—it's an AI-powered platform crafted to help you master Arabic in a way that's both engaging and highly effective. Whether you're a complete beginner or looking to refine your skills, LearnLugha offers an interactive experience that adapts to your needs and makes learning enjoyable.
+                LearnLugha is more than just a language learning app—it&apos;s an AI-powered platform crafted to help you master Arabic in a way that&apos;s both engaging and highly effective. Whether you&apos;re a complete beginner or looking to refine your skills, LearnLugha offers an interactive experience that adapts to your needs and makes learning enjoyable.
               </p>
             </AccordionContent>
           </AccordionItem>
@@ -31,7 +31,7 @@ export default function FAQ() {
             </AccordionTrigger>
             <AccordionContent className="p-4 rounded-lg mt-2 text-lg">
               <p className="mt-2">
-                Our AI is designed to take your learning to the next level by tailoring the experience to suit your individual style. It offers personalized feedback, pinpoints areas where you can improve, and adjusts the difficulty of lessons based on your progress. This means that as you learn, the platform evolves with you, ensuring that you're always challenged, but never overwhelmed.
+                Our AI is designed to take your learning to the next level by tailoring the experience to suit your individual style. It offers personalized feedback, pinpoints areas where you can improve, and adjusts the difficulty of lessons based on your progress. This means that as you learn, the platform evolves with you, ensuring that you&apos;re always challenged, but never overwhelmed.
               </p>
             </AccordionContent>
           </AccordionItem>
@@ -71,7 +71,7 @@ export default function FAQ() {
             </AccordionTrigger>
             <AccordionContent className="p-4 rounded-lg mt-2 text-lg">
             <p className="mt-2">
-              As you use LearnLugha, you'll earn achievement badges as you reach new milestones, and receive personalized tips on areas where you can improve. These features help keep you engaged and on track to reach your language goals, making your learning experience both rewarding and effective.
+              As you use LearnLugha, you&apos;ll earn achievement badges as you reach new milestones, and receive personalized tips on areas where you can improve. These features help keep you engaged and on track to reach your language goals, making your learning experience both rewarding and effective.
             </p>
             </AccordionContent>
           </AccordionItem>
