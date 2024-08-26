@@ -51,7 +51,7 @@ export default function FAQ() {
             </AccordionTrigger>
             <AccordionContent className="bg-gray-900 p-4 rounded-lg shadow-md mt-2 text-lg">
               <p className="mt-2">
-                Absolutely! LearnLugha is designed to cater to all skill levels, from complete beginners to advanced learners. If you're just starting your Arabic learning journey, our AI-driven platform will guide you through the basics with personalized lessons that focus on essential vocabulary, grammar, and pronunciation. The learning experience is interactive and adapts to your pace, ensuring that you build a strong foundation before moving on to more complex topics. As you progress, the AI continuously tailors the content to match your growing proficiency, making your learning experience both effective and enjoyable.
+                Absolutely! LearnLugha is designed to cater to all skill levels, from complete beginners to advanced learners. If you&apos;re just starting your Arabic learning journey, our AI-driven platform will guide you through the basics with personalized lessons that focus on essential vocabulary, grammar, and pronunciation. The learning experience is interactive and adapts to your pace, ensuring that you build a strong foundation before moving on to more complex topics. As you progress, the AI continuously tailors the content to match your growing proficiency, making your learning experience both effective and enjoyable.
               </p>
             </AccordionContent>
           </AccordionItem>
@@ -71,7 +71,7 @@ export default function FAQ() {
             </AccordionTrigger>
             <AccordionContent className="bg-gray-900 p-4 rounded-lg shadow-md mt-2 text-lg">
               <p className="mt-2">
-                LearnLugha offers detailed progress tracking through interactive dashboards and achievement badges. You'll be able to see your improvement in vocabulary, grammar, and pronunciation over time, as well as receive personalized recommendations on areas to focus on.
+                LearnLugha offers detailed progress tracking through interactive dashboards and achievement badges. You&apos;ll be able to see your improvement in vocabulary, grammar, and pronunciation over time, as well as receive personalized recommendations on areas to focus on.
               </p>
             </AccordionContent>
           </AccordionItem>
@@ -81,7 +81,7 @@ export default function FAQ() {
             </AccordionTrigger>
             <AccordionContent className="bg-gray-900 p-4 rounded-lg shadow-md mt-2 text-lg">
               <p className="mt-2">
-                The AI chatbot in LearnLugha allows you to practice Arabic conversation in a natural and interactive way. You can engage in real-time dialogue with the AI, which simulates everyday conversations based on your skill level. The chatbot responds to your inputs, provides instant feedback, and helps you improve your vocabulary, grammar, and pronunciation. Whether you're practicing greetings, ordering food, or discussing more complex topics, the AI chatbot adapts to your progress, making your learning experience both practical and immersive.
+                The AI chatbot in LearnLugha allows you to practice Arabic conversation in a natural and interactive way. You can engage in real-time dialogue with the AI, which simulates everyday conversations based on your skill level. The chatbot responds to your inputs, provides instant feedback, and helps you improve your vocabulary, grammar, and pronunciation. Whether you&apos;re practicing greetings, ordering food, or discussing more complex topics, the AI chatbot adapts to your progress, making your learning experience both practical and immersive.
               </p>
             </AccordionContent>
           </AccordionItem>
