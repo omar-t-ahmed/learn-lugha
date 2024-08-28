@@ -10,25 +10,26 @@ export default function Waitlist() {
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        console.log("Form submitted");
-
+    
         try {
-
             // Query Firestore to check if the email already exists
             const q = query(collection(db, "waitlist"), where("email", "==", email));
             const querySnapshot = await getDocs(q);
-
+    
             if (!querySnapshot.empty) {
                 setMessage("This email is already on the waitlist.");
                 return;
             }
-
+    
             // Add the email to Firestore
-            const docRef = await addDoc(collection(db, "waitlist"), {
+            await addDoc(collection(db, "waitlist"), {
                 email: email,
                 timestamp: new Date(),
             });
-
+    
+            // Immediately provide positive feedback before the email is sent
+            setMessage("Thank you! You've been added to the waitlist.");
+    
             // Send the confirmation email via the API route
             const response = await fetch('/api/sendEmail', {
                 method: 'POST',
@@ -37,23 +38,17 @@ export default function Waitlist() {
                 },
                 body: JSON.stringify({ email }),
             });
-
+    
             const data = await response.json();
-
-            if (data.success) {
-                setMessage("Thank you! You've been added to the waitlist.");
-            } else {
-                setMessage("There was an error sending the confirmation email.");
+    
+            if (!data.success) {
+                setMessage("Thank you! You've been added to the waitlist, but there was an error sending the confirmation email.");
             }
-
+    
             setEmail(""); // Clear the email field after submission
-
+    
         } catch (error) {
-            if (error instanceof Error) {
-                setMessage("There was an error. Please try again.");
-            } else {
-                setMessage("There was an unexpected error. Please try again.");
-            }
+            setMessage("There was an error. Please try again.");
         }
     };
 
