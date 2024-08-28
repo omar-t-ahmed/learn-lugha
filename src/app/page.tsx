@@ -1,3 +1,4 @@
+import Link from "next/link";
 import MaxWidthWrapper from "@/components/MaxWidthWrapper";
 import Navbar from "@/components/Navbar";
 import Waitlist from "@/components/Waitlist";
@@ -17,6 +18,13 @@ export default function Home() {
           <p className="mt-4 md:mt-6 text-md md:text-lg text-gray-400">
             Experience the future of language learning with AI-driven lessons.
           </p>
+          <div className="mt-8">
+            <Link href="/faq" passHref>
+              <button className="inline-block bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform">
+                View FAQs
+              </button>
+            </Link>
+          </div>
         </div>
         <div className="flex-1 flex justify-center mt-8 md:mt-0">
           <Waitlist />
