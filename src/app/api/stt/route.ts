@@ -27,7 +27,7 @@ export async function POST(req: Request): Promise<NextResponse> {
 
   const config: protos.google.cloud.speech.v1.RecognitionConfig = {
     encoding: protos.google.cloud.speech.v1.RecognitionConfig.AudioEncoding.LINEAR16,
-    sampleRateHertz: 16000,
+    // Remove sampleRateHertz to allow automatic detection
     languageCode: 'ar-SA',
     audioChannelCount: 0,
     enableSeparateRecognitionPerChannel: false,
@@ -42,7 +42,8 @@ export async function POST(req: Request): Promise<NextResponse> {
     useEnhanced: false,
     toJSON: function (): { [k: string]: any; } {
       throw new Error('Function not implemented.');
-    }
+    },
+    sampleRateHertz: 0
   };
 
   const request: protos.google.cloud.speech.v1.RecognizeRequest = {
