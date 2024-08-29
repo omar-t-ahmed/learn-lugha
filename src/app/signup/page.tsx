@@ -4,50 +4,56 @@ export default function SignUp() {
   return (
     <div className="min-h-screen flex flex-col items-center bg-gradient-to-br from-black via-black to-purple-700 text-white">
       <main className="flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-6 py-10">
-        <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-8">Sign Up</h1>
-        <form className="bg-gray-900 p-6 rounded-lg shadow-md w-full max-w-md">
-          <div className="mb-4">
-            <label className="block text-gray-400 text-sm font-bold mb-2" htmlFor="username">
-              Username
-            </label>
-            <input
-              type="text"
-              id="username"
-              className="w-full px-3 py-2 border border-gray-600 bg-zinc-900 text-white rounded-md focus:outline-none"
-              placeholder="Enter your username"
-              required
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block text-gray-400 text-sm font-bold mb-2" htmlFor="email">
-              Email
+        <form className="bg-zinc-800 p-8 rounded-lg shadow-lg w-full max-w-md">
+        <p className="text-3xl md:text-4xl font-extrabold text-white mb-8 text-center">Sign Up</p>
+          <div className="mb-6">
+            <label className="block text-white text-sm font-medium mb-2" htmlFor="email">
+              Email Address
             </label>
             <input
               type="email"
               id="email"
-              className="w-full px-3 py-2 border border-gray-600 bg-zinc-900 text-white rounded-md focus:outline-none"
-              placeholder="Enter your email"
+              className="w-full px-4 py-2 border border-zinc-700 bg-zinc-900 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="Email"
               required
             />
           </div>
-          <div className="mb-4">
-            <label className="block text-gray-400 text-sm font-bold mb-2" htmlFor="password">
+          <div className="mb-6">
+            <label className="block text-white text-sm font-medium mb-2" htmlFor="password">
               Password
             </label>
             <input
               type="password"
               id="password"
-              className="w-full px-3 py-2 border border-gray-600 bg-zinc-900 text-white rounded-md focus:outline-none"
-              placeholder="Enter your password"
+              className="w-full px-4 py-2 border border-zinc-700 bg-zinc-900 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="Password"
+              required
+            />
+          </div>
+          <div className="mb-10">
+            <label className="block text-white text-sm font-medium mb-2" htmlFor="confirm-password">
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              id="confirm-password"
+              className="w-full px-4 py-2 border border-zinc-700 bg-zinc-900 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="Confirm Password"
               required
             />
           </div>
           <button
-            type="submit"
-            className="w-full py-2 px-4 bg-purple-500 hover:bg-purple-600 text-white font-bold rounded-md"
-          >
-            Sign Up
-          </button>
+              type="submit"
+              className="w-full py-3 bg-purple-700 hover:bg-purple-800 text-white font-semibold rounded-md"
+            >
+              Sign Up
+            </button>
+            <button
+              type="button"
+              className="w-full mt-4 py-3 bg-purple-800 hover:bg-purple-900 text-white font-semibold rounded-md"
+            >
+              <span className="mr-2">G</span> Sign Up with Google
+        </button>
         </form>
       </main>
       <footer className="mb-5">
