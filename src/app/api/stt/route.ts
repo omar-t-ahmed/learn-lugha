@@ -1,65 +1,56 @@
 import { NextResponse } from 'next/server';
 import { SpeechClient, protos } from '@google-cloud/speech';
-import * as fs from 'fs';
-
-interface SpeechToTextRequest {
-  audioFilePath: string; // Path to the local audio file
-}
 
 export async function POST(req: Request): Promise<NextResponse> {
-  const { audioFilePath } = await req.json() as SpeechToTextRequest;
+  const { audioContent } = await req.json();
 
   // Create a new Speech client
   const client = new SpeechClient({
-    keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS!, // Path to your service account key file
+    keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS!,
   });
 
-  // Read the audio file into memory
-  const audioBytes = fs.readFileSync(audioFilePath).toString('base64');
-
-  // Configure the request
+  // Configure the request with minimal necessary options
   const audio: protos.google.cloud.speech.v1.RecognitionAudio = {
-    content: audioBytes,
+    content: audioContent,
     toJSON: function (): { [k: string]: any; } {
-      throw new Error('Function not implemented.');
+      return { content: this.content };
     }
   };
 
-  const config: protos.google.cloud.speech.v1.RecognitionConfig = {
-    encoding: protos.google.cloud.speech.v1.RecognitionConfig.AudioEncoding.LINEAR16,
-    // Remove sampleRateHertz to allow automatic detection
-    languageCode: 'ar-SA',
-    audioChannelCount: 0,
-    enableSeparateRecognitionPerChannel: false,
-    alternativeLanguageCodes: [],
-    maxAlternatives: 0,
-    profanityFilter: false,
-    speechContexts: [],
-    enableWordTimeOffsets: false,
-    enableWordConfidence: false,
-    enableAutomaticPunctuation: false,
-    model: '',
-    useEnhanced: false,
+  const config: Partial<protos.google.cloud.speech.v1.RecognitionConfig> = {
+    languageCode: 'ar-SA', // Language of the audio
+    audioChannelCount: 1,  // Assume mono-channel audio
+    maxAlternatives: 1,    // Only get the most likely transcription
+    profanityFilter: false, // No need to filter profanity
+    model: 'default',       // Use the default model for faster processing
     toJSON: function (): { [k: string]: any; } {
-      throw new Error('Function not implemented.');
-    },
-    sampleRateHertz: 0
-  };
-
-  const request: protos.google.cloud.speech.v1.RecognizeRequest = {
-    audio: audio,
-    config: config,
-    toJSON: function (): { [k: string]: any; } {
-      throw new Error('Function not implemented.');
+      return {
+        languageCode: this.languageCode,
+        audioChannelCount: this.audioChannelCount,
+        maxAlternatives: this.maxAlternatives,
+        profanityFilter: this.profanityFilter,
+        model: this.model,
+      };
     }
   };
 
-  // Detects speech in the audio file
-  const [response] = await client.recognize(request);
+  try {
+    // Detects speech in the audio content
+    const [response] = await client.recognize({
+      audio: audio,
+      config: config,
+    });
 
-  const transcription = response.results
-    ?.map(result => result.alternatives?.[0].transcript)
-    .join('\n') || '';
+    const transcription = response.results
+      ?.map(result => result.alternatives?.[0].transcript)
+      .join('\n') || '';
 
-  return NextResponse.json({ transcription });
+    return NextResponse.json({ transcription });
+  } catch (error) {
+    if (error instanceof Error) {
+      return NextResponse.json({ transcription: '', error: error.message });
+    } else {
+      return NextResponse.json({ transcription: '', error: 'Unknown error occurred' });
+    }
+  }
 }
