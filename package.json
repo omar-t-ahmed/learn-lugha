@@ -16,6 +16,7 @@
     "@google-cloud/text-to-speech": "^5.4.0",
     "@mui/material": "^5.16.7",
     "@radix-ui/react-accordion": "^1.2.0",
+    "axios": "^1.7.5",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
     "cn": "^0.1.1",
