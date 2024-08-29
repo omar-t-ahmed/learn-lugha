@@ -73,9 +73,10 @@
     text-wrap: balance;
   }
 }
+
 body {
   color: white;
-  background: rgb(17, 24, 39); /* Tailwind's 'gray-900' */
+  background: white; /* Tailwind's 'gray-900' */
   font-family: 'Roboto', sans-serif;
 }
 /* Smaller Purple Themed Button */
