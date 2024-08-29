@@ -61,30 +61,14 @@ export default function LessonPath() {
               }}
               onClick={(e) => handleClick(e, lesson, isUnlocked)}
             >
-              {/* Line between lessons */}
-              {/* {index < lessons.length - 1 && (
-                <div
-                  className={`absolute h-[2px] ${
-                    index % 2 === 0 ? "left-[100%]" : "right-[100%]"
-                  } top-[50%]`}
-                  style={{
-                    width: "150px", // Ensure the line reaches the next lesson
-                    transform:
-                      index % 2 === 0
-                        ? "translateX(0%) rotate(0deg)"
-                        : "translateX(0%) rotate(180deg)",
-                    borderBottom: "2px dotted #ccc",
-                    transformOrigin: index % 2 === 0 ? "left center" : "right center",
-                  }}
-                ></div>
-              )} */}
-
               {/* Lesson circles */}
               <div
                 className={`relative flex items-center justify-center w-16 h-16 rounded-full border-4 transition-transform duration-200 transform hover:scale-110 cursor-pointer ${lessonStatus}`}
               >
                 <span className="text-white text-lg font-bold">{lesson.id}</span>
               </div>
+
+
             </div>
           );
         })}
