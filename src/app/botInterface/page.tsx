@@ -10,6 +10,9 @@ const ConversationApp = () => {
 
     let mediaRecorder: MediaRecorder;
     let audioChunks: Blob[] = [];
+    let silenceTimeout: NodeJS.Timeout | null = null;
+    const silenceThreshold = 24; // Adjusted for RMS value based on observed data
+    const silenceDuration = 1500; // Time in milliseconds to detect silence
 
     const startRecording = () => {
         navigator.mediaDevices.getUserMedia({ audio: true })
@@ -17,6 +20,40 @@ const ConversationApp = () => {
                 mediaRecorder = new MediaRecorder(stream, { mimeType: 'audio/webm;codecs=opus' });
                 mediaRecorder.start();
                 setIsRecording(true);
+
+                const audioContext = new AudioContext();
+                const source = audioContext.createMediaStreamSource(stream);
+                const analyser = audioContext.createAnalyser();
+                analyser.fftSize = 512;
+                source.connect(analyser);
+
+                const dataArray = new Uint8Array(analyser.frequencyBinCount);
+
+                const checkSilence = () => {
+                    analyser.getByteFrequencyData(dataArray);
+                    const rms = Math.sqrt(dataArray.reduce((sum, value) => sum + value * value, 0) / dataArray.length);
+
+                    console.log('RMS:', rms);
+
+                    if (rms < silenceThreshold) {
+                        if (!silenceTimeout) {
+                            silenceTimeout = setTimeout(() => {
+                                stopRecording();
+                            }, silenceDuration);
+                        }
+                    } else {
+                        if (silenceTimeout) {
+                            clearTimeout(silenceTimeout);
+                            silenceTimeout = null;
+                        }
+                    }
+
+                    if (mediaRecorder.state === 'recording') {
+                        requestAnimationFrame(checkSilence);
+                    }
+                };
+
+                checkSilence();
 
                 mediaRecorder.ondataavailable = function(event) {
                     if (event.data && event.data.size > 0) {
@@ -38,29 +75,31 @@ const ConversationApp = () => {
 
                                 try {
                                     const sttResponse = await axios.post('/api/stt', {
-                                      audioContent: base64String.split(',')[1],
+                                        audioContent: base64String.split(',')[1],
                                     });
-                                  
+
                                     console.log('Received transcription:', sttResponse.data.transcription);
                                     setTranscription(sttResponse.data.transcription);
-                                  } catch (error) {
+                                } catch (error) {
                                     console.error('Error receiving transcription:', error);
-                                  }
+                                }
                             }
                         };
                         reader.readAsDataURL(audioBlob);
                     }
                 };
-
-                setTimeout(() => {
-                    mediaRecorder.stop();
-                    setIsRecording(false);
-                }, 3000); // Increase to 5 seconds
             })
             .catch(error => {
                 setIsRecording(false);
                 console.error('Error accessing media devices:', error);
             });
+    };
+
+    const stopRecording = () => {
+        if (mediaRecorder && mediaRecorder.state === 'recording') {
+            mediaRecorder.stop();
+            setIsRecording(false);
+        }
     };
 
     return (
