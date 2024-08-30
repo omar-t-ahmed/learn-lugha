@@ -1,6 +1,27 @@
+"use client";
+
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { auth } from '@/firebase';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
 import Navbar from "@/components/Navbar";
 
 export default function SignUp() {
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const router = useRouter();
+
+  const handleSignUp = async (e: React.FormEvent) => {
+    e.preventDefault();
+
+    try {
+      await createUserWithEmailAndPassword(auth, email, password);
+      router.push('/lessons');
+    } catch (error) {
+      console.error('Error signing up:', error);
+    }
+  };
+
   return (
     <div className="min-h-screen flex bg-gradient-to-br from-black via-gray-900 to-purple-700">
       <div className="flex-1 flex flex-col justify-center p-10">
@@ -24,7 +45,7 @@ export default function SignUp() {
       </div>
 
       <div className="flex-1 flex items-center justify-center p-10">
-        <form className="bg-zinc-800 p-8 rounded-lg shadow-lg w-full max-w-md">
+        <form onSubmit={handleSignUp} className="bg-zinc-800 p-8 rounded-lg shadow-lg w-full max-w-md">
           <h1 className="text-2xl font-semibold mb-6 text-center text-white">Create your LearnLugha account</h1>
 
           <div className="mb-4">
@@ -34,6 +55,8 @@ export default function SignUp() {
             <input
               type="email"
               id="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
               className="w-full px-4 py-2 border border-zinc-700 bg-zinc-900 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="example@gmail.com"
               required
@@ -60,6 +83,8 @@ export default function SignUp() {
             <input
               type="password"
               id="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="w-full px-4 py-2 border border-zinc-700 bg-zinc-900 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
               placeholder="Password"
               required
