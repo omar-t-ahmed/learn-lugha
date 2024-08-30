@@ -1,6 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
+import { useRouter } from "next/navigation"; // Import from next/navigation
 
 // Define the Lesson type
 interface Lesson {
@@ -21,6 +22,8 @@ const lessons: Lesson[] = [
 ];
 
 export default function LessonPath() {
+  const router = useRouter(); // Use the correct router hook
+
   const [selectedLesson, setSelectedLesson] = useState<Lesson & { isUnlocked: boolean } | null>(null);
   const [dialogPosition, setDialogPosition] = useState<{ top: number; left: number } | null>(null);
 
@@ -35,6 +38,10 @@ export default function LessonPath() {
   const handleClose = () => {
     setSelectedLesson(null);
     setDialogPosition(null);
+  };
+
+  const navigateToLesson = (lessonId: number) => {
+    router.push(`/lesson/${lessonId}`); // Ensure this matches the path structure
   };
 
   return (
@@ -128,13 +135,19 @@ export default function LessonPath() {
           </p>
 
           {selectedLesson.completed && (
-            <button className="px-4 py-2 bg-white text-green-700 rounded hover:bg-gray-100 transition">
+            <button
+              className="px-4 py-2 bg-white text-green-700 rounded hover:bg-gray-100 transition"
+              onClick={() => navigateToLesson(selectedLesson.id)}
+            >
               Go to Lesson
             </button>
           )}
 
           {selectedLesson.isUnlocked && !selectedLesson.completed && (
-            <button className="px-4 py-2 bg-white text-yellow-700 rounded hover:bg-gray-100 transition">
+            <button
+              className="px-4 py-2 bg-white text-yellow-700 rounded hover:bg-gray-100 transition"
+              onClick={() => navigateToLesson(selectedLesson.id)}
+            >
               Start Lesson
             </button>
           )}
