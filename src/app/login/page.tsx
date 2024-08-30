@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { auth } from '@/firebase';
-import { signInWithEmailAndPassword } from 'firebase/auth';
+import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 'firebase/auth';
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 
@@ -28,6 +28,17 @@ export default function Login() {
       } else {
         setError('Incorrect username or password.');
       }
+    }
+  };
+
+  const handleGoogleSignIn = async () => {
+    setError(null);
+    const provider = new GoogleAuthProvider();
+    try {
+      await signInWithPopup(auth, provider);
+      router.push('/lessons');
+    } catch (error: any) {
+      setError('Failed to sign in with Google.');
     }
   };
 
@@ -77,6 +88,14 @@ export default function Login() {
             className="w-full py-3 bg-purple-700 hover:bg-purple-800 text-white font-semibold rounded-md"
           >
             Sign in
+          </button>
+
+          <button
+            type="button"
+            onClick={handleGoogleSignIn}
+            className="w-full mt-4 py-3 border border-purple-600 bg-transparent hover:bg-purple-900 text-white font-semibold rounded-md flex items-center justify-center"
+          >
+            <span className="mr-2">G</span> Sign in with Google
           </button>
 
           <div className="mt-6 text-center">
