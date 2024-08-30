@@ -12,7 +12,7 @@ export default function Welcome() {
         </p>
         <div className="flex space-x-4">
           <Link href="/signup">
-            <button className="py-2 px-4 bg-purple-500 hover:bg-purple-600 text-white font-bold rounded-md">
+            <button className="py-2 px-4 bg-purple-700 hover:bg-purple-800 text-white font-bold rounded-md">
               Get Started
             </button>
           </Link>
@@ -23,9 +23,6 @@ export default function Welcome() {
           </Link>
         </div>
       </main>
-      <footer className="mb-5">
-        <p className="text-center text-gray-400">© 2024 LearnLugha. All rights reserved.</p>
-      </footer>
     </div>
   );
 }
