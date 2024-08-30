@@ -1,26 +1,9 @@
-import { useEffect } from 'react';
-import { useRouter } from 'next/router';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '@/firebase';
-import Link from 'next/link';
-import Navbar from '@/components/Navbar';
+import Link from "next/link";
+import Navbar from "@/components/Navbar";
 
 export default function Welcome() {
-  const router = useRouter();
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (!user) {
-        router.push('/login'); // Redirect to login if no user is logged in
-      }
-    });
-
-    return () => unsubscribe(); // Clean up subscription on unmount
-  }, [router]);
-
   return (
     <div className="min-h-screen flex flex-col items-center bg-gradient-to-br from-black via-black to-purple-700 text-white">
-      <Navbar /> {/* Optional: Include Navbar if needed */}
       <main className="flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-6 py-10">
         <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-8 text-center">
           Welcome to LearnLugha

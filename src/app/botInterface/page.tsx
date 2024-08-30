@@ -55,7 +55,7 @@ const ConversationApp = () => {
                 setTimeout(() => {
                     mediaRecorder.stop();
                     setIsRecording(false);
-                }, 5000); // Increase to 5 seconds
+                }, 3000); // Increase to 5 seconds
             })
             .catch(error => {
                 setIsRecording(false);
@@ -64,7 +64,7 @@ const ConversationApp = () => {
     };
 
     return (
-        <div>
+        <div className='bg-white text-black'>
             <MaxWidthWrapper className="py-10 flex flex-col justify-between items-center">
                 <button onClick={startRecording} disabled={isRecording}>
                     {isRecording ? 'Recording...' : 'Start Recording'}
@@ -72,8 +72,8 @@ const ConversationApp = () => {
 
                 {transcription && (
                     <div className='py-5'>
-                        <h2>Transcription:</h2>
-                        <p>{transcription}</p>
+                        <h2 className='text-3xl py-5 text-center'>Transcription:</h2>
+                        <p className='text-3xl'>{transcription}</p>
                     </div>
                 )}
             </MaxWidthWrapper>
