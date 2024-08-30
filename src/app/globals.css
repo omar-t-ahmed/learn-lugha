@@ -1,6 +1,9 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 
 @layer base {
   :root {
@@ -74,10 +77,12 @@
   }
 }
 
+
+
 body {
   color: white;
-  background: white; /* Tailwind's 'gray-900' */
-  font-family: 'Roboto', sans-serif;
+  background: white;
+  font-family: 'Inter', sans-serif;
 }
 /* Smaller Purple Themed Button */
 .button-purple {
