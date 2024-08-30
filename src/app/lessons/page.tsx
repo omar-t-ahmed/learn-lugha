@@ -74,6 +74,8 @@ export default function LessonPath() {
               >
                 <span className="text-white text-lg font-bold">{lesson.id}</span>
               </div>
+
+
             </div>
           );
         })}
