@@ -1,21 +1,32 @@
-"use client"
+"use client";
+
 import { useState } from 'react';
 import { auth } from '@/firebase';
 import { signInWithEmailAndPassword } from 'firebase/auth';
-import { useRouter } from 'next/router';
+import { useRouter } from 'next/navigation';
 
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState<string | null>(null); // State for error messages
   const router = useRouter();
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError(null); // Clear previous error messages
     try {
       await signInWithEmailAndPassword(auth, email, password);
-      router.push('/lessons'); // Redirect to the welcome page
-    } catch (error) {
-      console.error('Error logging in:', error);
+      router.push('/lessons'); // Redirect to the lessons page
+    } catch (error: any) {
+      if (error.code === 'auth/invalid-email') {
+        setError('Invalid email address.');
+      } else if (error.code === 'auth/wrong-password') {
+        setError('Incorrect password.');
+      } else if (error.code === 'auth/user-not-found') {
+        setError('User not found.');
+      } else {
+        setError('Incorrect username or password.');
+      }
     }
   };
 
@@ -24,6 +35,11 @@ export default function Login() {
       <main className="flex flex-col items-center justify-center w-full max-w-7xl mx-auto px-6 py-10">
         <h1 className="text-4xl md:text-5xl font-extrabold text-white mb-8">Login</h1>
         <form onSubmit={handleLogin} className="bg-gray-900 p-6 rounded-lg shadow-md w-full max-w-md">
+          {error && (
+            <div className="mb-4 p-4 bg-red-600 text-white rounded-md">
+              {error}
+            </div>
+          )}
           <div className="mb-4">
             <label className="block text-gray-400 text-sm font-bold mb-2" htmlFor="email">
               Email
