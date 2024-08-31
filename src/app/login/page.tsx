@@ -6,6 +6,7 @@ import { signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from 
 import { useRouter } from 'next/navigation';
 import Navbar from '@/components/Navbar';
 
+
 export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -46,67 +47,65 @@ export default function Login() {
     <div className="bg-gradient-to-br from-black via-gray-900 to-purple-700 min-h-screen">
       <Navbar />
       <div className="flex items-center justify-center p-6 md:p-16 mt-10 md:mt-20">
-        <form onSubmit={handleLogin} className="bg-zinc-800 p-6 md:p-8 rounded-lg shadow-lg w-full max-w-lg">
-          <h1 className="text-2xl font-semibold mb-6 text-center text-white">Sign in</h1>
+        <div className="w-full max-w-xl bg-zinc-900 p-8 rounded-2xl shadow-lg">
+          <h1 className="text-3xl font-bold text-center text-white mb-10">Sign in</h1>
           {error && (
             <div className="mb-4 p-4 bg-red-600 text-white rounded-md">
               {error}
             </div>
           )}
-          <div className="mb-4">
-            <label className="block text-white text-sm font-medium mb-2" htmlFor="email">
-              Email
-            </label>
+          
+          <div className="flex justify-center gap-4 mb-6">
+            <button
+              onClick={handleGoogleSignIn}
+              className="flex items-center justify-center w-2/3 py-3 bg-gray-800 text-white rounded-md hover:bg-gray-700"
+            >
+              <span className="mr-2">G</span> Sign in with Google
+            </button>
+          </div>
+
+          <div className="flex items-center justify-center text-gray-500 mb-6">
+            <span className="w-1/4 border-t border-gray-700"></span>
+            <span className="px-2">or</span>
+            <span className="w-1/4 border-t border-gray-700"></span>
+          </div>
+
+          <form onSubmit={handleLogin}>
             <input
               type="email"
               id="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full px-4 py-3 border border-zinc-700 bg-zinc-900 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-              placeholder="Enter your email"
+              className="mb-4 w-full px-4 py-3 border border-zinc-700 bg-zinc-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="Email"
               required
             />
-          </div>
 
-          <div className="mb-4">
-            <label className="block text-white text-sm font-medium mb-2" htmlFor="password">
-              Password
-            </label>
             <input
               type="password"
               id="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full px-4 py-3 border border-zinc-700 bg-zinc-900 text-white rounded-md focus:outline-none focus:ring-2 focus:ring-purple-500"
-              placeholder="Enter your password"
+              className="mb-4 w-full px-4 py-3 border border-zinc-700 bg-zinc-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+              placeholder="Password"
               required
             />
-          </div>
 
-          <button
-            type="submit"
-            className="w-full py-3 bg-purple-700 hover:bg-purple-800 text-white font-semibold rounded-md"
-          >
-            Sign in
-          </button>
+            <button
+              type="submit"
+              className="w-full py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-200"
+            >
+              Sign in
+            </button>
+          </form>
 
-          <button
-            type="button"
-            onClick={handleGoogleSignIn}
-            className="w-full mt-4 py-3 border border-purple-600 bg-transparent hover:bg-purple-900 text-white font-semibold rounded-md flex items-center justify-center"
-          >
-            <span className="mr-2">G</span> Sign in with Google
-          </button>
-
-          <div className="mt-6 text-center">
-            <p className="text-gray-400">
-              New to LearnLugha?{" "}
-              <a href="/signup" className="text-purple-600 hover:text-purple-700 underline">
-                Create an account
-              </a>
-            </p>
-          </div>
-        </form>
+          <p className="mt-6 text-center text-gray-400">
+            New to LearnLugha?{" "}
+            <a href="/signup" className="text-purple-600 underline font-semibold">
+              Create an account
+            </a>
+          </p>
+        </div>
       </div>
     </div>
   );
