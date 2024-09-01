@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 
 const Chatbot: React.FC = () => {
   const [messages, setMessages] = useState<{ text: string; isUser: boolean }[]>([]);
@@ -8,9 +8,28 @@ const Chatbot: React.FC = () => {
   const [isSpeaking, setIsSpeaking] = useState(false);
 
   // Handle Text-to-Speech
-  const handleSpeak = (text: string) => {
-    const utterance = new SpeechSynthesisUtterance(text);
-    speechSynthesis.speak(utterance);
+  const handleSpeak = async (text: string) => {
+    try {
+      const response = await fetch("/api/tts", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ text }), // Send the text to the TTS route
+      });
+  
+      if (!response.ok) {
+        throw new Error("TTS request failed");
+      }
+  
+      const blob = await response.blob(); // Get the audio content as a Blob
+      const url = URL.createObjectURL(blob); // Create a URL for the audio content
+  
+      const audio = new Audio(url); // Create a new audio element
+      audio.play(); // Play the audio
+    } catch (error) {
+      console.error("Error during TTS:", error);
+    }
   };
 
   // Handle Speech-to-Text
@@ -30,24 +49,39 @@ const Chatbot: React.FC = () => {
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
       setMessages((prevMessages) => [...prevMessages, { text: transcript, isUser: true }]);
-      // You can trigger a response here based on the transcript
+      handleBotResponse(transcript); // Trigger bot response based on the transcript
     };
 
     recognition.start();
   };
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (input.trim() === "") return;
 
     setMessages((prevMessages) => [...prevMessages, { text: input, isUser: true }]);
     setInput("");
 
-    // Simulate a bot response (Replace this with actual bot integration)
-    setTimeout(() => {
-      const botResponse = `Bot response to "${input}"`;
+    await handleBotResponse(input);
+  };
+
+  const handleBotResponse = async (userInput: string) => {
+    try {
+      const response = await fetch("/api/openai", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ input: userInput }),
+      });
+
+      const data = await response.json();
+      const botResponse = data.response;
+
       setMessages((prevMessages) => [...prevMessages, { text: botResponse, isUser: false }]);
       handleSpeak(botResponse);
-    }, 1000);
+    } catch (error) {
+      console.error("Error communicating with OpenAI:", error);
+    }
   };
 
   return (
@@ -67,7 +101,7 @@ const Chatbot: React.FC = () => {
       <div className="flex p-2 border-t mt-2">
         <input
           type="text"
-          className="flex-grow p-2 border border-gray-300 rounded-l-md text-black"  
+          className="flex-grow p-2 border border-gray-300 rounded-l-md text-black"
           placeholder="Type your message..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
