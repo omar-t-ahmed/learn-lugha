@@ -2,8 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { auth } from "@/firebase";
-import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { signIn } from "next-auth/react";
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
 
@@ -13,7 +12,7 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [error, setError] = useState<string | null>(null); // Add state for error message
+  const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
   const handleSignUp = async (e: React.FormEvent) => {
@@ -30,66 +29,46 @@ export default function SignUp() {
     }
 
     try {
-      const userCredential = await createUserWithEmailAndPassword(
-        auth,
+      const result = await signIn("credentials", {
+        redirect: false,
         email,
-        password
-      );
-
-      const userUID = userCredential.user.uid;
-
-      // Call the existing API to save the user in the database
-      const response = await fetch('/api/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email,
-          name,
-          username,
-        }),
+        password,
       });
 
-      if (response.ok) {
-        router.push("/lessons");
+      if (result?.error) {
+        setError(result.error);
       } else {
-        console.error('Failed to create user in database');
-        setError("Failed to create user in database.");
+        // After successful sign-in, call your API to save the user in the database
+        const response = await fetch("/api/users", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email,
+            name,
+            username,
+          }),
+        });
+
+        if (response.ok) {
+          router.push("/lessons");
+        } else {
+          console.error("Failed to create user in database");
+          setError("Failed to create user in database.");
+        }
       }
     } catch (error: any) {
-      if (error.code === 'auth/email-already-in-use') {
-        setError("Email is already in use.");
-      } else {
-        console.error("Error signing up:", error);
-        setError("An error occurred while signing up. Please try again.");
-      }
+      console.error("Error signing up:", error);
+      setError("An error occurred while signing up. Please try again.");
     }
   };
 
   const handleGoogleSignUp = async () => {
-    const provider = new GoogleAuthProvider();
     try {
-      const result = await signInWithPopup(auth, provider);
-      const user = result.user;
-
-      const response = await fetch('/api/users', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: user.email || "",
-          name: user.displayName || "Google User",
-          username: user.email?.split('@')[0] || user.uid,
-        }),
-      });
-
-      if (response.ok) {
-        router.push("/lessons");
-      } else {
-        console.error('Failed to create user in database');
-        setError("Failed to create user in database");
+      const result = await signIn("google", { callbackUrl: "/lessons" });
+      if (result?.error) {
+        setError("Failed to sign up with Google.");
       }
     } catch (error: any) {
       console.error("Error signing up with Google:", error);
@@ -238,7 +217,9 @@ export default function SignUp() {
             
             <p className="mt-6 text-center text-gray-400">
               Already have an account?{" "}
-              {/* Add a link to the login page here */}
+              <a href="/signin" className="text-purple-600 underline font-semibold">
+                Sign in here
+              </a>
             </p>
           </div>
         </div>
