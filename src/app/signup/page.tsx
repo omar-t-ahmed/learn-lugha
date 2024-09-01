@@ -3,26 +3,29 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { auth } from "@/firebase";
-import { createUserWithEmailAndPassword } from "firebase/auth";
-import { PrismaClient } from "@prisma/client";
+import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
-
-const prisma = new PrismaClient();
 
 export default function SignUp() {
   const [name, setName] = useState("");
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState(""); // New state for confirm password
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [error, setError] = useState<string | null>(null); // Add state for error message
   const router = useRouter();
 
   const handleSignUp = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (password !== confirmPassword) {
-      alert("Passwords do not match");
+      setError("Passwords do not match.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setError("Passwords must be at least 6 characters.");
       return;
     }
 
@@ -35,18 +38,62 @@ export default function SignUp() {
 
       const userUID = userCredential.user.uid;
 
-      await prisma.user.create({
-        data: {
-          id: userUID,
-          name: name,
-          username: username,
-          email: email,
+      // Call the existing API to save the user in the database
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
         },
+        body: JSON.stringify({
+          email,
+          name,
+          username,
+        }),
       });
 
-      router.push("/lessons");
-    } catch (error) {
-      console.error("Error signing up:", error);
+      if (response.ok) {
+        router.push("/lessons");
+      } else {
+        console.error('Failed to create user in database');
+        setError("Failed to create user in database.");
+      }
+    } catch (error: any) {
+      if (error.code === 'auth/email-already-in-use') {
+        setError("Email is already in use.");
+      } else {
+        console.error("Error signing up:", error);
+        setError("An error occurred while signing up. Please try again.");
+      }
+    }
+  };
+
+  const handleGoogleSignUp = async () => {
+    const provider = new GoogleAuthProvider();
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+
+      const response = await fetch('/api/users', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: user.email || "",
+          name: user.displayName || "Google User",
+          username: user.email?.split('@')[0] || user.uid,
+        }),
+      });
+
+      if (response.ok) {
+        router.push("/lessons");
+      } else {
+        console.error('Failed to create user in database');
+        setError("Failed to create user in database");
+      }
+    } catch (error: any) {
+      console.error("Error signing up with Google:", error);
+      setError("An error occurred while signing up with Google. Please try again.");
     }
   };
 
@@ -108,11 +155,13 @@ export default function SignUp() {
         <div className="z-10 flex-1 flex items-center justify-center p-4 md:p-10">
           <div className="w-full max-w-xl bg-zinc-900 p-8 rounded-2xl shadow-lg">
             <h1 className="text-3xl font-bold text-center text-white mb-10">Create an account</h1>
-            {/* <p className="text-center text-gray-400 mb-6">Enter your info to create your account</p> */}
             
             <div className="flex justify-center gap-4 mb-6">
-              <button className="flex items-center justify-center w-2/3 py-3 bg-gray-800 text-white rounded-md hover:bg-gray-700">
-              <span className="mr-2">G</span> Sign Up with Google
+              <button
+                onClick={handleGoogleSignUp}
+                className="flex items-center justify-center w-2/3 py-3 bg-gray-800 text-white rounded-md hover:bg-gray-700"
+              >
+                <span className="mr-2">G</span> Sign Up with Google
               </button>
             </div>
             
@@ -173,6 +222,12 @@ export default function SignUp() {
                 required
               />
               
+              {error && (
+                <div className="mb-4 p-2 text-red-600 bg-red-100 rounded">
+                  {error}
+                </div>
+              )}
+              
               <button
                 type="submit"
                 className="w-full py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-200"
@@ -183,9 +238,7 @@ export default function SignUp() {
             
             <p className="mt-6 text-center text-gray-400">
               Already have an account?{" "}
-              <a href="/login" className="text-purple-600 underline font-semibold">
-                Log in
-              </a>
+              {/* Add a link to the login page here */}
             </p>
           </div>
         </div>
