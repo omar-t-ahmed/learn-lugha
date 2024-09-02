@@ -9,7 +9,8 @@ import {
 
 export default function FAQ() {
   return (
-    <div className="min-h-screen flex flex-col items-center bg-gradient-to-br from-black via-black to-purple-700 text-white">
+    <div className="min-h-screen flex flex-col items-center bg-gradient-to-br from-black via-gray-900 to-purple-700 text-white">
+      <Navbar/>
       <main className="flex flex-col items-center justify-center w-full max-w-6xl mx-auto px-6 py-10">
         <p className="text-3xl md:text-4xl p-4 font-extrabold mb-8 text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-indigo-600 text-center">
           Frequently Asked Questions
