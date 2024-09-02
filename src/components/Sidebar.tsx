@@ -51,7 +51,7 @@ const Sidebar = () => {
             </Link>
           </li>
           <li className="flex flex-1">
-            <Link href="/logout" className={`flex-1 flex items-center justify-center p-4 text-xl hover:bg-gray-700 ${isActive('/logout')}`}>
+            <Link href="/login" className={`flex-1 flex items-center justify-center p-4 text-xl hover:bg-gray-700 ${isActive('/logout')}`}>
               <FaSignOutAlt className="mr-3 text-2xl" />
               Logout
             </Link>
