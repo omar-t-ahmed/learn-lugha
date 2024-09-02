@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
 import Navbar from "@/components/Navbar";
 import Image from "next/image";
+import bcrypt from 'bcryptjs';
 
 export default function SignUp() {
   const [name, setName] = useState("");
@@ -29,34 +30,39 @@ export default function SignUp() {
     }
 
     try {
-      const result = await signIn("credentials", {
-        redirect: false,
-        email,
-        password,
+      // Hash the password
+      const hashedPassword = bcrypt.hashSync(password, 10);
+
+      // Create the user in your database
+      const response = await fetch("/api/users", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email,
+          password: hashedPassword,
+          name,
+          username,
+        }),
       });
 
-      if (result?.error) {
-        setError(result.error);
-      } else {
-        // After successful sign-in, call your API to save the user in the database
-        const response = await fetch("/api/users", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email,
-            name,
-            username,
-          }),
+      if (response.ok) {
+        // Automatically log the user in
+        const result = await signIn("credentials", {
+          redirect: false,
+          email,
+          password,
         });
 
-        if (response.ok) {
-          router.push("/lessons");
+        if (result?.error) {
+          setError(result.error);
         } else {
-          console.error("Failed to create user in database");
-          setError("Failed to create user in database.");
+          router.push("/lessons");
         }
+      } else {
+        console.error("Failed to create user in database");
+        setError("Failed to create user in database.");
       }
     } catch (error: any) {
       console.error("Error signing up:", error);

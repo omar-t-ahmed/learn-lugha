@@ -10,9 +10,9 @@ generator client {
 model User {
   id           String        @id @default(auto()) @map("_id") @db.ObjectId
   email        String        @unique
+  password     String?        // Store hashed passwords here
   name         String?
-  username     String        @unique
-  emailVerified DateTime?    // Add this line to allow optional email verification date
+  username     String        @unique 
   lessons      Lesson[]
   achievements Achievement[]
   transcripts  Transcript[]
@@ -20,7 +20,6 @@ model User {
   accounts     Account[]
   sessions     Session[]
 }
-
 
 model Lesson {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
@@ -62,17 +61,15 @@ model Account {
   provider           String
   providerAccountId  String
   type               String
-  access_token       String?  // Optional
-  refresh_token      String?  // Optional
-  expires_at         Int?     // Optional
-  scope              String?  // Optional
-  id_token           String?  // Optional
-  token_type         String?  // Add this line to store token_type
-  session_state      String?  // Optional
+  access_token       String?  // Optional fields for tokens
+  refresh_token      String?
+  expires_at         Int?
+  scope              String?
+  id_token           String?
+  session_state      String?
 
   @@unique([provider, providerAccountId])
 }
-
 
 model Session {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId

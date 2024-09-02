@@ -1,54 +1,69 @@
-import NextAuth, { AuthOptions, User as NextAuthUser } from 'next-auth';
-import GoogleProvider from 'next-auth/providers/google';
-import { PrismaAdapter } from '@next-auth/prisma-adapter';
-import { db } from '@/db';
+import NextAuth, { AuthOptions } from 'next-auth';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import { PrismaClient } from '@prisma/client';
+import bcrypt from 'bcryptjs';
 
-// Extend the User type to include only the fields that exist in your Prisma schema
-interface UserWithUsername extends NextAuthUser {
+const prisma = new PrismaClient();
+
+interface UserWithPassword {
+  id: string;
+  email: string;
+  name: string | null;
   username: string;
-  // Only include fields that exist in your Prisma schema here
+  password: string; // Add the password field
 }
 
 export const authOptions: AuthOptions = {
   providers: [
-    GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID || '',
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET || '',
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        email: { label: 'Email', type: 'text' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          return null;
+        }
+
+        const user = await prisma.user.findUnique({
+          where: { email: credentials.email },
+          select: {
+            id: true,
+            email: true,
+            name: true,
+            username: true,
+            password: true, // Ensure password is included in the query
+          },
+        });
+
+        if (user && bcrypt.compareSync(credentials.password, (user as UserWithPassword).password)) {
+          // If the passwords match, return the user object without the password
+          const { password, ...userWithoutPassword } = user as UserWithPassword;
+          return userWithoutPassword;
+        } else {
+          // If the passwords do not match, return null
+          return null;
+        }
+      },
     }),
   ],
-  adapter: PrismaAdapter(db),
   secret: process.env.NEXTAUTH_SECRET,
   session: {
     strategy: 'jwt',
   },
   callbacks: {
-    async signIn({ user, account, profile }) {
-      const userWithUsername = user as UserWithUsername;
-
-      // Generate a username if it doesn't exist
-      if (!userWithUsername.username) {
-        userWithUsername.username = userWithUsername.email?.split('@')[0] || userWithUsername.name || 'user';
-      }
-
-      // Explicitly remove any fields that should not be passed to Prisma
-      delete (userWithUsername as any).image;
-      delete (userWithUsername as any).emailVerified; // Remove emailVerified field
-
-      // Return true to continue the sign-in process
-      return true;
-    },
     async session({ session, token }) {
-      if (token && session.user) {
+      if (token) {
         session.user.id = token.id as string;
-        session.user.username = token.username as string; // Assign username from token
+        session.user.username = token.username as string;
       }
       return session;
     },
     async jwt({ token, user }) {
       if (user) {
-        const userWithUsername = user as UserWithUsername;
-        token.id = userWithUsername.id;
-        token.username = userWithUsername.username; // Store username in the token
+        token.id = user.id;
+        token.username = (user as UserWithPassword).username;
       }
       return token;
     },
