@@ -12,6 +12,7 @@ model User {
   email        String   @unique
   name         String?
   username     String   @unique // Add this line
+  password     String
   lessons      Lesson[]
   achievements Achievement[]
   transcripts  Transcript[]
