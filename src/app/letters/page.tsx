@@ -42,7 +42,21 @@ const LettersPage: React.FC = () => {
       <div className="ml-64 p-10 flex flex-col items-center">
         <h1 className="text-3xl font-bold mb-10">Arabic Letters</h1>
         <div className="grid grid-cols-5 gap-4 max-w-4xl mx-auto">
-          {Object.keys(letterMapping).map((letter, index) => (
+          {Object.keys(letterMapping).slice(0, -3).map((letter, index) => (
+            <div
+              key={index}
+              className="flex flex-col justify-center items-center bg-gray-800 rounded-lg p-6 text-4xl font-bold"
+            >
+              <div>{letter}</div>
+              <div className="text-xl mt-2">{letterMapping[letter]}</div>
+            </div>
+          ))}
+          
+          {/* Empty grid items to push last 3 letters to center */}
+          <div className="col-span-1"></div>
+          <div className="col-span-1"></div>
+
+          {Object.keys(letterMapping).slice(-3).map((letter, index) => (
             <div
               key={index}
               className="flex flex-col justify-center items-center bg-gray-800 rounded-lg p-6 text-4xl font-bold"
