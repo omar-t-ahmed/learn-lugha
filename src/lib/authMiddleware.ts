@@ -3,7 +3,7 @@ import { getAuth } from 'firebase-admin/auth';
 import fs from 'fs';
 
 // Get the path to the service account JSON file
-const serviceAccountPath = process.env.GOOGLE_APPLICATION_CREDENTIALS;
+const serviceAccountPath = process.env.GOOGLE_APPLICATION_CREDENTIALS2;
 
 if (!serviceAccountPath) {
   throw new Error('GOOGLE_APPLICATION_CREDENTIALS environment variable is not set');
