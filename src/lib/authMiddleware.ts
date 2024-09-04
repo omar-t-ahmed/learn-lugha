@@ -1,21 +1,24 @@
-import { initializeApp, cert, getApps } from 'firebase-admin/app';
+import { initializeApp, cert, getApps, ServiceAccount } from 'firebase-admin/app';
 import { getAuth } from 'firebase-admin/auth';
-import fs from 'fs';
 
-// Get the path to the service account JSON file
-const serviceAccountPath = process.env.GOOGLE_APPLICATION_CREDENTIALS2;
-
-if (!serviceAccountPath) {
-  throw new Error('GOOGLE_APPLICATION_CREDENTIALS environment variable is not set');
-}
-
-// Read and parse the service account JSON file
-const serviceAccount = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
+// Reconstruct the service account JSON object from environment variables
+const serviceAccount = {
+  type: process.env.GOOGLE_TYPE_FIREBASE,
+  project_id: process.env.GOOGLE_PROJECT_ID_FIREBASE,
+  private_key_id: process.env.GOOGLE_PRIVATE_KEY_ID_FIREBASE,
+  private_key: (process.env.GOOGLE_PRIVATE_KEY_FIREBASE || '').replace(/\\n/g, '\n'), // Replace escaped newlines
+  client_email: process.env.GOOGLE_CLIENT_EMAIL_FIREBASE,
+  client_id: process.env.GOOGLE_CLIENT_ID_FIREBASE,
+  auth_uri: process.env.GOOGLE_AUTH_URI_FIREBASE,
+  token_uri: process.env.GOOGLE_TOKEN_URI_FIREBASE,
+  auth_provider_x509_cert_url: process.env.GOOGLE_AUTH_PROVIDER_X509_CERT_URL_FIREBASE,
+  client_x509_cert_url: process.env.GOOGLE_CLIENT_X509_CERT_URL_FIREBASE
+};
 
 // Initialize Firebase Admin SDK if it hasn't been initialized yet
 if (!getApps().length) {
   initializeApp({
-    credential: cert(serviceAccount),
+    credential: cert(serviceAccount as ServiceAccount),
   });
 }
 
