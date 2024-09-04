@@ -9,7 +9,6 @@ export async function POST(req: Request) {
   try {
     const { email, name, username }: { email: string; name?: string; username: string } = await req.json();
 
-    // Create the user using prisma.user.create
     const newUser = await prisma.user.create({
       data: {
         email,
@@ -23,11 +22,11 @@ export async function POST(req: Request) {
     console.error('Failed to create user:', error);
     return NextResponse.json({ error: 'Failed to create user' }, { status: 500 });
   } finally {
-    await prisma.$disconnect(); // Properly close the Prisma Client connection
+    await prisma.$disconnect();
   }
 }
 
-// Handle GET request to return a dummy response (requires token)
+// Handle GET request to fetch authenticated user's details
 export async function GET(req: Request) {
   try {
     const authHeader = req.headers.get('authorization');
@@ -39,18 +38,80 @@ export async function GET(req: Request) {
 
     const verified = await verifyToken(token);
 
-    const dummyData = {
-      message: "This is a dummy response from /api/users",
-      users: [
-        { id: 1, name: "John Doe", email: "john@example.com" },
-        { id: 2, name: "Jane Smith", email: "jane@example.com" },
-      ],
-    };
+    const user = await prisma.user.findUnique({
+      where: { email: verified.email },
+      include: {
+        lessons: true,
+        achievements: true,
+        transcripts: true,
+        progress: true,
+      },
+    });
 
-    return NextResponse.json(dummyData, { status: 200 });
+    if (!user) {
+      return NextResponse.json({ error: 'User not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(user, { status: 200 });
   } catch (error) {
-    console.error('Failed to verify token:', error);
-    return NextResponse.json({ error: 'Failed to verify token' }, { status: 500 });
+    console.error('Failed to verify token or fetch user:', error);
+    return NextResponse.json({ error: 'Failed to fetch user information' }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+// Handle PATCH request to update user details
+export async function PATCH(req: Request) {
+  try {
+    const authHeader = req.headers.get('authorization');
+    const token = authHeader?.split(' ')[1];
+
+    if (!token) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const verified = await verifyToken(token);
+    const { email, name, username } = await req.json();
+
+    const updatedUser = await prisma.user.update({
+      where: { email: verified.email },
+      data: {
+        email,
+        name,
+        username,
+      },
+    });
+
+    return NextResponse.json(updatedUser, { status: 200 });
+  } catch (error) {
+    console.error('Failed to update user:', error);
+    return NextResponse.json({ error: 'Failed to update user' }, { status: 500 });
+  } finally {
+    await prisma.$disconnect();
+  }
+}
+
+// Handle DELETE request to remove the authenticated user
+export async function DELETE(req: Request) {
+  try {
+    const authHeader = req.headers.get('authorization');
+    const token = authHeader?.split(' ')[1];
+
+    if (!token) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const verified = await verifyToken(token);
+
+    await prisma.user.delete({
+      where: { email: verified.email },
+    });
+
+    return NextResponse.json({ message: 'User deleted successfully' }, { status: 200 });
+  } catch (error) {
+    console.error('Failed to delete user:', error);
+    return NextResponse.json({ error: 'Failed to delete user' }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }
