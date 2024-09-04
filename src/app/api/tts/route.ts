@@ -11,9 +11,13 @@ interface TextToSpeechRequest {
 export async function POST(req: Request): Promise<NextResponse> {
   const { text, languageCode = 'ar-SA', voiceName = 'ar-XA-Standard-B', audioEncoding = 'MP3' } = await req.json() as TextToSpeechRequest;
 
-  // Create a new Text-to-Speech client
+  // Create a new Text-to-Speech client using environment variables
   const client = new TextToSpeechClient({
-    keyFilename: process.env.GOOGLE_APPLICATION_CREDENTIALS!,
+    credentials: {
+      private_key: process.env.GOOGLE_PRIVATE_KEY!.replace(/\\n/g, '\n'),
+      client_email: process.env.GOOGLE_CLIENT_EMAIL!,
+    },
+    projectId: process.env.GOOGLE_PROJECT_ID!,
   });
 
   // Configure the request
