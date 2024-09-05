@@ -71,6 +71,8 @@
   }
 }
 
+
+
 /* This is a utility class for the background */
 .background-stripe {
   position: relative;
@@ -125,6 +127,17 @@ body {
   background: white;
   font-family: 'Inter', sans-serif;
 }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 /* Smaller Purple Themed Button */
 .button-purple {
   align-items: center;
