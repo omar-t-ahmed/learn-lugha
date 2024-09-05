@@ -18,15 +18,12 @@ export default function Hero() {
       <header className="absolute inset-x-0 top-0 z-50">
         <nav className="flex items-center justify-between p-6 lg:px-8">
           <div className="flex lg:flex-1">
-            <Link href="/" className="flex justify-center items-center">
+            <Link href="/" className="flex justify-center mb-1 items-center">
               <Image
                 src={logo}
-                className="block h-8 w-8"
+                className="block h-9 w-9 mb-1"
                 alt="Logo"
               />
-              {/* <Link href="/" className="flex z-40 pl-2 pt-2 text-md font-bold text-white">
-                LEARN<span className="text-indigo-600 text-lg pl-1.5 pb-1">لغة</span>
-              </Link> */}
             </Link>
           </div>
           <div className="flex lg:hidden">
@@ -44,10 +41,10 @@ export default function Hero() {
             </button>
           </div>
           <div className="hidden lg:flex lg:gap-x-12">
-            <Link href="/faq" className="text-md font-semibold leading-6 text-white">FAQ</Link>
-            <Link href="/pricing" className="text-md font-semibold leading-6 text-white">Pricing</Link>
-            <Link href="/about" className="text-md font-semibold leading-6 text-white">About</Link>
-            <Link href="/privacy-policy" className="text-md font-semibold leading-6 text-white">Privacy Policy</Link>
+            <Link href="/faq" className="text-md font-semibold leading-6 hover:underline text-white">FAQ</Link>
+            <Link href="/pricing" className="text-md font-semibold leading-6 hover:underline text-white">Pricing</Link>
+            <Link href="/about" className="text-md font-semibold leading-6 hover:underline text-white">About</Link>
+            <Link href="/privacy-policy" className="text-md font-semibold leading-6 hover:underline text-white">Privacy Policy</Link>
           </div>
           <div className="hidden lg:flex lg:flex-1 lg:justify-end">
             <Link href="/login" className="text-md flex items-center justify-center font-semibold leading-6 text-white">
