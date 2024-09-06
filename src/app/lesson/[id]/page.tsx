@@ -45,7 +45,7 @@ const LessonPage = () => {
   }
 
   return (
-    <div className="bg-gradient-to-b from-black to-purple-900 min-h-screen text-white">
+    <div className="bg-gradient-to-b from-black to-gray-900 min-h-screen text-white">
       <Navbar/>
       <div className="relative flex flex-col items-center justify-start p-10 "> 
           <h1 className="text-4xl font-bold mb-4">{lesson.title}</h1>

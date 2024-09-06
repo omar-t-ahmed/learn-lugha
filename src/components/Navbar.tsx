@@ -10,16 +10,13 @@ const Navbar = () => {
         <nav className="flex items-center h-14 py-4 pt-8 inset-x-0 top-0 w-full text-white ">
                 <div className="flex h-14 items-center justify-between">
                     <div className="flex justify-center items-center">
+                        <Link
+                            href="/">
                         <Image
                             src={logo}
-                            className="block h-10 w-10 ml-4 sm:ml-8"
+                            className="block h-9 w-9 ml-4 sm:ml-8 mt-1"
                             alt="Logo"
                         />
-                        <Link
-                            href="/"
-                            className="flex z-40 pl-2 pt-2 text-xl font-bold text-white"
-                        >
-                            LEARN<span className="text-indigo-600 text-2xl pl-1.5 pb-1">لغة</span>
                         </Link>
                     </div>
                 </div>

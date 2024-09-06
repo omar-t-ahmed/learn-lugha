@@ -24,18 +24,10 @@ const Chatbot: React.FC = () => {
   // Handle Text-to-Speech
   const handleSpeak = async (text: string, index: number) => {
     try {
+      console.log("Sending TTS request for text:", text); // Add this log
       if (isProcessingTTS.current) return;
       isProcessingTTS.current = true;
-
-      // Stop current audio if playing
-      if (audioRef.current && !audioRef.current.paused) {
-        audioRef.current.pause();
-        audioRef.current.currentTime = 0;
-        audioRef.current = null;
-        setSpeakingIndex(null);
-        return;
-      }
-
+  
       const response = await fetch("/api/tts", {
         method: "POST",
         headers: {
@@ -43,53 +35,19 @@ const Chatbot: React.FC = () => {
         },
         body: JSON.stringify({ text }),
       });
-
+  
       if (!response.ok) {
         throw new Error("TTS request failed");
       }
-
+  
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
       audioRef.current = audio;
-
-      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
-      const source = audioContext.createMediaElementSource(audio);
-      const analyser = audioContext.createAnalyser();
-      const dataArray = new Uint8Array(analyser.frequencyBinCount);
-      source.connect(analyser);
-      analyser.connect(audioContext.destination);
-
-      audio.onplay = () => {
-        setSpeakingIndex(index);
-        const visualize = () => {
-          analyser.getByteFrequencyData(dataArray);
-          let volume = 0;
-          for (let i = 0; i < dataArray.length; i++) {
-            if (dataArray[i] > volume) {
-              volume = dataArray[i];
-            }
-          }
-          setVolumeLevel(volume);
-          if (audioRef.current) {
-            requestAnimationFrame(visualize);
-          }
-        };
-        visualize();
-      };
-
-      audio.onended = () => {
-        setSpeakingIndex(null);
-        audioRef.current = null;
-        audioContext.close();
-        isSpeakingRef.current = false;
-        isProcessingTTS.current = false;
-      };
-
       audio.play();
     } catch (error) {
       console.error("Error during TTS:", error);
-      isSpeakingRef.current = false;
+    } finally {
       isProcessingTTS.current = false;
     }
   };
@@ -223,21 +181,14 @@ const Chatbot: React.FC = () => {
 
       {/* User Profile Picture */}
       <div className="absolute right-5 top-1/3 transform -translate-y-1/3">
-        <img
+        {/* <img
           src={userProfilePic}
           alt="User"
           className={`w-45 h-60 rounded-full transition-all duration-300 ${
             isListening ? `transform scale-130 border-8 border-red-500` : ""
           }`}
-        />
+        /> */}
         <div className="mt-4 flex justify-center">
-          <button
-            onClick={toggleListening}
-            className={`p-2 ${isListening ? "bg-red-500" : "bg-green-500"} text-white rounded-md flex items-center`}
-          >
-            <i className={`fas ${isListening ? "fa-microphone-slash" : "fa-microphone"} mr-2`}></i>
-            {isListening ? "Stop Speaking" : "Start Speaking"}
-          </button>
         </div>
       </div>
 
@@ -317,12 +268,21 @@ const Chatbot: React.FC = () => {
               if (e.key === "Enter") handleSendMessage();
             }}
           />
-          <button
-            onClick={handleSendMessage}
-            className="bg-blue-500 text-white p-2 rounded-r-md hover:bg-blue-600 active:bg-blue-700 transition-colors"
-          >
-            Send
-          </button>
+          <div className="flex gap-10 justify-between">
+            <button
+              onClick={handleSendMessage}
+              className="bg-blue-500 text-white p-2 rounded-r-md hover:bg-blue-600 active:bg-blue-700 transition-colors"
+            >
+              Send
+            </button>
+            <button
+              onClick={toggleListening}
+              className={`p-2 ${isListening ? "bg-red-500" : "bg-green-500"} text-white rounded-md flex items-center`}
+            >
+              <i className={`fas ${isListening ? "fa-microphone-slash" : "fa-microphone"} mr-2`}></i>
+              {isListening ? "Stop Speaking" : "Start Speaking"}
+            </button>
+          </div>
         </div>
       </div>
     </div>
