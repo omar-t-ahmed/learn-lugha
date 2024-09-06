@@ -31,8 +31,8 @@ export default function About() {
         <section className="w-full text-left mb-10">
           <h2 className="text-3xl font-semibold text-white mb-4">Our Vision</h2>
           <p className="text-lg text-gray-400 leading-8">
-            At LearnLugha, we believe language is a gateway to culture, and by learning Arabic, you're opening doors to new opportunities. Our vision is to break down language barriers and make learning enjoyable, by combining advanced AI technology with human-centered design. Whether you’re preparing for travel, improving career opportunities, or connecting with Arabic-speaking communities, LearnLugha is your partner in mastering the Arabic language.
-          </p>
+            At LearnLugha, we believe language is a gateway to culture, and by learning Arabic, you&apos;re opening doors to new opportunities. Our vision is to break down language barriers and make learning enjoyable, by combining advanced AI technology with human-centered design. Whether you&apos;re preparing for travel, improving career opportunities, or connecting with Arabic-speaking communities, LearnLugha is your partner in mastering the Arabic language.
+        </p>
         </section>
 
         <section className="w-full text-left mb-10">

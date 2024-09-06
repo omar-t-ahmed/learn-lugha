@@ -2,6 +2,7 @@
 
 import React, { useState, useRef, useEffect } from "react";
 import '@fortawesome/fontawesome-free/css/all.min.css';
+import Image from "next/image";
 
 const userProfilePic = "/arabic-user.png"; // Path relative to the public directory
 const botProfilePic = "/arabic-teacher-male.png"; // Path relative to the public directory
@@ -167,7 +168,7 @@ const Chatbot: React.FC = () => {
     <div className="relative min-h-screen flex flex-col justify-center items-center p-4 w-full max-w-screen-xl mx-auto">
       {/* Teacher Profile Picture */}
       <div className="absolute left-5 top-1/3 transform -translate-y-1/3">
-        <img
+        <Image
           src={botProfilePic}
           alt="Chatbot"
           className={`w-40 h-60 rounded-full transition-all ${
