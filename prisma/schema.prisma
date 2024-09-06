@@ -12,6 +12,7 @@ model User {
   email        String   @unique
   name         String?
   username     String   @unique // Add this line
+  gender Gender
   lessons      Lesson[]
   achievements Achievement[]
   transcripts  Transcript[]
@@ -49,4 +50,9 @@ model Progress {
   level       Int
   userId      String   @unique @db.ObjectId
   user        User     @relation(fields: [userId], references: [id])
+}
+
+enum Gender {
+  male
+  female
 }
