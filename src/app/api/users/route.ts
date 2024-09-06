@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { PrismaClient } from '@prisma/client';
+import { Gender, PrismaClient } from '@prisma/client';
 import { verifyToken } from '@/lib/authMiddleware';
 
 const prisma = new PrismaClient();
@@ -7,13 +7,14 @@ const prisma = new PrismaClient();
 // Handle POST request to create a new user
 export async function POST(req: Request) {
   try {
-    const { email, name, username }: { email: string; name?: string; username: string } = await req.json();
+    const { email, name, username, gender }: { email: string; name?: string; username: string; gender: Gender} = await req.json();
 
     const newUser = await prisma.user.create({
       data: {
         email,
         name,
         username,
+        gender
       },
     });
 
