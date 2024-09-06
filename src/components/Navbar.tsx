@@ -7,7 +7,7 @@ import logo from '../../public/LEARN LUGHA.png';
 
 const Navbar = () => {
     return (
-        <nav className="sticky z-[100] h-14 py-2 inset-x-0 top-0 w-full text-white shadow-lg bg-black ">
+        <nav className="flex items-center h-14 py-4 pt-8 inset-x-0 top-0 w-full text-white ">
                 <div className="flex h-14 items-center justify-between">
                     <div className="flex justify-center items-center">
                         <Image

@@ -1,9 +1,13 @@
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Source_Sans_3 } from "next/font/google"; // Import Source Sans 3 instead of Roboto
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 
-const inter = Inter({ subsets: ["latin"] });
+const sourceSans3 = Source_Sans_3({
+  weight: ['400', '700'], // Specify the weights you want to use
+  subsets: ['latin'],
+  display: 'swap',
+});
 
 export const metadata: Metadata = {
   title: "Learn Lugha",
@@ -17,10 +21,10 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={inter.className}>
-        <Navbar/>
+      <body className={sourceSans3.className}>
+        {/* <Navbar/> */}
         {children}
-        </body>
+      </body>
     </html>
   );
 }

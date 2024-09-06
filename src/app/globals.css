@@ -1,6 +1,9 @@
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
 
 @layer base {
   :root {
@@ -68,16 +71,73 @@
   }
 }
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+
+
+/* This is a utility class for the background */
+.background-stripe {
+  position: relative;
+  background-color: #1a1a1a; /* Dark background */
+  overflow: hidden;
+}
+
+/* Add the diagonal lines using pseudo-elements */
+.background-stripe::before,
+.background-stripe::after {
+  content: '';
+  position: absolute;
+  width: 100%; /* Cover the full width */
+  height: 150px; /* Adjust the height */
+  background: linear-gradient(135deg, #7f71e7 0%, #6146d0 100%);
+  opacity: 0.7; /* Adjust transparency */
+  z-index: 0;
+}
+
+/* Position the lines */
+.background-stripe::before {
+  top: 15%;
+  left: 0;
+  transform: translateX(-20%);
+}
+
+.background-stripe::after {
+  bottom: 25%;
+  right: 0;
+  transform: translateX(80%);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .background-stripe::before,
+  .background-stripe::after {
+    height: 100px; /* Reduce height on smaller screens */
+    opacity: 0.5; /* Reduce opacity */
   }
 }
+
+@media (max-width: 480px) {
+  .background-stripe::before,
+  .background-stripe::after {
+    height: 80px; /* Further reduce height on very small screens */
+    opacity: 0.3; /* Further reduce opacity */
+  }
+}
+
 body {
   color: white;
-  background: rgb(17, 24, 39); /* Tailwind's 'gray-900' */
-  font-family: 'Roboto', sans-serif;
+  background: white;
+  font-family: 'Inter', sans-serif;
 }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden; /* Prevent horizontal scroll */
+}
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
 /* Smaller Purple Themed Button */
 .button-purple {
   align-items: center;

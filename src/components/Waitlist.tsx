@@ -1,7 +1,7 @@
 'use client';
 
 import React, { useState } from "react";
-import db from "../../src/firebase";
+import {db} from "../../src/firebase";
 import { collection, addDoc, query, where, getDocs } from "firebase/firestore";
 
 export default function Waitlist() {
