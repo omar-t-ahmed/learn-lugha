@@ -31,7 +31,7 @@ const LessonPage = () => {
     return (
       <div className="bg-gradient-to-br from-black via-gray-900 to-purple-700 min-h-screen text-white">
         <Navbar/>
-        <div className="flex flex-col items-center justify-center p-10">
+        <div>
           <h1 className="text-4xl font-bold mb-10">Lesson not found</h1>
           <button
             className="px-4 py-2 bg-white text-purple-700 rounded hover:bg-gray-100 transition"

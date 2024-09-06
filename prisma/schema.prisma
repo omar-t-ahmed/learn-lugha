@@ -29,7 +29,7 @@ model Lesson {
 
 model Achievement {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  name        String
+  title        String
   description String
   userId      String   @db.ObjectId
   user        User     @relation(fields: [userId], references: [id])
@@ -37,8 +37,9 @@ model Achievement {
 
 model Transcript {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  text        String
+  content     String
   userId      String   @db.ObjectId
+  lessonId    Int      
   user        User     @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now())
 }

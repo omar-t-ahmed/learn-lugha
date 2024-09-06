@@ -1,157 +1,97 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar"; // Import the Sidebar component
+import ProgressBar from "@/components/ProgressBar"; // Import the custom ProgressBar component
+import { FaCheckCircle, FaGem } from 'react-icons/fa';
 
-// Define the Quest type
 interface Quest {
   id: number;
   title: string;
+  description: string;
+  goal: string;
+  progress: number; // Progress in percentage
   completed: boolean;
 }
 
-const quests: Quest[] = [
-  { id: 1, title: "Quest 1", completed: true },
-  { id: 2, title: "Quest 2", completed: false },
-  { id: 3, title: "Quest 3", completed: false },
-  { id: 4, title: "Quest 4", completed: false },
-  { id: 5, title: "Quest 5", completed: false },
-  { id: 6, title: "Quest 6", completed: false },
-  { id: 7, title: "Quest 7", completed: false },
-  { id: 8, title: "Quest 8", completed: false },
+const questsData: Quest[] = [
+  {
+    id: 1,
+    title: 'Earn 10 XP',
+    description: 'Earn a total of 10 experience points.',
+    goal: '10 XP',
+    progress: 50, // Example progress
+    completed: false,
+  },
+  {
+    id: 2,
+    title: 'Complete 5 minutes of learning',
+    description: 'Spend at least 5 minutes learning today.',
+    goal: '5 minutes',
+    progress: 75,
+    completed: false,
+  },
+  {
+    id: 3,
+    title: 'Score 80% or higher in 2 lessons',
+    description: 'Achieve at least 80% score in 2 lessons.',
+    goal: '80% in 2 lessons',
+    progress: 25,
+    completed: false,
+  },
 ];
 
-export default function QuestPath() {
-  const router = useRouter();
+const QuestPage = () => {
+  const [quests, setQuests] = useState(questsData);
 
-  const [selectedQuest, setSelectedQuest] = useState<Quest & { isUnlocked: boolean } | null>(null);
-  const [dialogPosition, setDialogPosition] = useState<{ top: number; left: number } | null>(null);
-
-  const handleClick = (event: React.MouseEvent, quest: Quest, isUnlocked: boolean) => {
-    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
-    const top = rect.bottom + window.scrollY;
-    const left = rect.left + window.scrollX + rect.width / 2;
-    setDialogPosition({ top, left });
-    setSelectedQuest({ ...quest, isUnlocked });
-  };
-
-  const handleClose = () => {
-    setSelectedQuest(null);
-    setDialogPosition(null);
-  };
-
-  const navigateToQuest = (questId: number) => {
-    router.push(`/quest/${questId}`);
+  const handleQuestCompletion = (id: number) => {
+    setQuests(prevQuests =>
+      prevQuests.map(quest =>
+        quest.id === id ? { ...quest, completed: true } : quest
+      )
+    );
   };
 
   return (
-    <div className="bg-gradient-to-br from-black via-gray-900 to-purple-700 min-h-screen text-white">
+    <div className="bg-gradient-to-br from-black via-gray-900 to-purple-700 min-h-screen text-white flex">
       <Sidebar />
-      <div className="ml-64 p-10 flex flex-col items-center">
-        <h1 className="text-3xl font-bold mb-10">LearnLugha Quests</h1>
-        <div className="relative flex flex-col items-center w-full max-w-2xl">
-          {quests.map((quest, index) => {
-            const isUnlocked = index === 0 || quests[index - 1].completed;
-            const questStatus = quest.completed
-              ? "bg-blue-500 border-blue-700"
-              : isUnlocked
-              ? "bg-orange-500 border-orange-700"
-              : "bg-gray-600 border-gray-700";
-
-            return (
-              <div
-                key={quest.id}
-                className={`relative flex items-center mb-20 ${
-                  index % 2 === 0 ? "self-start" : "self-end"
-                }`}
-                style={{
-                  position: "relative",
-                  left: index % 2 === 0 ? "105px" : "-105px",
-                }}
-                onClick={(e) => handleClick(e, quest, isUnlocked)}
-              >
-                <div
-                  className={`relative flex items-center justify-center w-16 h-16 rounded-full border-4 transition-transform duration-200 transform hover:scale-110 cursor-pointer ${questStatus}`}
-                >
-                  <span className="text-white text-lg font-bold">{quest.id}</span>
-                </div>
+      <div className="ml-64 p-10 flex flex-col items-center w-full">
+        <h1 className="text-3xl font-bold mb-10">Daily Quests</h1>
+        <div className="space-y-4 w-full max-w-3xl">
+          {quests.map(quest => (
+            <div key={quest.id} className="bg-gray-800 p-4 rounded-lg shadow-md">
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-xl font-semibold">{quest.title}</h2>
+                {quest.completed && (
+                  <FaCheckCircle className="text-green-500 text-2xl" />
+                )}
               </div>
-            );
-          })}
+              <p className="text-gray-300 mb-2">{quest.description}</p>
+              <ProgressBar
+                progress={quest.progress}
+                completed={quest.completed}
+              />
+              <div className="flex items-center justify-between text-gray-400">
+                <span>{quest.progress}% completed</span>
+                {quest.completed ? (
+                  <span className="text-green-600 flex items-center">
+                    <FaGem className="mr-1" /> 5 Gems
+                  </span>
+                ) : (
+                  <button
+                    onClick={() => handleQuestCompletion(quest.id)}
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition"
+                  >
+                    Mark as Complete
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
-
-        {selectedQuest && dialogPosition && (
-          <div
-            className={`absolute z-50 p-5 rounded-lg text-white dialog-box ${
-              selectedQuest.completed
-                ? "bg-blue-500"
-                : selectedQuest.isUnlocked
-                ? "bg-orange-500"
-                : "bg-gray-600"
-            }`}
-            style={{
-              top: `${dialogPosition.top + 10}px`,
-              left: `${dialogPosition.left}px`,
-              transform: "translateX(-50%)",
-            }}
-          >
-            <button
-              onClick={handleClose}
-              className="absolute top-2 right-2 text-lg font-bold"
-              style={{
-                color:
-                  selectedQuest.completed
-                    ? "#2B6CB0"
-                    : selectedQuest.isUnlocked
-                    ? "#DD6B20"
-                    : "#2D3748",
-              }}
-            >
-              &times;
-            </button>
-
-            <div
-              className="absolute top-[-10px] left-[50%] transform translate-x-[-50%] w-0 h-0 border-l-[10px] border-l-transparent border-r-[10px] border-r-transparent border-b-[10px]"
-              style={{
-                borderBottomColor:
-                  selectedQuest.completed
-                    ? "#4299e1"
-                    : selectedQuest.isUnlocked
-                    ? "#ED8936"
-                    : "#718096",
-              }}
-            ></div>
-
-            <h2 className="text-2xl font-bold mb-2">{selectedQuest.title}</h2>
-            <p className="text-lg mb-4">
-              {selectedQuest.completed
-                ? "This quest is completed."
-                : selectedQuest.isUnlocked
-                ? "This quest is unlocked."
-                : "Sorry, this quest is locked."}
-            </p>
-
-            {selectedQuest.completed && (
-              <button
-                className="px-4 py-2 bg-white text-blue-700 rounded hover:bg-gray-100 transition"
-                onClick={() => navigateToQuest(selectedQuest.id)}
-              >
-                Go to Quest
-              </button>
-            )}
-
-            {selectedQuest.isUnlocked && !selectedQuest.completed && (
-              <button
-                className="px-4 py-2 bg-white text-orange-700 rounded hover:bg-gray-100 transition"
-                onClick={() => navigateToQuest(selectedQuest.id)}
-              >
-                Start Quest
-              </button>
-            )}
-          </div>
-        )}
       </div>
     </div>
   );
-}
+};
+
+export default QuestPage;
