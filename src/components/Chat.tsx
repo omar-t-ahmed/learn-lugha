@@ -122,6 +122,15 @@ const Chatbot: React.FC = () => {
       if (isProcessingTTS.current) return;
       isProcessingTTS.current = true;
 
+      // Stop current audio if playing
+      if (audioRef.current && !audioRef.current.paused) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current = null;
+        setSpeakingIndex(null);
+        return;
+      }
+
       const response = await fetch("/api/tts", {
         method: "POST",
         headers: {
@@ -138,13 +147,48 @@ const Chatbot: React.FC = () => {
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
       audioRef.current = audio;
+
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const source = audioContext.createMediaElementSource(audio);
+      const analyser = audioContext.createAnalyser();
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+      source.connect(analyser);
+      analyser.connect(audioContext.destination);
+
+      audio.onplay = () => {
+        setSpeakingIndex(index);
+        const visualize = () => {
+          analyser.getByteFrequencyData(dataArray);
+          let volume = 0;
+          for (let i = 0; i < dataArray.length; i++) {
+            if (dataArray[i] > volume) {
+              volume = dataArray[i];
+            }
+          }
+          setVolumeLevel(volume);
+          if (audioRef.current) {
+            requestAnimationFrame(visualize);
+          }
+        };
+        visualize();
+      };
+
+      audio.onended = () => {
+        setSpeakingIndex(null);
+        audioRef.current = null;
+        audioContext.close();
+        isSpeakingRef.current = false;
+        isProcessingTTS.current = false;
+      };
+
       audio.play();
     } catch (error) {
       console.error("Error during TTS:", error);
-    } finally {
+      isSpeakingRef.current = false;
       isProcessingTTS.current = false;
     }
   };
+
 
   // Initialize Speech Recognition
   const initializeSpeechRecognition = () => {
@@ -274,21 +318,23 @@ const Chatbot: React.FC = () => {
   return (
     <div className="relative min-h-screen flex flex-col justify-center items-center p-4 w-full max-w-screen-xl mx-auto">
       {/* Teacher Profile Picture */}
-      <div className="absolute left-5 top-1/3 transform -translate-y-1/3">
-        <Image
+      <div className="absolute -left-8 sm:left-1 top-24 sm:top-20 transform sm:-translate-y-1/8">
+        <img
           src={botProfilePic}
           alt="Chatbot"
-          width={160} // specify the width
-          height={240} // specify the height
-          className={`w-40 h-60 rounded-full transition-all ${
+          className={`w-24 h-36 sm:w-40 sm:h-60 rounded-full transition-all ${
             speakingIndex !== null ? `border-8 border-green-500` : ""
           }`}
+          style={{
+            borderWidth: `${speakingIndex !== null ? (volumeLevel / 256) * 10 : 8}px`,
+          }}
         />
       </div>
 
+  
       {/* Chat Messages */}
-      <div className="flex flex-col items-center w-full max-w-5xl mt-6 overflow-y-auto h-80 pr-2 no-scrollbar">
-        <div className="w-full px-28">
+      <div className="flex flex-col items-center w-full max-w-full sm:max-w-5xl mt-6 overflow-y-auto h-80 pr-2 no-scrollbar sm:ml-0 ml-24">
+        <div className="w-full px-4 sm:px-28">
           {messages.map((message, index) => (
             <div key={index} className={`mb-2`}>
               <div className={`flex ${message.isUser ? "justify-end" : "justify-start"}`}>
@@ -296,10 +342,10 @@ const Chatbot: React.FC = () => {
                   ref={(el) => {
                     messageRefs.current[index] = el; // Assign the element to the ref
                   }}
-                  className={`inline-block p-3 rounded-lg ${
+                  className={`inline-block p-2 sm:p-3 rounded-lg ${
                     message.isUser ? "bg-blue-500 text-white" : "bg-purple-200 text-black"
                   }`}
-                  style={{ maxWidth: "65%", textAlign: "left", wordBreak: "break-word" }}
+                  style={{ maxWidth: "80%", textAlign: "left", wordBreak: "break-word" }}
                 >
                   {message.text}
                 </div>
@@ -326,9 +372,9 @@ const Chatbot: React.FC = () => {
                 <div
                   className="p-2 bg-purple-100 rounded-lg text-gray-500"
                   style={{
-                    width: messageRefs.current[index]?.offsetWidth, // Match width to Arabic message
+                    width: messageRefs.current[index]?.offsetWidth,
                     textAlign: "left",
-                    marginTop: "0px", // Keep it close to the original message
+                    marginTop: "0px",
                     border: "1px solid #ddd",
                   }}
                 >
@@ -339,17 +385,17 @@ const Chatbot: React.FC = () => {
           ))}
           {isThinking && (
             <div className="mb-2 flex justify-start items-center">
-              <div className="inline-block p-3 rounded-lg bg-purple-200 text-black" style={{ maxWidth: "65%" }}>
+              <div className="inline-block p-2 sm:p-3 rounded-lg bg-purple-200 text-black" style={{ maxWidth: "80%" }}>
                 <span className="animate-pulse">thinking...</span>
               </div>
             </div>
           )}
         </div>
       </div>
-
+  
       {/* Input */}
       {!lessonCompleted && (
-        <div className="w-full max-w-xl mt-4">
+        <div className="w-full max-w-full sm:max-w-xl mt-4">
           <div className="flex p-2 border-t mt-2 justify-center">
             <input
               type="text"
