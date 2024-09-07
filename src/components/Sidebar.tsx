@@ -1,5 +1,3 @@
-"use client";
-
 import React, { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
@@ -17,8 +15,8 @@ const Sidebar = () => {
   const isActive = (path: string) =>
     pathname === path
       ? isCollapsed
-        ? "bg-gray-700 w-16 text-indigo-600"
-        : "bg-gray-700 text-indigo-600"
+        ? "bg-gray-800 w-16 text-indigo-500"
+        : "bg-gray-800 text-indigo-500"
       : "";
 
   const handleLogout = async () => {
@@ -31,42 +29,33 @@ const Sidebar = () => {
   };
 
   return (
-    <div className={`flex h-screen bg-gray-800 text-white fixed top-0 left-0 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
+    <div className={`flex h-screen bg-black text-white fixed top-0 left-0 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
       <div className={`flex flex-col h-full ${isCollapsed ? 'w-16' : 'w-64'}`}>
-        <Link href="/" className={`flex items-center p-4 text-xl font-bold text-white hover:text-indigo-600 ${isActive('/')}`}>
-          <Image
-            src={logo}
-            className={`block h-10 w-10 mr-4 ${isCollapsed && 'hidden'}`}
-            alt="Logo"
-          />
-          {!isCollapsed && (
-            <span>
-              LEARN<span className="text-indigo-600 text-2xl pl-1.5 pb-1">لغة</span>
-            </span>
-          )}
+        <Link href="/" className={`flex items-center justify-center p-4 text-xl font-bold text-white hover:text-indigo-500 ${isActive('/')}`}>
+          
         </Link>
         <nav className="flex-1 flex flex-col">
           <ul className="flex flex-col flex-1">
             <li className="flex flex-1">
-              <Link href="/lessons" className={`flex-1 flex items-center justify-center p-4 text-xl hover:bg-gray-700 ${isActive('/lessons')}`}>
+              <Link href="/lessons" className={`flex-1 flex items-center justify-center p-4 text-xl hover:bg-gray-800 ${isActive('/lessons')}`}>
                 <FaHome className="mr-3 text-2xl" />
                 {!isCollapsed && 'Learn'}
               </Link>
             </li>
             <li className="flex flex-1">
-              <Link href="/letters" className={`flex-1 flex items-center justify-center p-4 text-xl hover:bg-gray-700 ${isActive('/letters')}`}>
+              <Link href="/letters" className={`flex-1 flex items-center justify-center p-4 text-xl hover:bg-gray-800 ${isActive('/letters')}`}>
                 <FaBook className="mr-3 text-2xl" />
                 {!isCollapsed && 'Letters'}
               </Link>
             </li>
             <li className="flex flex-1">
-              <Link href="/quests" className={`flex-1 flex items-center justify-center p-4 text-xl hover:bg-gray-700 ${isActive('/quests')}`}>
+              <Link href="/quests" className={`flex-1 flex items-center justify-center p-4 text-xl hover:bg-gray-800 ${isActive('/quests')}`}>
                 <FaBook className="mr-3 text-2xl" />
                 {!isCollapsed && 'Quests'}
               </Link>
             </li>
             <li className="flex flex-1">
-              <Link href="/profile" className={`flex-1 flex items-center justify-center p-4 text-xl hover:bg-gray-700 ${isActive('/profile')}`}>
+              <Link href="/profile" className={`flex-1 flex items-center justify-center p-4 text-xl hover:bg-gray-800 ${isActive('/profile')}`}>
                 <FaUser className="mr-3 text-2xl" />
                 {!isCollapsed && 'Profile'}
               </Link>
@@ -74,7 +63,7 @@ const Sidebar = () => {
             <li className="flex flex-1">
               <button
                 onClick={handleLogout}
-                className="flex-1 flex items-center justify-center p-4 text-xl hover:bg-gray-700 cursor-pointer"
+                className="flex-1 flex items-center justify-center p-4 text-xl hover:bg-gray-800 cursor-pointer"
               >
                 <FaSignOutAlt className="mr-3 text-2xl" />
                 {!isCollapsed && 'Logout'}
@@ -85,7 +74,7 @@ const Sidebar = () => {
       </div>
       <button
         onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute top-1/2 right-0 transform translate-x-full -translate-y-1/2 bg-gray-700 text-white p-2 rounded-r-full"
+        className="absolute top-1/2 right-0 transform translate-x-full -translate-y-1/2 bg-gray-800 text-white p-2 rounded-r-full"
       >
         {isCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
       </button>

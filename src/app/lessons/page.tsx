@@ -46,7 +46,7 @@ export default function LessonPath() {
   };
 
   return (
-    <div className="bg-gradient-to-br from-black via-gray-900 to-purple-700 min-h-screen text-white">
+    <div className="bg-gradient-to-br from-black to-gray-900 min-h-screen text-white">
       <Sidebar />
       <div className="ml-64 p-10 flex flex-col items-center">
         <h1 className="text-3xl font-bold mb-10">LearnLugha Path</h1>
