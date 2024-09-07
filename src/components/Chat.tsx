@@ -94,7 +94,7 @@ const lesson = {
       "type": "phrase"
     }
   ]
-}
+};
 
 const userProfilePic = "/arabic-user.png"; // Path relative to the public directory
 const botProfilePic = "/arabic-teacher-male.png"; // Path relative to the public directory
@@ -139,9 +139,14 @@ const Chatbot: React.FC = () => {
       const audio = new Audio(url);
       audioRef.current = audio;
       audio.play();
+
+      audio.onplay = () => setSpeakingIndex(index);
+      audio.onended = () => {
+        setSpeakingIndex(null);
+        isProcessingTTS.current = false;
+      };
     } catch (error) {
       console.error("Error during TTS:", error);
-    } finally {
       isProcessingTTS.current = false;
     }
   };
@@ -154,14 +159,8 @@ const Chatbot: React.FC = () => {
     recognition.lang = "ar";
     recognition.interimResults = false;
 
-    recognition.onstart = () => {
-      setIsListening(true);
-    };
-
-    recognition.onend = () => {
-      setIsListening(false);
-    };
-
+    recognition.onstart = () => setIsListening(true);
+    recognition.onend = () => setIsListening(false);
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
       setMessages((prevMessages) => [...prevMessages, { text: transcript, isUser: true }]);
