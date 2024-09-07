@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
-import Sidebar from "@/components/Sidebar"; // Import the Sidebar component
+import Sidebar from "@/components/Sidebar";
 
 // Define the Lesson type
 interface Lesson {
@@ -46,10 +46,10 @@ export default function LessonPath() {
   };
 
   return (
-    <div className="bg-gradient-to-br from-black to-gray-900 min-h-screen text-white">
+    <div className="bg-gradient-to-br from-gray-900 to-black min-h-screen text-white">
       <Sidebar />
-      <div className="ml-64 p-10 flex flex-col items-center">
-        <h1 className="text-3xl font-bold mb-10">LearnLugha Path</h1>
+      <div className="md:ml-64 p-5 md:p-10 flex flex-col items-center">
+        <h1 className="text-2xl md:text-3xl font-bold mb-5 md:mb-10">Lessons</h1>
         <div className="relative flex flex-col items-center w-full max-w-2xl">
           {lessons.map((lesson, index) => {
             const isUnlocked = index === 0 || lessons[index - 1].completed;
@@ -62,19 +62,15 @@ export default function LessonPath() {
             return (
               <div
                 key={lesson.id}
-                className={`relative flex items-center mb-20 ${
-                  index % 2 === 0 ? "self-start" : "self-end"
-                }`}
-                style={{
-                  position: "relative",
-                  left: index % 2 === 0 ? "105px" : "-105px",
-                }}
+                className={`relative flex items-center mb-10 md:mb-20 ${
+                  index % 2 === 0 ? "md:self-start md:ml-16" : "md:self-end md:mr-16"
+                } justify-center md:justify-${index % 2 === 0 ? 'start' : 'end'}`}
                 onClick={(e) => handleClick(e, lesson, isUnlocked)}
               >
                 <div
-                  className={`relative flex items-center justify-center w-16 h-16 rounded-full border-4 transition-transform duration-200 transform hover:scale-110 cursor-pointer ${lessonStatus}`}
+                  className={`relative flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full border-4 transition-transform duration-200 transform hover:scale-110 cursor-pointer ${lessonStatus}`}
                 >
-                  <span className="text-white text-lg font-bold">{lesson.id}</span>
+                  <span className="text-white text-lg md:text-xl font-bold">{lesson.id}</span>
                 </div>
               </div>
             );
@@ -83,7 +79,7 @@ export default function LessonPath() {
 
         {selectedLesson && dialogPosition && (
           <div
-            className={`absolute z-50 p-5 rounded-lg text-white dialog-box ${
+            className={`absolute z-50 p-5 rounded-lg text-white dialog-box w-64 ${
               selectedLesson.completed
                 ? "bg-green-500"
                 : selectedLesson.isUnlocked
@@ -123,8 +119,8 @@ export default function LessonPath() {
               }}
             ></div>
 
-            <h2 className="text-2xl font-bold mb-2">{selectedLesson.title}</h2>
-            <p className="text-lg mb-4">
+            <h2 className="text-xl font-bold mb-2">{selectedLesson.title}</h2>
+            <p className="text-md mb-4">
               {selectedLesson.completed
                 ? "This lesson is completed."
                 : selectedLesson.isUnlocked
@@ -134,7 +130,7 @@ export default function LessonPath() {
 
             {selectedLesson.completed && (
               <button
-                className="px-4 py-2 bg-white text-green-700 rounded hover:bg-gray-100 transition"
+                className="px-4 py-2 bg-white text-green-700 rounded hover:bg-gray-100 transition w-full"
                 onClick={() => navigateToLesson(selectedLesson.id)}
               >
                 Go to Lesson
@@ -143,7 +139,7 @@ export default function LessonPath() {
 
             {selectedLesson.isUnlocked && !selectedLesson.completed && (
               <button
-                className="px-4 py-2 bg-white text-yellow-700 rounded hover:bg-gray-100 transition"
+                className="px-4 py-2 bg-white text-yellow-700 rounded hover:bg-gray-100 transition w-full"
                 onClick={() => navigateToLesson(selectedLesson.id)}
               >
                 Start Lesson

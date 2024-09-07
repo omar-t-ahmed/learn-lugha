@@ -395,10 +395,10 @@ const Chatbot: React.FC = () => {
       </div>
 
       {lessonCompleted && (
-        <div className="mt-6 text-green-500 text-xl">
-          <p>Congratulations! You've completed the lesson!</p>
-        </div>
-      )}
+  <div className="mt-6 text-green-500 text-xl">
+    <p>Congratulations! You&apos;ve completed the lesson!</p>
+  </div>
+)}
     </div>
   );
 };
