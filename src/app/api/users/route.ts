@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { Gender, PrismaClient } from '@prisma/client';
+import { PrismaClient, Gender } from '@prisma/client';
 import { verifyToken } from '@/lib/authMiddleware';
 
 const prisma = new PrismaClient();

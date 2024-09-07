@@ -12,7 +12,7 @@ model User {
   email        String   @unique
   name         String?
   username     String   @unique // Add this line
-  gender Gender
+  gender       Gender
   lessons      Lesson[]
   achievements Achievement[]
   transcripts  Transcript[]
@@ -40,7 +40,7 @@ model Transcript {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   content     String
   userId      String   @db.ObjectId
-  lessonId    Int      
+  lessonId    Int
   user        User     @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now())
 }
