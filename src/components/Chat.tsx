@@ -4,12 +4,106 @@ import React, { useState, useRef, useEffect } from "react";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import Image from "next/image";
 
+// Define your lesson here
+const lesson = {
+  "lesson": "Introductions and Greetings",
+  "objectives": [
+    "Learn how to greet others in Arabic",
+    "Introduce yourself and ask for someone's name",
+    "Learn basic pronouns and polite phrases"
+  ],
+  "vocabulary": [
+    {
+      "arabic": "أَﻧَﺎ",
+      "english": "I am",
+      "type": "pronoun"
+    },
+    {
+      "arabic": "اِسْمِي",
+      "english": "My name is",
+      "type": "phrase"
+    },
+    {
+      "arabic": "مَا اِسْمُكَ؟",
+      "english": "What is your name? (m)",
+      "type": "question"
+    },
+    {
+      "arabic": "مَا اِسْمُكِ؟",
+      "english": "What is your name? (f)",
+      "type": "question"
+    },
+    {
+      "arabic": "مِنْ أَيْنَ أَنْتَ؟",
+      "english": "Where are you from? (m)",
+      "type": "question"
+    },
+    {
+      "arabic": "مِنْ أَيْنَ أَنْتِ؟",
+      "english": "Where are you from? (f)",
+      "type": "question"
+    },
+    {
+      "arabic": "كَيفَ حَالُكَ؟",
+      "english": "How are you? (m)",
+      "type": "question"
+    },
+    {
+      "arabic": "كَيفَ حَالُكِ؟",
+      "english": "How are you? (f)",
+      "type": "question"
+    },
+    {
+      "arabic": "بِخَيْرٍ",
+      "english": "I am fine",
+      "type": "phrase"
+    },
+    {
+      "arabic": "الحَمْدُ لِلَّه",
+      "english": "Praise be to Allah",
+      "type": "expression"
+    },
+    {
+      "arabic": "شُكْرًا",
+      "english": "Thank you",
+      "type": "expression"
+    },
+    {
+      "arabic": "السَّلامُ عَلَيْكُم",
+      "english": "Peace be upon you",
+      "type": "greeting"
+    },
+    {
+      "arabic": "وَعَلَيْكُمُ السَّلام",
+      "english": "And upon you be peace",
+      "type": "greeting"
+    },
+    {
+      "arabic": "مَعَ السَّلامَة",
+      "english": "With peace (Goodbye)",
+      "type": "farewell"
+    },
+    {
+      "arabic": "وَدَاعًا",
+      "english": "Goodbye",
+      "type": "farewell"
+    },
+    {
+      "arabic": "أَنَا مِنْ",
+      "english": "I am from",
+      "type": "phrase"
+    }
+  ]
+}
+
 const userProfilePic = "/arabic-user.png"; // Path relative to the public directory
 const botProfilePic = "/arabic-teacher-male.png"; // Path relative to the public directory
 
 const Chatbot: React.FC = () => {
   const [messages, setMessages] = useState<{ text: string; isUser: boolean; translation?: string }[]>([]);
   const [input, setInput] = useState("");
+  const [usedVocabulary, setUsedVocabulary] = useState<string[]>([]);
+  const [lessonCompleted, setLessonCompleted] = useState(false);
   const [isListening, setIsListening] = useState(false);
   const [isThinking, setIsThinking] = useState(false);
   const [speakingIndex, setSpeakingIndex] = useState<number | null>(null); // Track which message is being read
@@ -25,10 +119,9 @@ const Chatbot: React.FC = () => {
   // Handle Text-to-Speech
   const handleSpeak = async (text: string, index: number) => {
     try {
-      console.log("Sending TTS request for text:", text); // Add this log
       if (isProcessingTTS.current) return;
       isProcessingTTS.current = true;
-  
+
       const response = await fetch("/api/tts", {
         method: "POST",
         headers: {
@@ -36,11 +129,11 @@ const Chatbot: React.FC = () => {
         },
         body: JSON.stringify({ text }),
       });
-  
+
       if (!response.ok) {
         throw new Error("TTS request failed");
       }
-  
+
       const blob = await response.blob();
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
@@ -133,24 +226,33 @@ const Chatbot: React.FC = () => {
   const handleBotResponse = async (userInput: string) => {
     try {
       setIsThinking(true);
-      setMessages((prevMessages) => prevMessages.filter((msg) => msg.text !== 'thinking...'));
 
       const response = await fetch("/api/openai", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ input: userInput }),
+        body: JSON.stringify({ input: userInput, lesson }),
       });
 
       const data = await response.json();
       const botResponse = data.response;
+      const newUsedVocab = data.usedVocabulary;
 
-      setMessages((prevMessages) => {
-        const updatedMessages = [...prevMessages, { text: botResponse, isUser: false }];
-        handleSpeak(botResponse, updatedMessages.length - 1);
-        return updatedMessages;
-      });
+      // Update vocabulary and messages
+      setUsedVocabulary((prevUsed) => [
+        ...prevUsed,
+        ...newUsedVocab.filter((vocab: string) => !prevUsed.includes(vocab)),
+      ]);
+      setMessages((prevMessages) => [
+        ...prevMessages,
+        { text: botResponse, isUser: false },
+      ]);
+
+      handleSpeak(botResponse, messages.length);
+      if (usedVocabulary.length === lesson.vocabulary.length) {
+        setLessonCompleted(true);
+      }
     } catch (error) {
       console.error("Error communicating with OpenAI:", error);
     } finally {
@@ -164,6 +266,11 @@ const Chatbot: React.FC = () => {
     handleSpeak(introMessage, 0);
   }, []);
 
+  // Helper function to check if a vocabulary word is used
+  const isVocabularyUsed = (arabicWord: string) => {
+    return usedVocabulary.includes(arabicWord);
+  };
+
   return (
     <div className="relative min-h-screen flex flex-col justify-center items-center p-4 w-full max-w-screen-xl mx-auto">
       {/* Teacher Profile Picture */}
@@ -171,26 +278,12 @@ const Chatbot: React.FC = () => {
         <Image
           src={botProfilePic}
           alt="Chatbot"
+          width={160} // specify the width
+          height={240} // specify the height
           className={`w-40 h-60 rounded-full transition-all ${
             speakingIndex !== null ? `border-8 border-green-500` : ""
           }`}
-          style={{
-            borderWidth: `${speakingIndex !== null ? (volumeLevel / 256) * 10 : 8}px`,
-          }}
         />
-      </div>
-
-      {/* User Profile Picture */}
-      <div className="absolute right-5 top-1/3 transform -translate-y-1/3">
-        {/* <img
-          src={userProfilePic}
-          alt="User"
-          className={`w-45 h-60 rounded-full transition-all duration-300 ${
-            isListening ? `transform scale-130 border-8 border-red-500` : ""
-          }`}
-        /> */}
-        <div className="mt-4 flex justify-center">
-        </div>
       </div>
 
       {/* Chat Messages */}
@@ -198,9 +291,7 @@ const Chatbot: React.FC = () => {
         <div className="w-full px-28">
           {messages.map((message, index) => (
             <div key={index} className={`mb-2`}>
-              <div
-                className={`flex ${message.isUser ? "justify-end" : "justify-start"}`}
-              >
+              <div className={`flex ${message.isUser ? "justify-end" : "justify-start"}`}>
                 <div
                   ref={(el) => {
                     messageRefs.current[index] = el; // Assign the element to the ref
@@ -256,20 +347,20 @@ const Chatbot: React.FC = () => {
         </div>
       </div>
 
-      {/* Input and buttons */}
-      <div className="w-full max-w-xl mt-4">
-        <div className="flex p-2 border-t mt-2 justify-center">
-          <input
-            type="text"
-            className="flex-grow p-2 border border-gray-300 rounded-l-md text-black"
-            placeholder="Type your message..."
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyPress={(e) => {
-              if (e.key === "Enter") handleSendMessage();
-            }}
-          />
-          <div className="flex gap-10 justify-between">
+      {/* Input */}
+      {!lessonCompleted && (
+        <div className="w-full max-w-xl mt-4">
+          <div className="flex p-2 border-t mt-2 justify-center">
+            <input
+              type="text"
+              className="flex-grow p-2 border border-gray-300 rounded-l-md text-black"
+              placeholder="Type your message..."
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              onKeyPress={(e) => {
+                if (e.key === "Enter") handleSendMessage();
+              }}
+            />
             <button
               onClick={handleSendMessage}
               className="bg-blue-500 text-white p-2 rounded-r-md hover:bg-blue-600 active:bg-blue-700 transition-colors"
@@ -278,14 +369,36 @@ const Chatbot: React.FC = () => {
             </button>
             <button
               onClick={toggleListening}
-              className={`p-2 ${isListening ? "bg-red-500" : "bg-green-500"} text-white rounded-md flex items-center`}
+              className={`p-2 ml-2 ${isListening ? "bg-red-500" : "bg-green-500"} text-white rounded-md flex items-center`}
             >
               <i className={`fas ${isListening ? "fa-microphone-slash" : "fa-microphone"} mr-2`}></i>
               {isListening ? "Stop Speaking" : "Start Speaking"}
             </button>
           </div>
         </div>
+      )}
+
+      {/* Vocabulary Progress */}
+      <div className="w-full max-w-3xl mt-6">
+        <h3 className="text-xl font-semibold">Vocabulary Progress</h3>
+        <ul className="list-disc list-inside mt-4">
+          {lesson.vocabulary.map((vocab, index) => (
+            <li key={index} className="mb-2">
+              <span className={`font-bold ${isVocabularyUsed(vocab.arabic) ? "text-green-500" : "text-gray-400"}`}>
+                {vocab.arabic}
+              </span>
+              {" - "}
+              <span className="text-gray-700">{vocab.english}</span>
+            </li>
+          ))}
+        </ul>
       </div>
+
+      {lessonCompleted && (
+        <div className="mt-6 text-green-500 text-xl">
+          <p>Congratulations! You've completed the lesson!</p>
+        </div>
+      )}
     </div>
   );
 };
