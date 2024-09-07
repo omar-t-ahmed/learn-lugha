@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import { verifyToken } from '@/lib/authMiddleware';
 
+
 const prisma = new PrismaClient();
 
 // Handle POST request to create a new user
