@@ -6,8 +6,8 @@ import Navbar from "@/components/Navbar";
 
 const lessonData: Record<number, { title: string; content: string }> = {
   1: {
-    title: "Lesson 1: Introduction to Arabic",
-    content: "Welcome to Lesson 1! In this lesson, we'll cover the basics of Arabic..."
+    title: "Lesson 1: Intro to Arabic",
+    content: "In this lesson, we'll cover the basics of Arabic"
   },
   2: {
     title: "Lesson 2: Basic Vocabulary",
