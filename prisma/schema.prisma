@@ -40,7 +40,7 @@ model Transcript {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   content     String
   userId      String   @db.ObjectId
-  lessonId    Int      
+  lessonId    Int
   user        User     @relation(fields: [userId], references: [id])
   createdAt   DateTime @default(now())
 }
@@ -55,4 +55,5 @@ model Progress {
 enum Gender {
   male
   female
+  unknown
 }
