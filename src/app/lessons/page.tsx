@@ -3,6 +3,7 @@
 import React, { useState } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
+import UserProgress from "@/components/UserProgress";
 
 // Define the Lesson type
 interface Lesson {
@@ -48,6 +49,9 @@ export default function LessonPath() {
   return (
     <div className="bg-gradient-to-br from-gray-900 to-black min-h-screen text-white">
       <Sidebar />
+      <div className=" bg-gradient-to-br from-gray-900 to-black text-white p-10">
+        <UserProgress maxLevel={2} />
+      </div>
       <div className="md:ml-64 p-5 md:p-10 flex flex-col items-center">
         <h1 className="text-2xl md:text-3xl font-bold mb-5 md:mb-10">Lessons</h1>
         <div className="relative flex flex-col items-center w-full max-w-2xl">

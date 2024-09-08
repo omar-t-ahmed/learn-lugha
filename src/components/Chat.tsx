@@ -14,82 +14,82 @@ const lesson = {
   ],
   "vocabulary": [
     {
-      "arabic": "أَﻧَﺎ",
+      "arabic": "انا",
       "english": "I am",
       "type": "pronoun"
     },
     {
-      "arabic": "اِسْمِي",
+      "arabic": "اسمي",
       "english": "My name is",
       "type": "phrase"
     },
     {
-      "arabic": "مَا اِسْمُكَ؟",
+      "arabic": "ما اسمك؟",
       "english": "What is your name? (m)",
       "type": "question"
     },
     {
-      "arabic": "مَا اِسْمُكِ؟",
+      "arabic": "ما اسمكِ؟",
       "english": "What is your name? (f)",
       "type": "question"
     },
     {
-      "arabic": "مِنْ أَيْنَ أَنْتَ؟",
+      "arabic": "من اين انت؟",
       "english": "Where are you from? (m)",
       "type": "question"
     },
     {
-      "arabic": "مِنْ أَيْنَ أَنْتِ؟",
+      "arabic": "من اين انتِ؟",
       "english": "Where are you from? (f)",
       "type": "question"
     },
     {
-      "arabic": "كَيفَ حَالُكَ؟",
+      "arabic": "كيف حالك؟",
       "english": "How are you? (m)",
       "type": "question"
     },
     {
-      "arabic": "كَيفَ حَالُكِ؟",
+      "arabic": "كيف حالكِ؟",
       "english": "How are you? (f)",
       "type": "question"
     },
     {
-      "arabic": "بِخَيْرٍ",
+      "arabic": "بخير",
       "english": "I am fine",
       "type": "phrase"
     },
     {
-      "arabic": "الحَمْدُ لِلَّه",
+      "arabic": "الحمد لله",
       "english": "Praise be to Allah",
       "type": "expression"
     },
     {
-      "arabic": "شُكْرًا",
+      "arabic": "شكراً",
       "english": "Thank you",
       "type": "expression"
     },
     {
-      "arabic": "السَّلامُ عَلَيْكُم",
+      "arabic": "السلام عليكم",
       "english": "Peace be upon you",
       "type": "greeting"
     },
     {
-      "arabic": "وَعَلَيْكُمُ السَّلام",
+      "arabic": "وعليكم السلام",
       "english": "And upon you be peace",
       "type": "greeting"
     },
     {
-      "arabic": "مَعَ السَّلامَة",
+      "arabic": "مع السلامة",
       "english": "With peace (Goodbye)",
       "type": "farewell"
     },
     {
-      "arabic": "وَدَاعًا",
+      "arabic": "وداعاً",
       "english": "Goodbye",
       "type": "farewell"
     },
     {
-      "arabic": "أَنَا مِنْ",
+      "arabic": "انا من",
       "english": "I am from",
       "type": "phrase"
     }
@@ -100,7 +100,8 @@ const userProfilePic = "/arabic-user.png"; // Path relative to the public direct
 const botProfilePic = "/arabic-teacher-male.png"; // Path relative to the public directory
 
 const Chatbot: React.FC = () => {
-  const [messages, setMessages] = useState<{ text: string; isUser: boolean; translation?: string }[]>([]);
+  // const [messages, setMessages] = useState<{ text: string; isUser: boolean; translation?: string }[]>([]);
+  const [messages, setMessages] = useState<{ content: string; isUser: boolean; translation?: string; role: string }[]>([]);
   const [input, setInput] = useState("");
   const [usedVocabulary, setUsedVocabulary] = useState<string[]>([]);
   const [lessonCompleted, setLessonCompleted] = useState(false);
@@ -115,12 +116,32 @@ const Chatbot: React.FC = () => {
   const [translatedMessages, setTranslatedMessages] = useState<{ [key: number]: string }>({});
   const [showTranslation, setShowTranslation] = useState<{ [key: number]: boolean }>({}); // Track whether to show translation
   const messageRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
+  const messageEndRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollToBottom = () => {
+    if (messageEndRef.current) {
+      messageEndRef.current.scrollIntoView({ behavior: "smooth", block: "end", inline: "nearest" });
+    }
+  };
+
+  useEffect(() => {
+    scrollToBottom(); // Scroll to the bottom whenever a new message is added
+  }, [messages]);
 
   // Handle Text-to-Speech
   const handleSpeak = async (text: string, index: number) => {
     try {
       if (isProcessingTTS.current) return;
       isProcessingTTS.current = true;
+
+      // Stop current audio if playing
+      if (audioRef.current && !audioRef.current.paused) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+        audioRef.current = null;
+        setSpeakingIndex(null);
+        return;
+      }
 
       const response = await fetch("/api/tts", {
         method: "POST",
@@ -138,13 +159,48 @@ const Chatbot: React.FC = () => {
       const url = URL.createObjectURL(blob);
       const audio = new Audio(url);
       audioRef.current = audio;
+
+      const audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+      const source = audioContext.createMediaElementSource(audio);
+      const analyser = audioContext.createAnalyser();
+      const dataArray = new Uint8Array(analyser.frequencyBinCount);
+      source.connect(analyser);
+      analyser.connect(audioContext.destination);
+
+      audio.onplay = () => {
+        setSpeakingIndex(index);
+        const visualize = () => {
+          analyser.getByteFrequencyData(dataArray);
+          let volume = 0;
+          for (let i = 0; i < dataArray.length; i++) {
+            if (dataArray[i] > volume) {
+              volume = dataArray[i];
+            }
+          }
+          setVolumeLevel(volume);
+          if (audioRef.current) {
+            requestAnimationFrame(visualize);
+          }
+        };
+        visualize();
+      };
+
+      audio.onended = () => {
+        setSpeakingIndex(null);
+        audioRef.current = null;
+        audioContext.close();
+        isSpeakingRef.current = false;
+        isProcessingTTS.current = false;
+      };
+
       audio.play();
     } catch (error) {
       console.error("Error during TTS:", error);
-    } finally {
+      isSpeakingRef.current = false;
       isProcessingTTS.current = false;
     }
   };
+
 
   // Initialize Speech Recognition
   const initializeSpeechRecognition = () => {
@@ -164,7 +220,7 @@ const Chatbot: React.FC = () => {
 
     recognition.onresult = (event: any) => {
       const transcript = event.results[0][0].transcript;
-      setMessages((prevMessages) => [...prevMessages, { text: transcript, isUser: true }]);
+      setMessages((prevMessages) => [...prevMessages, { content: transcript, isUser: true, role: "user" }]);
       handleBotResponse(transcript);
     };
 
@@ -217,8 +273,19 @@ const Chatbot: React.FC = () => {
 
   const handleSendMessage = async () => {
     if (input.trim() === "") return;
-
-    setMessages((prevMessages) => [...prevMessages, { text: input, isUser: true }]);
+  
+    // Track used vocabulary based on user input
+    const userVocabularyUsed = lesson.vocabulary
+      .filter((vocab) => input.includes(vocab.arabic))
+      .map((vocab) => vocab.arabic);
+  
+    // Update the vocabulary state for the user
+    setUsedVocabulary((prevUsed) => [
+      ...prevUsed,
+      ...userVocabularyUsed.filter((vocab: string) => !prevUsed.includes(vocab)),
+    ]);
+  
+    setMessages((prevMessages) => [...prevMessages, { content: input, isUser: true, role: "user" }]);
     setInput("");
     await handleBotResponse(input);
   };
@@ -232,21 +299,16 @@ const Chatbot: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ input: userInput, lesson }),
+        body: JSON.stringify({ input: userInput, lesson, conversation: messages }),
       });
 
       const data = await response.json();
       const botResponse = data.response;
       const newUsedVocab = data.usedVocabulary;
 
-      // Update vocabulary and messages
-      setUsedVocabulary((prevUsed) => [
-        ...prevUsed,
-        ...newUsedVocab.filter((vocab: string) => !prevUsed.includes(vocab)),
-      ]);
       setMessages((prevMessages) => [
         ...prevMessages,
-        { text: botResponse, isUser: false },
+        { content: botResponse, isUser: false, role: "system" },
       ]);
 
       handleSpeak(botResponse, messages.length);
@@ -262,7 +324,7 @@ const Chatbot: React.FC = () => {
 
   useEffect(() => {
     const introMessage = "Welcome to the lesson! Let's start learning Arabic.";
-    setMessages([{ text: introMessage, isUser: false }]);
+    setMessages([{ content: introMessage, isUser: false, role:"system" }]);
     handleSpeak(introMessage, 0);
   }, []);
 
@@ -274,21 +336,23 @@ const Chatbot: React.FC = () => {
   return (
     <div className="relative min-h-screen flex flex-col justify-center items-center p-4 w-full max-w-screen-xl mx-auto">
       {/* Teacher Profile Picture */}
-      <div className="absolute left-5 top-1/3 transform -translate-y-1/3">
-        <Image
+      <div className="absolute -left-8 sm:left-1 top-24 sm:top-20 transform sm:-translate-y-1/8">
+        <img
           src={botProfilePic}
           alt="Chatbot"
-          width={160} // specify the width
-          height={240} // specify the height
-          className={`w-40 h-60 rounded-full transition-all ${
-            speakingIndex !== null ? `border-8 border-green-500` : ""
+          className={`w-24 h-36 sm:w-40 sm:h-60 rounded-full transition-all ${
+            speakingIndex !== null ? `border-8 border-indigo-500` : ""
           }`}
+          style={{
+            borderWidth: `${speakingIndex !== null ? (volumeLevel / 256) * 10 : 8}px`,
+          }}
         />
       </div>
 
+  
       {/* Chat Messages */}
-      <div className="flex flex-col items-center w-full max-w-5xl mt-6 overflow-y-auto h-80 pr-2 no-scrollbar">
-        <div className="w-full px-28">
+      <div className="flex flex-col items-center w-full max-w-full sm:max-w-5xl mt-6 overflow-y-auto h-80 pr-2 no-scrollbar sm:ml-0 ml-24">
+        <div className="w-full px-4 sm:px-28 h-full overflow-y-auto">
           {messages.map((message, index) => (
             <div key={index} className={`mb-2`}>
               <div className={`flex ${message.isUser ? "justify-end" : "justify-start"}`}>
@@ -296,24 +360,24 @@ const Chatbot: React.FC = () => {
                   ref={(el) => {
                     messageRefs.current[index] = el; // Assign the element to the ref
                   }}
-                  className={`inline-block p-3 rounded-lg ${
+                  className={`inline-block p-2 sm:p-3 rounded-lg ${
                     message.isUser ? "bg-blue-500 text-white" : "bg-purple-200 text-black"
                   }`}
-                  style={{ maxWidth: "65%", textAlign: "left", wordBreak: "break-word" }}
+                  style={{ maxWidth: "80%", textAlign: "left", wordBreak: "break-word" }}
                 >
-                  {message.text}
+                  {message.content}
                 </div>
                 {!message.isUser && (
                   <>
                     <button
-                      onClick={() => handleSpeak(message.text, index)}
+                      onClick={() => handleSpeak(message.content, index)}
                       className={`ml-2 ${speakingIndex === index ? "text-black" : "text-gray-600 hover:text-gray-800"}`}
                       title="Listen to message"
                     >
                       <i className="fas fa-volume-up"></i>
                     </button>
                     <button
-                      onClick={() => handleTranslate(message.text, index)}
+                      onClick={() => handleTranslate(message.content, index)}
                       className={`ml-2 text-gray-600 hover:text-gray-800`}
                       title="Translate message"
                     >
@@ -326,9 +390,9 @@ const Chatbot: React.FC = () => {
                 <div
                   className="p-2 bg-purple-100 rounded-lg text-gray-500"
                   style={{
-                    width: messageRefs.current[index]?.offsetWidth, // Match width to Arabic message
+                    width: messageRefs.current[index]?.offsetWidth,
                     textAlign: "left",
-                    marginTop: "0px", // Keep it close to the original message
+                    marginTop: "0px",
                     border: "1px solid #ddd",
                   }}
                 >
@@ -339,17 +403,18 @@ const Chatbot: React.FC = () => {
           ))}
           {isThinking && (
             <div className="mb-2 flex justify-start items-center">
-              <div className="inline-block p-3 rounded-lg bg-purple-200 text-black" style={{ maxWidth: "65%" }}>
+              <div className="inline-block p-2 sm:p-3 rounded-lg bg-purple-200 text-black" style={{ maxWidth: "80%" }}>
                 <span className="animate-pulse">thinking...</span>
               </div>
             </div>
           )}
+          <div ref={messageEndRef}></div>
         </div>
       </div>
-
+  
       {/* Input */}
       {!lessonCompleted && (
-        <div className="w-full max-w-xl mt-4">
+        <div className="w-full max-w-full sm:max-w-xl mt-4">
           <div className="flex p-2 border-t mt-2 justify-center">
             <input
               type="text"
@@ -392,6 +457,7 @@ const Chatbot: React.FC = () => {
             </li>
           ))}
         </ul>
+
       </div>
 
       {lessonCompleted && (
