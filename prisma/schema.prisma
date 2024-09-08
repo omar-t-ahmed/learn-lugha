@@ -55,4 +55,5 @@ model Progress {
 enum Gender {
   male
   female
+  unknown
 }

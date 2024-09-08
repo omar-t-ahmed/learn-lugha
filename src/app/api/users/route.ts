@@ -7,7 +7,8 @@ const prisma = new PrismaClient();
 // Handle POST request to create a new user
 export async function POST(req: Request) {
   try {
-    const { email, name, username, gender }: { email: string; name?: string; username: string; gender: Gender} = await req.json();
+    const { email, name, username, gender }: { email: string; name?: string; username: string; gender: Gender } = await req.json();
+
 
     const newUser = await prisma.user.create({
       data: {
@@ -18,8 +19,6 @@ export async function POST(req: Request) {
       },
     });
 
-
-    
     return NextResponse.json(newUser, { status: 201 });
   } catch (error) {
     console.error('Failed to create user:', error);
@@ -28,6 +27,7 @@ export async function POST(req: Request) {
     await prisma.$disconnect();
   }
 }
+
 
 // Handle GET request to fetch authenticated user's details
 export async function GET(req: Request) {
