@@ -8,7 +8,6 @@ interface Plan {
 }
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
-  // will api version here cause errors
   apiVersion: '2024-06-20',
 });
 

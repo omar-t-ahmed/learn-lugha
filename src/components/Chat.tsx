@@ -29,28 +29,13 @@ const lesson = {
       "type": "question"
     },
     {
-      "arabic": "ما اسمكِ؟",
-      "english": "What is your name? (f)",
-      "type": "question"
-    },
-    {
       "arabic": "من اين انت؟",
       "english": "Where are you from? (m)",
       "type": "question"
     },
     {
-      "arabic": "من اين انتِ؟",
-      "english": "Where are you from? (f)",
-      "type": "question"
-    },
-    {
       "arabic": "كيف حالك؟",
       "english": "How are you? (m)",
-      "type": "question"
-    },
-    {
-      "arabic": "كيف حالكِ؟",
-      "english": "How are you? (f)",
       "type": "question"
     },
     {
@@ -67,11 +52,6 @@ const lesson = {
       "arabic": "شكراً",
       "english": "Thank you",
       "type": "expression"
-    },
-    {
-      "arabic": "السلام عليكم",
-      "english": "Peace be upon you",
-      "type": "greeting"
     },
     {
       "arabic": "وعليكم السلام",
