@@ -45,7 +45,7 @@ export async function POST(req: Request): Promise<NextResponse> {
   // Call OpenAI API with the lesson and conversation history
   const completion = await openai.chat.completions.create({
     messages,
-    model: 'gpt-4',
+    model: 'gpt-4o-mini',
     temperature: 0.7,
     max_tokens: 150,
   });

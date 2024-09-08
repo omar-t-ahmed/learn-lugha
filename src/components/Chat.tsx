@@ -404,7 +404,7 @@ const Chatbot: React.FC = () => {
           {isThinking && (
             <div className="mb-2 flex justify-start items-center">
               <div className="inline-block p-2 sm:p-3 rounded-lg bg-purple-200 text-black" style={{ maxWidth: "80%" }}>
-                <span className="animate-pulse">thinking...</span>
+                <span className="animate-pulse">Thinking...</span>
               </div>
             </div>
           )}
