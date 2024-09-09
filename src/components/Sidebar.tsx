@@ -36,7 +36,7 @@ const Sidebar = () => {
         <nav className="flex-1 flex flex-col">
           <ul className="flex flex-col flex-1">
             <li className="flex flex-1">
-              <Link href="/lessons" className={`flex-1 flex items-center justify-center p-4 text-xl hover:bg-gray-900 hover:text-indigo-500 ${isActive('/lessons')}`}>
+              <Link href="/home" className={`flex-1 flex items-center justify-center p-4 text-xl hover:bg-gray-900 hover:text-indigo-500 ${isActive('/home')}`}>
                 <FaHome className="text-2xl" />
                 {!isCollapsed && <span className="ml-3">Learn</span>}
               </Link>
