@@ -13,7 +13,7 @@ interface Lesson {
 }
 
 const lessons: Lesson[] = [
-  { id: 1, title: "Lesson 1", completed: true },
+  { id: 1, title: "Lesson 1", completed: false },
   { id: 2, title: "Lesson 2", completed: false },
   { id: 3, title: "Lesson 3", completed: false },
   { id: 4, title: "Lesson 4", completed: false },

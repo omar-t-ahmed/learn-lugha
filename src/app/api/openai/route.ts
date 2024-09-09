@@ -23,20 +23,18 @@ export async function POST(req: Request): Promise<NextResponse> {
     // Get user input, lesson details, and conversation history
     const { input, lesson, conversation }: { input: string; lesson: Lesson; conversation?: Message[] } = await req.json();
 
-    // Check if the current input is the same as the last one (to prevent identical consecutive requests)
     const currentTime = Date.now();
 
+    // Check if the current input is the same as the last one (to prevent identical consecutive requests)
     if (lastUserInput && lastUserInput.input === input && currentTime - lastUserInput.timestamp < 5000) {
-        // If the input is identical to the last one within 5 seconds, return a 204 No Content without a body
         return new NextResponse(null, { status: 204 });
     }
-    
 
     // Store the current request as the last one
     lastUserInput = { input, timestamp: currentTime };
 
     // Ensure conversation is initialized
-    const conversationHistory = Array.isArray(conversation) ? conversation : [];
+    const conversationHistory: Message[] = Array.isArray(conversation) ? conversation : [];
 
     // Set up the system message
     const systemContent = `
@@ -46,7 +44,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     You must ensure the student learns and uses the following vocabulary: ${lesson.vocabulary
         .map((vocab) => vocab.arabic)
         .join(", ")}.
-    Use short, simple sentences, and guide the student through the lesson objectives. Respond in Arabic, with no more than one sentence, and ensure the student uses the vocabulary words and stays on track. If they ask you repeat questions make sure to direct them back to the learning objective.
+    Use short, simple sentences, and guide the student through the lesson objectives. Respond in Arabic, with no more than one sentence, and ensure the student uses the vocabulary words and stays on track.
   `;
 
     const systemMessage: Message = {
@@ -61,7 +59,7 @@ export async function POST(req: Request): Promise<NextResponse> {
         { role: "user", content: input },
     ];
 
-    // Call OpenAI API with the lesson and conversation history
+    // First API call to generate a response to the user
     const completion = await openai.chat.completions.create({
         messages,
         model: "gpt-4o-mini",
@@ -69,21 +67,50 @@ export async function POST(req: Request): Promise<NextResponse> {
         max_tokens: 150,
     });
 
-    const response = completion.choices[0].message.content;
+    const responseContent = completion.choices[0].message.content;
 
-    // Track used vocabulary
+    // Track used vocabulary from the response
     const usedVocabulary: string[] = lesson.vocabulary
-        .filter((vocab) => response!.includes(vocab.arabic))
+        .filter((vocab) => responseContent!.includes(vocab.arabic))
         .map((vocab) => vocab.arabic);
 
-    // Return the response, used vocabulary, and updated conversation history
+    // Add the latest user input and assistant's response to conversation history
+    const updatedConversation: Message[] = [
+        ...conversationHistory,
+        { role: "user", content: input },
+        { role: "assistant", content: responseContent ?? "" }, // Ensure content is not null
+    ];
+
+    // Second API call to check if all vocabulary has been used
+    const checkCompletionContent = `
+    Based on the conversation so far, has the student used all of the following vocabulary words: ${lesson.vocabulary
+        .map((vocab) => vocab.arabic)
+        .join(", ")}?
+    Respond with Yes or No.
+    `;
+
+    const checkCompletionMessages: Message[] = [
+        { role: "system", content: checkCompletionContent },
+        ...updatedConversation,
+    ];
+
+    const completionCheck = await openai.chat.completions.create({
+        messages: checkCompletionMessages,
+        model: "gpt-4o-mini",
+        temperature: 0.7,
+        max_tokens: 50,
+    });
+
+    const completionResponse = completionCheck.choices[0].message.content;
+
+    // Determine if the lesson is completed based on OpenAI's response
+    const lessonCompleted = completionResponse!.trim().toLowerCase() === "yes";
+
+    // Return the response, used vocabulary, and whether the lesson is completed
     return NextResponse.json({
-        response: response,
+        response: responseContent ?? "", // Ensure content is not null
         usedVocabulary,
-        conversation: [
-            ...conversationHistory,
-            { role: "user", content: input },
-            { role: "assistant", content: response },
-        ],
+        lessonCompleted,
+        conversation: updatedConversation,
     });
 }

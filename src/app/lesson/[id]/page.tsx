@@ -34,7 +34,7 @@ const LessonPage = () => {
         <div>
           <h1 className="text-4xl font-bold mb-10">Lesson not found</h1>
           <button
-            className="px-4 py-2 bg-white text-purple-700 rounded hover:bg-gray-100 transition"
+            className="px-4 py-2 bg-indigo-500 text-white rounded hover:bg-gray-100 transition"
             onClick={() => router.push("/lessons")}
           >
             Back to Lessons
@@ -54,7 +54,7 @@ const LessonPage = () => {
           <Chatbot />
 
           <button
-            className="mt-6 px-4 py-2 bg-white text-purple-700 rounded hover:bg-gray-100 transition"
+            className="mt-6 px-4 py-2 bg-indigo-500 text-white font-semibold rounded hover:bg-gray-100 transition"
             onClick={() => router.push("/lessons")}
           >
             Back to Lessons
