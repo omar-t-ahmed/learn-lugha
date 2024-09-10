@@ -941,3 +941,137 @@ export const lessons = {
         vocabulary: [],
     },
 };
+
+
+export const chapters = [
+    {
+      chapter: 1,
+      lessons: [
+        lessons.lesson_1,
+        lessons.lesson_2,
+        lessons.lesson_3,
+        lessons.lesson_4,
+        lessons.lesson_5,
+      ],
+    },
+    {
+      chapter: 2,
+      lessons: [
+        lessons.lesson_6,
+        lessons.lesson_7,
+        lessons.lesson_8,
+        lessons.lesson_9,
+        lessons.lesson_10,
+      ],
+    },
+    {
+      chapter: 3,
+      lessons: [
+        lessons.lesson_11,
+        lessons.lesson_12,
+        lessons.lesson_13,
+        lessons.lesson_14,
+        lessons.lesson_15,
+      ],
+    },
+    {
+      chapter: 4,
+      lessons: [
+        lessons.lesson_16,
+        lessons.lesson_17,
+        lessons.lesson_18,
+        lessons.lesson_19,
+        lessons.lesson_20,
+      ],
+    },
+    {
+      chapter: 5,
+      lessons: [
+        lessons.lesson_21,
+        lessons.lesson_22,
+        lessons.lesson_23,
+        lessons.lesson_24,
+        lessons.lesson_25,
+      ],
+    },
+    {
+      chapter: 6,
+      lessons: [
+        lessons.lesson_26,
+        lessons.lesson_27,
+        lessons.lesson_28,
+        lessons.lesson_29,
+        lessons.lesson_30,
+      ],
+    },
+    {
+      chapter: 7,
+      lessons: [
+        lessons.lesson_31,
+        lessons.lesson_32,
+        lessons.lesson_33,
+        lessons.lesson_34,
+        lessons.lesson_35,
+      ],
+    },
+    {
+      chapter: 8,
+      lessons: [
+        lessons.lesson_36,
+        lessons.lesson_37,
+        lessons.lesson_38,
+        lessons.lesson_39,
+        lessons.lesson_40,
+      ],
+    },
+    {
+      chapter: 9,
+      lessons: [
+        lessons.lesson_41,
+        lessons.lesson_42,
+        lessons.lesson_43,
+        lessons.lesson_44,
+        lessons.lesson_45,
+      ],
+    },
+    {
+      chapter: 10,
+      lessons: [
+        lessons.lesson_46,
+        lessons.lesson_47,
+        lessons.lesson_48,
+        lessons.lesson_49,
+        lessons.lesson_50,
+      ],
+    },
+    {
+      chapter: 11,
+      lessons: [
+        lessons.lesson_51,
+        lessons.lesson_52,
+        lessons.lesson_53,
+        lessons.lesson_54,
+        lessons.lesson_55,
+      ],
+    },
+    {
+      chapter: 12,
+      lessons: [
+        lessons.lesson_56,
+        lessons.lesson_57,
+        lessons.lesson_58,
+        lessons.lesson_59,
+        lessons.lesson_60,
+      ],
+    },
+    {
+      chapter: 13,
+      lessons: [
+        lessons.lesson_61,
+        lessons.lesson_62,
+        lessons.lesson_63,
+        lessons.lesson_64,
+        lessons.lesson_65,
+      ],
+    },
+  ];

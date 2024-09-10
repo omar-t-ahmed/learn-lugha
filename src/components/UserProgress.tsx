@@ -40,8 +40,8 @@ const UserProgress: React.FC<UserProgressProps> = ({ maxLevel }) => {
   const percentage = (progress / maxLevel) * 100;
 
   return (
-    <div className="p-4 bg-gray-900 text-white">
-      <h2 className="text-2xl font-bold mb-4">Your Progress</h2>
+    <div className="p-4 rounded-md bg-gradient-to-tr from-gray-900 to-slate-600 text-white">
+      <h2 className="text-2xl text-center font-bold mb-4">Level</h2>
       <div className="w-full bg-gray-300 rounded-full h-6">
         <div
           className="bg-green-500 h-6 rounded-full transition-all duration-500"

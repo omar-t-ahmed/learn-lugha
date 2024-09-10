@@ -1,47 +1,33 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import UserProgress from "@/components/UserProgress";
-import { getCurrentUserToken } from '@/firebase'; // Import the token function
-
-interface Lesson {
-  id: number;
-  title: string;
-  completed: boolean;
-}
-
-const lessons: Lesson[] = [
-  { id: 1, title: "Lesson 1", completed: false },
-  { id: 2, title: "Lesson 2", completed: false },
-  { id: 3, title: "Lesson 3", completed: false },
-  { id: 4, title: "Lesson 4", completed: false },
-  { id: 5, title: "Lesson 5", completed: false },
-  { id: 6, title: "Lesson 6", completed: false },
-  { id: 7, title: "Lesson 7", completed: false },
-  { id: 8, title: "Lesson 8", completed: false },
-];
+import { getCurrentUserToken } from "@/firebase";
+import { chapters } from "@/lib/lessons"; // Assuming chapters come from the lessons library
 
 export default function LessonPath() {
   const router = useRouter();
-  const [userToken, setUserToken] = useState<string | null>(null); // Store the user's token
-  const [userProgress, setUserProgress] = useState<number>(0); // Track user progress
-  const [selectedLesson, setSelectedLesson] = useState<Lesson & { isUnlocked: boolean } | null>(null);
+  const [userToken, setUserToken] = useState<string | null>(null);
+  const [userLessons, setUserLessons] = useState<number[]>([]);
+  const [selectedLesson, setSelectedLesson] = useState<any | null>(null);
   const [dialogPosition, setDialogPosition] = useState<{ top: number; left: number } | null>(null);
 
-  // Fetch user token and progress when the component mounts
+  // Define a set of colors for the chapter titles
+  const chapterColors = ["bg-indigo-500", "bg-blue-500", "bg-green-500", "bg-cyan-500", "bg-red-500", "bg-yellow-500", "bg-pink-500"];
+
   useEffect(() => {
     const fetchTokenAndProgress = async () => {
       try {
-        const token = await getCurrentUserToken(); // Fetch the token
+        const token = await getCurrentUserToken();
         if (!token) {
-          router.push("/login"); // Redirect to login if no token
+          router.push("/login");
           return;
         }
         setUserToken(token);
 
-        // Fetch user progress from API
-        const response = await fetch("/api/progress", {
+        const response = await fetch("/api/user/lessons", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -50,21 +36,27 @@ export default function LessonPath() {
         });
 
         const data = await response.json();
-        setUserProgress(data.level || 0); // Set progress based on response
+        setUserLessons(data.lessons || []);
       } catch (error) {
-        console.error("Error fetching progress:", error);
+        console.error("Error fetching user lessons:", error);
       }
     };
 
     fetchTokenAndProgress();
   }, [router]);
 
-  const handleClick = (event: React.MouseEvent, lesson: Lesson, isUnlocked: boolean) => {
+  const handleClick = (event: React.MouseEvent, lesson: any, isUnlocked: boolean, lessonIndex: number) => {
+    if (!isUnlocked) return;
+
     const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
     const top = rect.bottom + window.scrollY;
-    const left = rect.left + window.scrollX + rect.width / 2;
+    const isOdd = lessonIndex % 2 === 0; // Use lessonIndex % 2 to determine left or right positioning
+
+    // Position the dialog to the left for odd lessons and right for even lessons
+    const left = isOdd ? rect.left - 250 : rect.right + 20; // Adjust for left or right
+
     setDialogPosition({ top, left });
-    setSelectedLesson({ ...lesson, isUnlocked });
+    setSelectedLesson({ ...lesson, lessonIndex, isUnlocked });
   };
 
   const handleClose = () => {
@@ -72,45 +64,123 @@ export default function LessonPath() {
     setDialogPosition(null);
   };
 
-  const navigateToLesson = (lessonId: number) => {
-    router.push(`/lesson/${lessonId}`);
+  const navigateToLesson = (lessonIndex: number) => {
+    router.push(`/lesson/${lessonIndex + 1}`);
   };
 
   if (!userToken) {
-    return null; // Render nothing while checking the token
+    return null;
   }
 
   return (
-    <div className="bg-gradient-to-br from-gray-900 to-black min-h-screen text-white">
+    <div className="bg-gradient-to-br from-gray-900 to-black min-h-screen text-white flex relative">
+      {/* Sidebar */}
       <Sidebar />
-      <div className="md:ml-64 p-5 md:p-10 flex flex-col items-center">
+
+      {/* Progress Bar on Top Right */}
+      <div className="absolute top-5 right-5 z-20">
+        {/* <UserProgress maxLevel={chapters.length * 5} /> */}
+      </div>
+
+      {/* Main content */}
+      <div className="flex-grow p-5 md:p-10 flex flex-col items-center relative">
         <h1 className="text-2xl md:text-3xl font-bold mb-5 md:mb-10">Lessons</h1>
-        <UserProgress maxLevel={8} /> {/* Pass max level for user progress */}
-        <div className="relative flex flex-col items-center w-full max-w-2xl">
-          {lessons.map((lesson, index) => {
-            const isUnlocked = index === 0 || lessons[index - 1].completed;
-            const lessonStatus = lesson.completed
-              ? "bg-green-500 border-green-700"
-              : isUnlocked
-              ? "bg-yellow-500 border-yellow-700"
-              : "bg-gray-600 border-gray-700";
+        <div className="relative w-full flex flex-col space-y-16 items-center">
+          {chapters.map((chapter, chapterIndex) => {
+            // Select a color for the chapter title by cycling through the color array
+            const chapterColor = chapterColors[chapterIndex % chapterColors.length];
 
             return (
-              <div
-                key={lesson.id}
-                className={`relative flex items-center mb-10 md:mb-20 ${
-                  index % 2 === 0 ? "md:self-start md:ml-16" : "md:self-end md:mr-16"
-                } justify-center md:justify-${index % 2 === 0 ? 'start' : 'end'}`}
-              >
-                <div
-                  className={`relative flex items-center justify-center w-12 h-12 md:w-16 md:h-16 rounded-full border-4 transition-transform duration-200 transform hover:scale-110 cursor-pointer ${lessonStatus}`}
+              <div key={chapterIndex} className="w-full flex flex-col items-center relative z-10">
+                <h2
+                  className={`p-4 rounded-md text-2xl w-1/2 font-bold mb-10 text-center ${chapterColor}`}
                 >
-                  <span className="text-white text-lg md:text-xl font-bold">{lesson.id}</span>
+                  Chapter {chapter.chapter}
+                </h2>
+                <div className="flex flex-col space-y-16 items-center">
+                  {chapter.lessons.map((lesson, lessonIndex) => {
+                    const isCompleted = userLessons.includes(lessonIndex);
+                    const isUnlocked =
+                      chapterIndex === 0
+                        ? lessonIndex === 0 || userLessons.includes(lessonIndex - 1)
+                        : chapters[chapterIndex - 1].lessons.every(
+                            (_, prevLessonIndex) => userLessons.includes(prevLessonIndex)
+                          );
+
+                    const lessonStatus = isCompleted
+                      ? "bg-green-500 border-green-700"
+                      : isUnlocked
+                      ? "bg-yellow-500 border-yellow-700"
+                      : "bg-gray-600 border-gray-700";
+
+                    // Alternate between right-side moving and left staying in place for the squiggle
+                    const isRight = lessonIndex % 2 !== 0;
+
+                    return (
+                      <div
+                        key={lessonIndex}
+                        className={`relative flex flex-col items-center cursor-pointer transition-all transform hover:scale-105 ${
+                          isRight ? "translate-x-16" : ""
+                        } ${!isUnlocked ? "opacity-50 cursor-not-allowed" : ""}`}
+                        onClick={(e) => handleClick(e, lesson, isUnlocked, lessonIndex)}
+                      >
+                        <div
+                          className={`relative flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full border-4 transition-transform duration-200 transform ${lessonStatus}`}
+                        >
+                          <span className="text-white text-lg md:text-xl font-bold">{lessonIndex + 1}</span>
+                        </div>
+                        <p className="text-center text-white mt-2">{lesson.title}</p>
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
             );
           })}
         </div>
+
+        {/* Selected lesson dialog */}
+        {selectedLesson && dialogPosition && (
+          <div
+            className={`absolute z-50 p-4 rounded-lg text-white w-64 ${
+              selectedLesson.isCompleted ? "bg-green-500" : selectedLesson.isUnlocked ? "bg-yellow-500" : "bg-gray-600"
+            }`}
+            style={{
+              top: `${dialogPosition.top - 120}px`,
+              left: `${dialogPosition.left - 30}px`,
+            }}
+          >
+            <button
+              onClick={handleClose}
+              className="absolute top-0 right-2 text-lg font-bold"
+            >
+              &times;
+            </button>
+
+            <h2 className="text-lg font-bold mb-2">{selectedLesson.title}</h2>
+            <p className="text-sm mb-4">
+              {selectedLesson.isCompleted ? "This lesson is completed." : "This lesson is unlocked."}
+            </p>
+
+            {selectedLesson.isUnlocked && !selectedLesson.isCompleted && (
+              <button
+                className="px-4 py-1 bg-white text-yellow-700 rounded hover:bg-gray-100 transition w-full"
+                onClick={() => navigateToLesson(selectedLesson.lessonIndex)}
+              >
+                Start Lesson
+              </button>
+            )}
+
+            {selectedLesson.isCompleted && (
+              <button
+                className="px-4 py-1 bg-white text-green-700 rounded hover:bg-gray-100 transition w-full"
+                onClick={() => navigateToLesson(selectedLesson.lessonIndex)}
+              >
+                Go to Lesson
+              </button>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );
