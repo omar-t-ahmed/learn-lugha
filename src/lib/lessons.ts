@@ -1,4 +1,16 @@
-export const lessons = {
+export type VocabularyItem = {
+    arabic: string;
+    english: string;
+    type: "pronoun" | "phrase" | "question" | "greeting" | "farewell" | "command" | "verb" | "noun";
+};
+
+export type LessonType = {
+    title: string;
+    objectives: string[];
+    vocabulary: VocabularyItem[];
+};
+
+export const lessons: Record<string, LessonType> = {
     lesson_1: {
         title: "Introductions and Greetings",
         objectives: [
@@ -2975,3 +2987,59 @@ export const lessons = {
         vocabulary: [],
     },
 };
+
+
+export const chapters = [
+    {
+      chapter: 1,
+      lessons: ["lesson_1", "lesson_2", "lesson_3", "lesson_4", "lesson_5"], // Array of lesson keys
+    },
+    {
+      chapter: 2,
+      lessons: ["lesson_6", "lesson_7", "lesson_8", "lesson_9", "lesson_10"],
+    },
+    {
+      chapter: 3,
+      lessons: ["lesson_11", "lesson_12", "lesson_13", "lesson_14", "lesson_15"],
+    },
+    {
+      chapter: 4,
+      lessons: ["lesson_16", "lesson_17", "lesson_18", "lesson_19", "lesson_20"],
+    },
+    {
+      chapter: 5,
+      lessons: ["lesson_21", "lesson_22", "lesson_23", "lesson_24", "lesson_25"],
+    },
+    {
+      chapter: 6,
+      lessons: ["lesson_26", "lesson_27", "lesson_28", "lesson_29", "lesson_30"],
+    },
+    {
+      chapter: 7,
+      lessons: ["lesson_31", "lesson_32", "lesson_33", "lesson_34", "lesson_35"],
+    },
+    {
+      chapter: 8,
+      lessons: ["lesson_36", "lesson_37", "lesson_38", "lesson_39", "lesson_40"],
+    },
+    {
+      chapter: 9,
+      lessons: ["lesson_41", "lesson_42", "lesson_43", "lesson_44", "lesson_45"],
+    },
+    {
+      chapter: 10,
+      lessons: ["lesson_46", "lesson_47", "lesson_48", "lesson_49", "lesson_50"],
+    },
+    {
+      chapter: 11,
+      lessons: ["lesson_51", "lesson_52", "lesson_53", "lesson_54", "lesson_55"],
+    },
+    {
+      chapter: 12,
+      lessons: ["lesson_56", "lesson_57", "lesson_58", "lesson_59", "lesson_60"],
+    },
+    {
+      chapter: 13,
+      lessons: ["lesson_61", "lesson_62", "lesson_63", "lesson_64", "lesson_65"],
+    },
+  ];

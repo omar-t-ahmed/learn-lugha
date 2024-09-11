@@ -49,7 +49,7 @@ export default function SignUp() {
       });
 
       if (response.ok) {
-        router.push("/lessons");
+        router.push("/home");
       } else {
         setError("Failed to create user in database.");
       }
@@ -75,7 +75,7 @@ export default function SignUp() {
       });
 
       if (response.ok) {
-        router.push("/lessons");
+        router.push("/home");
       } else {
         setError("Failed to create user in database");
       }

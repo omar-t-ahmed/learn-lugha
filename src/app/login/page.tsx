@@ -23,7 +23,7 @@ export default function Login() {
         setError(null);
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            router.push("/lessons");
+            router.push("/home");
         } catch (error: any) {
             if (error.code === "auth/invalid-email") {
                 setError("Invalid email address.");
@@ -50,7 +50,7 @@ export default function Login() {
                 .catch((error) => {
                     console.error("Error getting ID token:", error);
                 });
-            router.push("/lessons");
+            router.push("/home");
         } catch (error: any) {
             setError("Failed to sign in with Google.");
         }

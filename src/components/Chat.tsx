@@ -3,78 +3,24 @@
 import React, { useState, useRef, useEffect } from "react";
 import "@fortawesome/fontawesome-free/css/all.min.css";
 import Image from "next/image";
+import Confetti from "react-confetti";
+import { getCurrentUserToken } from "@/firebase";
 
 // Define your lesson here
-const lesson = {
-    lesson: "Introductions and Greetings",
-    objectives: [
-        "Learn how to greet others in Arabic",
-        "Introduce yourself and ask for someone's name",
-        "Learn basic pronouns and polite phrases",
-    ],
-    vocabulary: [
-        {
-            arabic: "انا",
-            english: "I am",
-            type: "pronoun",
-        },
-        {
-            arabic: "اسمي",
-            english: "My name is",
-            type: "phrase",
-        },
-        {
-            arabic: "ما اسمك؟",
-            english: "What is your name? (m)",
-            type: "question",
-        },
-        {
-            arabic: "من اين انت؟",
-            english: "Where are you from? (m)",
-            type: "question",
-        },
-        {
-            arabic: "كيف حالك؟",
-            english: "How are you? (m)",
-            type: "question",
-        },
-        {
-            arabic: "بخير",
-            english: "I am fine",
-            type: "phrase",
-        },
-        {
-            arabic: "الحمد لله",
-            english: "Praise be to Allah",
-            type: "expression",
-        },
-        {
-            arabic: "شكراً",
-            english: "Thank you",
-            type: "expression",
-        },
-        {
-            arabic: "وعليكم السلام",
-            english: "And upon you be peace",
-            type: "greeting",
-        },
-        {
-            arabic: "مع السلامة",
-            english: "With peace (Goodbye)",
-            type: "farewell",
-        },
-        {
-            arabic: "انا من",
-            english: "I am from",
-            type: "phrase",
-        },
-    ],
-};
+interface ChatbotProps {
+    user: any;
+    lesson: {
+      lesson_id: number;
+      title: string;
+      objectives: string[];
+      vocabulary: { arabic: string; english: string; type: string; }[];
+    };
+  }
 
 const userProfilePic = "/arabic-user.png"; // Path relative to the public directory
 const botProfilePic = "/arabic-teacher-male.png"; // Path relative to the public directory
 
-const Chatbot: React.FC = () => {
+const Chatbot: React.FC<ChatbotProps> = ({ user, lesson }) => {
     // const [messages, setMessages] = useState<{ text: string; isUser: boolean; translation?: string }[]>([]);
     const [messages, setMessages] = useState<
         {
@@ -103,6 +49,8 @@ const Chatbot: React.FC = () => {
     }>({}); // Track whether to show translation
     const messageRefs = useRef<{ [key: number]: HTMLDivElement | null }>({});
     const messageEndRef = useRef<HTMLDivElement | null>(null);
+    const [modalOpen, setModalOpen] = useState(false);
+    const [confetti, setConfetti] = useState(false)
 
     const scrollToBottom = () => {
         if (messageEndRef.current) {
@@ -297,10 +245,11 @@ const Chatbot: React.FC = () => {
   
 
     const handleBotResponse = async (userInput: string, conversation: { content: string; isUser: boolean; role: string }[]) => {
+      if (lessonCompleted) return;
+
         try {
-          console.log("handleBotResponse Called")
             setIsThinking(true);
-            console.log(JSON.stringify(conversation));
+
             const response = await fetch("/api/openai", {
                 method: "POST",
                 headers: {
@@ -319,7 +268,48 @@ const Chatbot: React.FC = () => {
 
             const data = await response.json();
             const botResponse = data.response;
-            const newUsedVocab = data.usedVocabulary;
+
+            if (data.lessonCompleted) {
+              setLessonCompleted(true)
+              setConfetti(true)
+
+              // Get the user token
+              const token = await getCurrentUserToken();
+
+              // Send PATCH request to update user's lessons
+              await fetch("/api/users", {
+                method: "PATCH",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${token}`, // Include the token in the headers
+                },
+                body: JSON.stringify({
+                  lessons: [...user.lessons, lesson.lesson_id],
+                }),
+              });
+
+              console.log(user)
+              // Send POST request to create a new transcript
+              
+              await fetch("/api/transcripts", {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  "Authorization": `Bearer ${token}`, // Include the token in the headers
+                },
+                body: JSON.stringify({
+                  content: conversation.map(msg => msg.content).join(" "),
+                  userId: user.id, // Pass the userId here
+                  lessonId: lesson.lesson_id,
+                }),
+              });
+
+              setTimeout(() => {
+                setConfetti(false);
+              }, 5000);
+
+              return;
+            }
 
             setMessages((prevMessages) => [
                 ...prevMessages,
@@ -353,9 +343,29 @@ const Chatbot: React.FC = () => {
         return usedVocabulary.includes(arabicWord);
     };
 
+    const closeModal = () => {
+      setModalOpen(false);
+  };
+
     return (
         <div className="relative min-h-screen flex flex-col justify-center items-center p-4 w-full max-w-screen-xl mx-auto">
             {/* Teacher Profile Picture */}
+            {confetti && <Confetti />}
+            {modalOpen && (
+                <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
+                    <div className="bg-white p-6 rounded shadow-lg max-w-sm w-full text-center">
+                        <h2 className="text-xl font-bold text-green-500 mb-4">Congratulations!</h2>
+                        <p>You have completed the lesson!</p>
+                        <button
+                            className="bg-blue-500 text-white px-4 py-2 mt-4 rounded hover:bg-blue-600"
+                            onClick={closeModal}
+                        >
+                            Close
+                        </button>
+                    </div>
+                </div>
+            )}
+            
             <div className="absolute -left-8 sm:left-1 top-24 sm:top-20 transform sm:-translate-y-1/8">
                 <img
                     src={botProfilePic}
@@ -509,9 +519,15 @@ const Chatbot: React.FC = () => {
                 </div>
             )}
 
+            {lessonCompleted && (
+                <div className="mt-6 text-green-500 text-xl">
+                    <p>Congratulations! You&apos;ve completed the lesson!</p>
+                </div>
+            )}
+
             {/* Vocabulary Progress */}
             <div className="w-full max-w-3xl mt-6">
-                <h3 className="text-xl font-semibold">Vocabulary Progress</h3>
+                <h3 className="text-xl font-semibold">Vocabulary</h3>
                 <ul className="list-disc list-inside mt-4">
                     {lesson.vocabulary.map((vocab, index) => (
                         <li key={index} className="mb-2">
@@ -532,12 +548,6 @@ const Chatbot: React.FC = () => {
                     ))}
                 </ul>
             </div>
-
-            {lessonCompleted && (
-                <div className="mt-6 text-green-500 text-xl">
-                    <p>Congratulations! You&apos;ve completed the lesson!</p>
-                </div>
-            )}
         </div>
     );
 };
