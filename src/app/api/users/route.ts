@@ -44,7 +44,6 @@ export async function GET(req: Request) {
     const user = await prisma.user.findUnique({
       where: { email: verified.email },
       include: {
-        lessons: true,
         achievements: true,
         transcripts: true,
         progress: true,
@@ -75,7 +74,7 @@ export async function PATCH(req: Request) {
     }
 
     const verified = await verifyToken(token);
-    const { email, name, username } = await req.json();
+    const { email, name, username, gender, lessons, achievements, progress, transcripts } = await req.json(); // Include all fields
 
     const updatedUser = await prisma.user.update({
       where: { email: verified.email },
@@ -83,6 +82,11 @@ export async function PATCH(req: Request) {
         email,
         name,
         username,
+        gender,
+        lessons,
+        achievements,
+        progress,
+        transcripts,
       },
     });
 

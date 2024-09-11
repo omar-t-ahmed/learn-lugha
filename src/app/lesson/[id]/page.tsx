@@ -11,13 +11,14 @@ const LessonPage = () => {
   const params = useParams();
   const router = useRouter();
   const [userToken, setUserToken] = useState<string | null>(null);
+  const [user, setUser] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
 
   const id = Number(params.id);
   const lessonKey = `lesson_${id}` as keyof typeof lessons;
   const lesson = lessons[lessonKey];
 
-  // Fetch user authentication token
+  // Fetch user authentication token and user details
   useEffect(() => {
     const checkUserAuth = async () => {
       try {
@@ -26,7 +27,22 @@ const LessonPage = () => {
           router.push("/login"); // Redirect to login if not authenticated
         } else {
           setUserToken(token);
-          setLoading(false); // User is authenticated, stop loading
+
+          const response = await fetch("/api/users", {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`, // Pass the token
+            },
+          });
+
+          if (response.ok) {
+            const userData = await response.json();
+            setUser(userData);
+            setLoading(false); // User is authenticated and data fetched, stop loading
+          } else {
+            router.push("/login"); // Redirect to login if response is not ok
+          }
         }
       } catch (error) {
         console.error("Error checking user authentication:", error);
@@ -69,8 +85,8 @@ const LessonPage = () => {
       <div className="relative flex flex-col items-center justify-start p-10">
         <h1 className="text-4xl font-bold mb-4">{lesson.title}</h1>
         {/* <p className="text-lg mb-6">{lesson.content}</p> */}
-        {/* Include the Chatbot under the lesson heading */}
-        <Chatbot />
+        {/* Include the Chatbot under the lesson heading and pass user and lesson */}
+        <Chatbot user={user} lesson={{ ...lesson, lesson_id: id }} />
         <button
           className="mt-6 px-4 py-2 bg-indigo-500 text-white font-semibold rounded hover:bg-gray-100 transition"
           onClick={() => router.push("/home")}

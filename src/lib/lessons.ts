@@ -1,4 +1,16 @@
-export const lessons = {
+export type VocabularyItem = {
+    arabic: string;
+    english: string;
+    type: "pronoun" | "phrase" | "question" | "greeting" | "farewell" | "command" | "verb" | "noun";
+};
+
+export type LessonType = {
+    title: string;
+    objectives: string[];
+    vocabulary: VocabularyItem[];
+};
+
+export const lessons: Record<string, LessonType> = {
     lesson_1: {
         title: "Introductions and Greetings",
         objectives: [
@@ -946,132 +958,54 @@ export const lessons = {
 export const chapters = [
     {
       chapter: 1,
-      lessons: [
-        lessons.lesson_1,
-        lessons.lesson_2,
-        lessons.lesson_3,
-        lessons.lesson_4,
-        lessons.lesson_5,
-      ],
+      lessons: ["lesson_1", "lesson_2", "lesson_3", "lesson_4", "lesson_5"], // Array of lesson keys
     },
     {
       chapter: 2,
-      lessons: [
-        lessons.lesson_6,
-        lessons.lesson_7,
-        lessons.lesson_8,
-        lessons.lesson_9,
-        lessons.lesson_10,
-      ],
+      lessons: ["lesson_6", "lesson_7", "lesson_8", "lesson_9", "lesson_10"],
     },
     {
       chapter: 3,
-      lessons: [
-        lessons.lesson_11,
-        lessons.lesson_12,
-        lessons.lesson_13,
-        lessons.lesson_14,
-        lessons.lesson_15,
-      ],
+      lessons: ["lesson_11", "lesson_12", "lesson_13", "lesson_14", "lesson_15"],
     },
     {
       chapter: 4,
-      lessons: [
-        lessons.lesson_16,
-        lessons.lesson_17,
-        lessons.lesson_18,
-        lessons.lesson_19,
-        lessons.lesson_20,
-      ],
+      lessons: ["lesson_16", "lesson_17", "lesson_18", "lesson_19", "lesson_20"],
     },
     {
       chapter: 5,
-      lessons: [
-        lessons.lesson_21,
-        lessons.lesson_22,
-        lessons.lesson_23,
-        lessons.lesson_24,
-        lessons.lesson_25,
-      ],
+      lessons: ["lesson_21", "lesson_22", "lesson_23", "lesson_24", "lesson_25"],
     },
     {
       chapter: 6,
-      lessons: [
-        lessons.lesson_26,
-        lessons.lesson_27,
-        lessons.lesson_28,
-        lessons.lesson_29,
-        lessons.lesson_30,
-      ],
+      lessons: ["lesson_26", "lesson_27", "lesson_28", "lesson_29", "lesson_30"],
     },
     {
       chapter: 7,
-      lessons: [
-        lessons.lesson_31,
-        lessons.lesson_32,
-        lessons.lesson_33,
-        lessons.lesson_34,
-        lessons.lesson_35,
-      ],
+      lessons: ["lesson_31", "lesson_32", "lesson_33", "lesson_34", "lesson_35"],
     },
     {
       chapter: 8,
-      lessons: [
-        lessons.lesson_36,
-        lessons.lesson_37,
-        lessons.lesson_38,
-        lessons.lesson_39,
-        lessons.lesson_40,
-      ],
+      lessons: ["lesson_36", "lesson_37", "lesson_38", "lesson_39", "lesson_40"],
     },
     {
       chapter: 9,
-      lessons: [
-        lessons.lesson_41,
-        lessons.lesson_42,
-        lessons.lesson_43,
-        lessons.lesson_44,
-        lessons.lesson_45,
-      ],
+      lessons: ["lesson_41", "lesson_42", "lesson_43", "lesson_44", "lesson_45"],
     },
     {
       chapter: 10,
-      lessons: [
-        lessons.lesson_46,
-        lessons.lesson_47,
-        lessons.lesson_48,
-        lessons.lesson_49,
-        lessons.lesson_50,
-      ],
+      lessons: ["lesson_46", "lesson_47", "lesson_48", "lesson_49", "lesson_50"],
     },
     {
       chapter: 11,
-      lessons: [
-        lessons.lesson_51,
-        lessons.lesson_52,
-        lessons.lesson_53,
-        lessons.lesson_54,
-        lessons.lesson_55,
-      ],
+      lessons: ["lesson_51", "lesson_52", "lesson_53", "lesson_54", "lesson_55"],
     },
     {
       chapter: 12,
-      lessons: [
-        lessons.lesson_56,
-        lessons.lesson_57,
-        lessons.lesson_58,
-        lessons.lesson_59,
-        lessons.lesson_60,
-      ],
+      lessons: ["lesson_56", "lesson_57", "lesson_58", "lesson_59", "lesson_60"],
     },
     {
       chapter: 13,
-      lessons: [
-        lessons.lesson_61,
-        lessons.lesson_62,
-        lessons.lesson_63,
-        lessons.lesson_64,
-        lessons.lesson_65,
-      ],
+      lessons: ["lesson_61", "lesson_62", "lesson_63", "lesson_64", "lesson_65"],
     },
   ];

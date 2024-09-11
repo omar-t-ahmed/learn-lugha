@@ -5,12 +5,16 @@ import { useRouter } from "next/navigation";
 import Sidebar from "@/components/Sidebar";
 import UserProgress from "@/components/UserProgress";
 import { getCurrentUserToken } from "@/firebase";
-import { chapters } from "@/lib/lessons"; // Assuming chapters come from the lessons library
+import { chapters, lessons, LessonType } from "@/lib/lessons"; // Import chapters and lessons from lessons.ts
+
+type UserType = {
+  lessons: number[]; // Change to number[]
+};
 
 export default function LessonPath() {
   const router = useRouter();
   const [userToken, setUserToken] = useState<string | null>(null);
-  const [userLessons, setUserLessons] = useState<number[]>([]);
+  const [userLessons, setUserLessons] = useState<number[]>([]); // Change to number[]
   const [selectedLesson, setSelectedLesson] = useState<any | null>(null);
   const [dialogPosition, setDialogPosition] = useState<{ top: number; left: number } | null>(null);
 
@@ -26,17 +30,11 @@ export default function LessonPath() {
           return;
         }
         setUserToken(token);
-
-        const response = await fetch("/api/user/lessons", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Pass the token
-          },
-        });
-
-        const data = await response.json();
-        setUserLessons(data.lessons || []);
+        
+        // Fetch user lessons progress here and set it
+        const user: UserType = await fetchUser(token); // Replace with your actual fetch function
+        setUserLessons(user.lessons);
+        
       } catch (error) {
         console.error("Error fetching user lessons:", error);
       }
@@ -45,18 +43,31 @@ export default function LessonPath() {
     fetchTokenAndProgress();
   }, [router]);
 
-  const handleClick = (event: React.MouseEvent, lesson: any, isUnlocked: boolean, lessonIndex: number) => {
+  const fetchUser = async (token: string): Promise<UserType> => {
+    // Replace with your actual fetch logic
+    // Example:
+    const response = await fetch('/api/users', {
+      headers: {
+        'Authorization': `Bearer ${token}`
+      }
+    });
+    const data = await response.json();
+    return data;
+  };
+
+  const handleClick = (event: React.MouseEvent, lesson: LessonType, isUnlocked: boolean, lessonKey: string) => {
     if (!isUnlocked) return;
 
     const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
     const top = rect.bottom + window.scrollY;
-    const isOdd = lessonIndex % 2 === 0; // Use lessonIndex % 2 to determine left or right positioning
+    const lessonNumber = parseInt(lessonKey.split('lesson_')[1], 10);
+    const isOdd = lessonNumber % 2 === 0; // Use lessonNumber % 2 to determine left or right positioning
 
     // Position the dialog to the left for odd lessons and right for even lessons
     const left = isOdd ? rect.left - 250 : rect.right + 20; // Adjust for left or right
 
     setDialogPosition({ top, left });
-    setSelectedLesson({ ...lesson, lessonIndex, isUnlocked });
+    setSelectedLesson({ ...lesson, lessonKey, isUnlocked });
   };
 
   const handleClose = () => {
@@ -64,13 +75,15 @@ export default function LessonPath() {
     setDialogPosition(null);
   };
 
-  const navigateToLesson = (lessonIndex: number) => {
-    router.push(`/lesson/${lessonIndex + 1}`);
+  const navigateToLesson = (lessonKey: string) => {
+    router.push(`/lesson/${lessonKey.split('lesson_')[1]}`);
   };
 
   if (!userToken) {
     return null;
   }
+
+  let globalLessonIndex = 0; // Initialize a global lesson index
 
   return (
     <div className="bg-gradient-to-br from-gray-900 to-black min-h-screen text-white flex relative">
@@ -98,14 +111,17 @@ export default function LessonPath() {
                   Chapter {chapter.chapter}
                 </h2>
                 <div className="flex flex-col space-y-16 items-center">
-                  {chapter.lessons.map((lesson, lessonIndex) => {
-                    const isCompleted = userLessons.includes(lessonIndex);
-                    const isUnlocked =
-                      chapterIndex === 0
-                        ? lessonIndex === 0 || userLessons.includes(lessonIndex - 1)
-                        : chapters[chapterIndex - 1].lessons.every(
-                            (_, prevLessonIndex) => userLessons.includes(prevLessonIndex)
-                          );
+                  {chapter.lessons.map((lessonKey, lessonIndex) => {
+                    // Ensure lessonKey is a string
+                    const lesson = lessons[lessonKey as keyof typeof lessons];
+                    if (!lesson) {
+                      console.error(`Lesson not found for key: ${lessonKey}`);
+                      return null;
+                    }
+                    const lessonNumber = parseInt(lessonKey.split('lesson_')[1], 10);
+                    const isCompleted = userLessons.includes(lessonNumber);
+                    const lastCompletedLessonNumber = userLessons[userLessons.length - 1];
+                    const isUnlocked = isCompleted || (userLessons.length === 0 && globalLessonIndex === 0) || (globalLessonIndex === lastCompletedLessonNumber + 1);
 
                     const lessonStatus = isCompleted
                       ? "bg-green-500 border-green-700"
@@ -114,20 +130,22 @@ export default function LessonPath() {
                       : "bg-gray-600 border-gray-700";
 
                     // Alternate between right-side moving and left staying in place for the squiggle
-                    const isRight = lessonIndex % 2 !== 0;
+                    const isRight = globalLessonIndex % 2 !== 0;
+
+                    globalLessonIndex++; // Increment the global lesson index
 
                     return (
                       <div
-                        key={lessonIndex}
+                        key={lessonKey}
                         className={`relative flex flex-col items-center cursor-pointer transition-all transform hover:scale-105 ${
                           isRight ? "translate-x-16" : ""
                         } ${!isUnlocked ? "opacity-50 cursor-not-allowed" : ""}`}
-                        onClick={(e) => handleClick(e, lesson, isUnlocked, lessonIndex)}
+                        onClick={(e) => handleClick(e, lesson, isUnlocked, lessonKey)}
                       >
                         <div
                           className={`relative flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full border-4 transition-transform duration-200 transform ${lessonStatus}`}
                         >
-                          <span className="text-white text-lg md:text-xl font-bold">{lessonIndex + 1}</span>
+                          <span className="text-white text-lg md:text-xl font-bold">{lessonNumber}</span>
                         </div>
                         <p className="text-center text-white mt-2">{lesson.title}</p>
                       </div>
@@ -165,7 +183,7 @@ export default function LessonPath() {
             {selectedLesson.isUnlocked && !selectedLesson.isCompleted && (
               <button
                 className="px-4 py-1 bg-white text-yellow-700 rounded hover:bg-gray-100 transition w-full"
-                onClick={() => navigateToLesson(selectedLesson.lessonIndex)}
+                onClick={() => navigateToLesson(selectedLesson.lessonKey)}
               >
                 Start Lesson
               </button>
@@ -174,7 +192,7 @@ export default function LessonPath() {
             {selectedLesson.isCompleted && (
               <button
                 className="px-4 py-1 bg-white text-green-700 rounded hover:bg-gray-100 transition w-full"
-                onClick={() => navigateToLesson(selectedLesson.lessonIndex)}
+                onClick={() => navigateToLesson(selectedLesson.lessonKey)}
               >
                 Go to Lesson
               </button>
