@@ -1,7 +1,16 @@
 export type VocabularyItem = {
     arabic: string;
     english: string;
-    type: "pronoun" | "phrase" | "question" | "greeting" | "farewell" | "command" | "verb" | "noun";
+    type:
+        | "pronoun"
+        | "phrase"
+        | "question"
+        | "greeting"
+        | "farewell"
+        | "command"
+        | "verb"
+        | "noun"
+        | "adjective";
 };
 
 export type LessonType = {
@@ -2150,811 +2159,811 @@ export const lessons: Record<string, LessonType> = {
         title: "Sending Messages and Exploring",
         objectives: [
             "Learn how to talk about sending messages, departing, and exploring new places",
-            "Use vocabulary related to communicating and traveling"
+            "Use vocabulary related to communicating and traveling",
         ],
         vocabulary: [
             {
                 arabic: "يتفق",
                 english: "To agree",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يرسل",
                 english: "To send",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "ينطلق",
                 english: "To depart",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يبعث",
                 english: "To send",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يتجول",
                 english: "To wander, explore",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "رسالة",
                 english: "Message",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "قارة",
                 english: "Continent",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "سفينة",
                 english: "Ship",
-                type: "noun"
-            }
-        ]
+                type: "noun",
+            },
+        ],
     },
     lesson_46: {
         title: "Making, Producing, and Forces",
         objectives: [
             "Learn how to talk about making and producing things, as well as using force",
-            "Use vocabulary related to creating, rejecting, and owning"
+            "Use vocabulary related to creating, rejecting, and owning",
         ],
         vocabulary: [
             {
                 arabic: "يجعل",
                 english: "To make",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يرفض",
                 english: "To reject",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يصنع",
                 english: "To produce, make",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يطير",
                 english: "To fly",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يفرض",
                 english: "To compel, force",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يملك",
                 english: "To own",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يربط",
                 english: "To tie",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "جمل",
                 english: "Camel",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "فائدة",
                 english: "Benefit",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "حجة",
                 english: "Evidence, proof",
-                type: "noun"
-            }
-        ]
+                type: "noun",
+            },
+        ],
     },
     lesson_47: {
         title: "Daily Actions and Observations",
         objectives: [
             "Learn how to describe daily actions such as cleaning, noticing, and using items",
-            "Use vocabulary related to routine activities and hygiene"
+            "Use vocabulary related to routine activities and hygiene",
         ],
         vocabulary: [
             {
                 arabic: "أزال",
                 english: "To remove",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يستعمل",
                 english: "To use",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "اغتسل",
                 english: "To shower",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يمسح",
                 english: "To wipe",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يكتفي",
                 english: "To settle, be content with",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يضيف",
                 english: "To add",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "كأس",
                 english: "Cup, glass",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "جسد",
                 english: "Body",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "وجه",
                 english: "Face",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "عامل",
                 english: "Worker",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "بيئة",
                 english: "Environment",
-                type: "noun"
-            }
-        ]
+                type: "noun",
+            },
+        ],
     },
     lesson_48: {
         title: "Actions Related to Health and Measurement",
         objectives: [
             "Learn how to talk about measuring, repeating actions, and maintaining health",
-            "Use vocabulary related to health, measurement, and body parts"
+            "Use vocabulary related to health, measurement, and body parts",
         ],
         vocabulary: [
             {
                 arabic: "يتكرر",
                 english: "To repeat",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يقيس",
                 english: "To measure",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يتحرك",
                 english: "To move, explore",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يكتشف",
                 english: "To explore, discover",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "حيض",
                 english: "Menstruation, period",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "مرفق",
                 english: "Elbow",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "رجل",
                 english: "Leg",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "كعب",
                 english: "Ankle",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "متخلفون",
                 english: "Backward, underdeveloped",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "متحضر",
                 english: "Civilized",
-                type: "noun"
-            }
-        ]
+                type: "noun",
+            },
+        ],
     },
     lesson_49: {
         title: "Responsibility and Righteousness",
         objectives: [
             "Learn how to talk about personal responsibilities and accountability",
-            "Use vocabulary related to embracing values, submitting to principles, and acting righteously"
+            "Use vocabulary related to embracing values, submitting to principles, and acting righteously",
         ],
         vocabulary: [
             {
                 arabic: "أثبت",
                 english: "To prove, verify",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "أسلم",
                 english: "To embrace Islam",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "انقاد",
                 english: "To submit, surrender",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "تكفل",
                 english: "To take upon oneself",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يحاسب",
                 english: "To hold accountable",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يرحب",
                 english: "To welcome",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "ركن",
                 english: "Pillar",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "حقيقة",
                 english: "Fact",
-                type: "noun"
-            }
-        ]
+                type: "noun",
+            },
+        ],
     },
     lesson_50: {
         title: "Communication and Understanding",
         objectives: [
             "Learn how to communicate effectively and understand others",
-            "Use vocabulary related to sending messages, welcoming others, and understanding the world"
+            "Use vocabulary related to sending messages, welcoming others, and understanding the world",
         ],
         vocabulary: [
             {
                 arabic: "أرسل",
                 english: "To send",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "فهم",
                 english: "To understand",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "يسعد",
                 english: "To bring happiness",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "نسخ",
                 english: "To abrogate",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "فاسد",
                 english: "Corrupt",
-                type: "adjective"
+                type: "adjective",
             },
             {
                 arabic: "يخرج",
                 english: "To take out",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "نبي",
                 english: "Prophet",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "زمان",
                 english: "Time, era",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "رسول",
                 english: "Messenger",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "مفتاح",
                 english: "Key",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "مرسل",
                 english: "Sent, Messenger",
-                type: "noun"
-            }
-        ]
+                type: "noun",
+            },
+        ],
     },
     lesson_51: {
         title: "Respect and Treatment",
         objectives: [
             "Learn how to talk about respect, treatment, and dealing with different situations",
-            "Use vocabulary related to respecting, treating, and handling people or situations"
+            "Use vocabulary related to respecting, treating, and handling people or situations",
         ],
         vocabulary: [
             {
                 arabic: "احترم",
                 english: "To respect",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "اخبر",
                 english: "To inform",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "خالف",
                 english: "To be different, contrary to",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "اخطا",
                 english: "To be mistaken, wrong",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "عامل",
                 english: "To deal with, treat",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "مزق",
                 english: "To tear up, rip apart",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "تكلف",
                 english: "To require, ask someone to do (something)",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "تجربة",
                 english: "Experience",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "مسؤولية",
                 english: "Responsibility",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "حكمة",
                 english: "Wisdom",
-                type: "noun"
-            }
-        ]
+                type: "noun",
+            },
+        ],
     },
     lesson_52: {
         title: "Power and Authorization",
         objectives: [
             "Learn how to discuss power, authorization, and taking control",
-            "Use vocabulary related to empowerment, ruling, and forgetting"
+            "Use vocabulary related to empowerment, ruling, and forgetting",
         ],
         vocabulary: [
             {
                 arabic: "ولى",
                 english: "To empower, authorize, appoint as ruler",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "انتفع",
                 english: "To benefit",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "نسي",
                 english: "To forget",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "مهاجر",
                 english: "Migrant",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "مراهق",
                 english: "Teenager, adolescent",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "ثروة",
                 english: "Wealth, fortune",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "جيش",
                 english: "Army",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "موضوع",
                 english: "Subject",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "شيخ",
                 english: "Elder, Shaykh",
-                type: "noun"
-            }
-        ]
+                type: "noun",
+            },
+        ],
     },
     lesson_53: {
         title: "Unity and Occupation",
         objectives: [
             "Learn how to discuss unity, occupation, and seeking help",
-            "Use vocabulary related to uniting, occupying, and seeking assistance"
+            "Use vocabulary related to uniting, occupying, and seeking assistance",
         ],
         vocabulary: [
             {
                 arabic: "اتحد",
                 english: "To unite",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "احتل",
                 english: "To occupy, seize",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "استعان",
                 english: "To seek help",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "نازع",
                 english: "To dispute, argue",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "مناطق",
                 english: "Province",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "مرازق",
                 english: "Passageway",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "محيط",
                 english: "Ocean",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "عملة",
                 english: "Currency",
-                type: "noun"
-            }
-        ]
+                type: "noun",
+            },
+        ],
     },
     lesson_54: {
         title: "Incitement and Action",
         objectives: [
             "Learn how to talk about provoking, committing actions, and experiencing things",
-            "Use vocabulary related to incitement, commitment, and supporting actions"
+            "Use vocabulary related to incitement, commitment, and supporting actions",
         ],
         vocabulary: [
             {
                 arabic: "اثار",
                 english: "To provoke, incite, instigate",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "اخاف",
                 english: "To frighten",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "ارتكب",
                 english: "To commit",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "استقر",
                 english: "To be settled",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "اوقف",
                 english: "To stop",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "ايد",
                 english: "To advocate, support",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "بحث",
                 english: "To search",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "تعاون",
                 english: "To assist, support one another",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "تمتع",
                 english: "To take pleasure in",
-                type: "verb"
-            }
-        ]
+                type: "verb",
+            },
+        ],
     },
     lesson_55: {
         title: "Control and Punishment",
         objectives: [
             "Learn how to talk about controlling, punishing, and ensuring safety",
-            "Use vocabulary related to controlling, punishing, and protecting"
+            "Use vocabulary related to controlling, punishing, and protecting",
         ],
         vocabulary: [
             {
                 arabic: "حمى",
                 english: "To protect",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "عاقب",
                 english: "To punish",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "قبض",
                 english: "To arrest, seize",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "نشط",
                 english: "To be active, proceed",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "نفذ",
                 english: "To adhere to, carry out",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "هيمن",
                 english: "To control, dominate",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "قارن",
                 english: "To compare",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "اغتصب",
                 english: "To rape, take by force",
-                type: "verb"
-            }
-        ]
+                type: "verb",
+            },
+        ],
     },
     lesson_56: {
         title: "Destruction and Consumption",
         objectives: [
             "Learn how to talk about destruction, consumption, and causing damage",
-            "Use vocabulary related to burning, consuming, and causing problems"
+            "Use vocabulary related to burning, consuming, and causing problems",
         ],
         vocabulary: [
             {
                 arabic: "احرق",
                 english: "To set on fire",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "استهلك",
                 english: "To consume",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "التهاب",
                 english: "To inflame",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "القى",
                 english: "To throw",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "انقرض",
                 english: "To become extinct",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "سبب",
                 english: "To cause",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "اتلف",
                 english: "To damage",
-                type: "verb"
-            }
-        ]
+                type: "verb",
+            },
+        ],
     },
     lesson_57: {
         title: "Protection and Monitoring",
         objectives: [
             "Learn how to talk about protection, monitoring, and safety",
-            "Use vocabulary related to protecting, monitoring, and controlling"
+            "Use vocabulary related to protecting, monitoring, and controlling",
         ],
         vocabulary: [
             {
                 arabic: "دفن",
                 english: "To bury",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "ذكر",
                 english: "To cite, mention, state",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "غرس",
                 english: "To plant",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "راقب",
                 english: "To monitor",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "اشترك",
                 english: "To join, partake in",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "مشروع",
                 english: "Project",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "مسور",
                 english: "Happy",
-                type: "noun"
+                type: "noun",
             },
             {
                 arabic: "مسؤولية",
                 english: "Responsibility",
-                type: "noun"
-            }
-        ]
+                type: "noun",
+            },
+        ],
     },
     lesson_58: {
         title: "Caution and Action",
         objectives: [
             "Learn how to talk about being cautious and taking action",
-            "Use vocabulary related to caution, claims, and exploitation"
+            "Use vocabulary related to caution, claims, and exploitation",
         ],
         vocabulary: [
             {
                 arabic: "احتاط",
                 english: "To be cautious, careful",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "ادعى",
                 english: "To claim",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "استغل",
                 english: "To exploit, benefit from",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "استفاد",
                 english: "To benefit by/from",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "انخفض",
                 english: "To decrease, become less",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "بذر",
                 english: "To waste",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "جمل",
                 english: "To beautify",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "برد",
                 english: "To cool, freeze, refrigerate",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "سخن",
                 english: "To warm up",
-                type: "verb"
-            }
-        ]
+                type: "verb",
+            },
+        ],
     },
     lesson_59: {
         title: "Provision and Preservation",
         objectives: [
             "Learn how to talk about providing, preserving, and taking care of resources",
-            "Use vocabulary related to obtaining, responding, and running out of resources"
+            "Use vocabulary related to obtaining, responding, and running out of resources",
         ],
         vocabulary: [
             {
                 arabic: "اضاء",
                 english: "To light up, illuminate",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "جدد",
                 english: "To renew",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "صدر",
                 english: "To export",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "ضاعف",
                 english: "To double, multiply",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "طبخ",
                 english: "To cook",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "قفز",
                 english: "To jump, leap",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "استجاب",
                 english: "To respond, carry out",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "وفر",
                 english: "To provide",
-                type: "verb"
+                type: "verb",
             },
             {
                 arabic: "استمد",
                 english: "To obtain from, take from",
-                type: "verb"
-            }
-        ]
+                type: "verb",
+            },
+        ],
     },
     lesson_60: {
         title: "",
@@ -2988,58 +2997,123 @@ export const lessons: Record<string, LessonType> = {
     },
 };
 
-
 export const chapters = [
     {
-      chapter: 1,
-      lessons: ["lesson_1", "lesson_2", "lesson_3", "lesson_4", "lesson_5"], // Array of lesson keys
+        chapter: 1,
+        lessons: ["lesson_1", "lesson_2", "lesson_3", "lesson_4", "lesson_5"], // Array of lesson keys
     },
     {
-      chapter: 2,
-      lessons: ["lesson_6", "lesson_7", "lesson_8", "lesson_9", "lesson_10"],
+        chapter: 2,
+        lessons: ["lesson_6", "lesson_7", "lesson_8", "lesson_9", "lesson_10"],
     },
     {
-      chapter: 3,
-      lessons: ["lesson_11", "lesson_12", "lesson_13", "lesson_14", "lesson_15"],
+        chapter: 3,
+        lessons: [
+            "lesson_11",
+            "lesson_12",
+            "lesson_13",
+            "lesson_14",
+            "lesson_15",
+        ],
     },
     {
-      chapter: 4,
-      lessons: ["lesson_16", "lesson_17", "lesson_18", "lesson_19", "lesson_20"],
+        chapter: 4,
+        lessons: [
+            "lesson_16",
+            "lesson_17",
+            "lesson_18",
+            "lesson_19",
+            "lesson_20",
+        ],
     },
     {
-      chapter: 5,
-      lessons: ["lesson_21", "lesson_22", "lesson_23", "lesson_24", "lesson_25"],
+        chapter: 5,
+        lessons: [
+            "lesson_21",
+            "lesson_22",
+            "lesson_23",
+            "lesson_24",
+            "lesson_25",
+        ],
     },
     {
-      chapter: 6,
-      lessons: ["lesson_26", "lesson_27", "lesson_28", "lesson_29", "lesson_30"],
+        chapter: 6,
+        lessons: [
+            "lesson_26",
+            "lesson_27",
+            "lesson_28",
+            "lesson_29",
+            "lesson_30",
+        ],
     },
     {
-      chapter: 7,
-      lessons: ["lesson_31", "lesson_32", "lesson_33", "lesson_34", "lesson_35"],
+        chapter: 7,
+        lessons: [
+            "lesson_31",
+            "lesson_32",
+            "lesson_33",
+            "lesson_34",
+            "lesson_35",
+        ],
     },
     {
-      chapter: 8,
-      lessons: ["lesson_36", "lesson_37", "lesson_38", "lesson_39", "lesson_40"],
+        chapter: 8,
+        lessons: [
+            "lesson_36",
+            "lesson_37",
+            "lesson_38",
+            "lesson_39",
+            "lesson_40",
+        ],
     },
     {
-      chapter: 9,
-      lessons: ["lesson_41", "lesson_42", "lesson_43", "lesson_44", "lesson_45"],
+        chapter: 9,
+        lessons: [
+            "lesson_41",
+            "lesson_42",
+            "lesson_43",
+            "lesson_44",
+            "lesson_45",
+        ],
     },
     {
-      chapter: 10,
-      lessons: ["lesson_46", "lesson_47", "lesson_48", "lesson_49", "lesson_50"],
+        chapter: 10,
+        lessons: [
+            "lesson_46",
+            "lesson_47",
+            "lesson_48",
+            "lesson_49",
+            "lesson_50",
+        ],
     },
     {
-      chapter: 11,
-      lessons: ["lesson_51", "lesson_52", "lesson_53", "lesson_54", "lesson_55"],
+        chapter: 11,
+        lessons: [
+            "lesson_51",
+            "lesson_52",
+            "lesson_53",
+            "lesson_54",
+            "lesson_55",
+        ],
     },
     {
-      chapter: 12,
-      lessons: ["lesson_56", "lesson_57", "lesson_58", "lesson_59", "lesson_60"],
+        chapter: 12,
+        lessons: [
+            "lesson_56",
+            "lesson_57",
+            "lesson_58",
+            "lesson_59",
+            "lesson_60",
+        ],
     },
     {
-      chapter: 13,
-      lessons: ["lesson_61", "lesson_62", "lesson_63", "lesson_64", "lesson_65"],
+        chapter: 13,
+        lessons: [
+            "lesson_61",
+            "lesson_62",
+            "lesson_63",
+            "lesson_64",
+            "lesson_65",
+        ],
     },
-  ];
+];
