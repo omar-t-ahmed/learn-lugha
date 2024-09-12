@@ -15,7 +15,6 @@ model User {
   gender       Gender   @default(unknown)
   lessons      Int[]
   achievements Achievement[]
-  transcripts  Transcript[]
   progress     Progress?
 }
 
@@ -28,12 +27,11 @@ model Achievement {
 }
 
 model Transcript {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  content     String
-  userId      String   @db.ObjectId
-  lessonId    Int
-  user        User     @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now())
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String
+  lessonId  Int
+  createdAt DateTime @default(now())
+  messages  Json     // Store messages as JSON
 }
 
 model Progress {

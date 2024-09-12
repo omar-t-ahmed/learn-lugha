@@ -45,7 +45,6 @@ export default function Login() {
             auth.currentUser
                 ?.getIdToken(true)
                 .then((idToken) => {
-                    console.log(idToken);
                 })
                 .catch((error) => {
                     console.error("Error getting ID token:", error);

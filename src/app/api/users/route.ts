@@ -45,7 +45,6 @@ export async function GET(req: Request) {
       where: { email: verified.email },
       include: {
         achievements: true,
-        transcripts: true,
         progress: true,
       },
     });
@@ -86,7 +85,6 @@ export async function PATCH(req: Request) {
         lessons,
         achievements,
         progress,
-        transcripts,
       },
     });
 

@@ -1,57 +1,41 @@
-'use client';
-import React, { useState, useEffect } from "react";
-import { getCurrentUserToken } from '@/firebase'; // Assuming you stored the Firebase config in a file like firebase.ts
+import React from 'react';
+import { Book, BarChart } from 'lucide-react';
 
 interface UserProgressProps {
-  maxLevel: number;
+  level: number;
+  xp: number;
 }
 
-const UserProgress: React.FC<UserProgressProps> = ({ maxLevel }) => {
-  const [progress, setProgress] = useState<number>(0);
-
-  useEffect(() => {
-    const fetchProgress = async () => {
-      try {
-        const token = await getCurrentUserToken(); // Get the user's token
-
-        if (!token) {
-          console.error("No user token found");
-          return;
-        }
-
-        const response = await fetch("/api/progress", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Use the Firebase token
-          },
-        });
-
-        const data = await response.json();
-        setProgress(data.level); // Set progress level from the fetched data
-      } catch (error) {
-        console.error("Failed to fetch progress:", error);
-      }
-    };
-
-    fetchProgress();
-  }, []);
-
-  const percentage = (progress / maxLevel) * 100;
-
+const ProgressBar: React.FC<{ value: number }> = ({ value }) => {
   return (
-    <div className="p-4 rounded-md bg-gradient-to-tr from-gray-900 to-slate-600 text-white">
-      <h2 className="text-2xl text-center font-bold mb-4">Level</h2>
-      <div className="w-full bg-gray-300 rounded-full h-6">
-        <div
-          className="bg-green-500 h-6 rounded-full transition-all duration-500"
-          style={{ width: `${percentage}%` }}
-        ></div>
-      </div>
-      <p className="text-center text-white text-sm mt-2">
-        {progress} / {maxLevel} lessons completed
-      </p>
+    <div className="w-full bg-gray-700 rounded-full h-2.5 mb-2">
+      <div
+        className="bg-blue-600 h-2.5 rounded-full"
+        style={{ width: `${value}%` }}
+      ></div>
     </div>
+  );
+};
+
+const UserProgress: React.FC<UserProgressProps> = ({ level, xp }) => {
+  return (
+    <main className="container mx-auto px-4 py-8">
+      <section className="bg-gray-800 rounded-lg shadow-md p-6 mb-8 text-white">
+        <h2 className="text-xl font-semibold mb-4">Your Progress</h2>
+        <div className="flex justify-between gap-4 items-center mb-4">
+          <div className="flex items-center space-x-2">
+            <BarChart className="h-5 w-5 text-yellow-500" />
+            <span className="font-medium">Lvl. {level}</span>
+          </div>
+          <div className="flex items-center space-x-2">
+            <Book className="h-5 w-5 text-green-500" />
+            <span className="font-medium">{xp} XP</span>
+          </div>
+        </div>
+        <ProgressBar value={(xp / 200) * 100} />
+        <p className="text-sm text-gray-400">{(xp / 200) * 100}% to next level</p>
+      </section>
+    </main>
   );
 };
 
