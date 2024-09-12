@@ -30,11 +30,15 @@ export default function LessonPath() {
           return;
         }
         setUserToken(token);
-        
+
         // Fetch user lessons progress here and set it
         const user: UserType = await fetchUser(token); // Replace with your actual fetch function
-        setUserLessons(user.lessons);
-        
+        if (user.lessons.length === 0) {
+          // If no lessons, unlock the first lesson
+          setUserLessons([0]); // Use 0 to indicate no completed lessons
+        } else {
+          setUserLessons(user.lessons);
+        }
       } catch (error) {
         console.error("Error fetching user lessons:", error);
       }
@@ -55,19 +59,23 @@ export default function LessonPath() {
     return data;
   };
 
-  const handleClick = (event: React.MouseEvent, lesson: LessonType, isUnlocked: boolean, lessonKey: string) => {
+  const handleClick = (event: React.MouseEvent, lesson: LessonType, lessonKey: string) => {
+    const lessonNumber = parseInt(lessonKey.split('lesson_')[1], 10);
+    const isCompleted = userLessons.includes(lessonNumber);
+    const lastCompletedLessonNumber = userLessons[userLessons.length - 1];
+    const isUnlocked = isCompleted || lessonNumber === lastCompletedLessonNumber + 1;
+
     if (!isUnlocked) return;
 
     const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
     const top = rect.bottom + window.scrollY;
-    const lessonNumber = parseInt(lessonKey.split('lesson_')[1], 10);
     const isOdd = lessonNumber % 2 === 0; // Use lessonNumber % 2 to determine left or right positioning
 
     // Position the dialog to the left for odd lessons and right for even lessons
-    const left = isOdd ? rect.left - 250 : rect.right + 20; // Adjust for left or right
+    const left = isOdd ? rect.left - 300 : rect.right + 50; // Adjust for left or right
 
     setDialogPosition({ top, left });
-    setSelectedLesson({ ...lesson, lessonKey, isUnlocked });
+    setSelectedLesson({ ...lesson, lessonKey, isCompleted, isUnlocked });
   };
 
   const handleClose = () => {
@@ -92,7 +100,7 @@ export default function LessonPath() {
 
       {/* Progress Bar on Top Right */}
       <div className="absolute top-5 right-5 z-20">
-        {/* <UserProgress maxLevel={chapters.length * 5} /> */}
+        <UserProgress level={1} xp={120} />
       </div>
 
       {/* Main content */}
@@ -121,7 +129,7 @@ export default function LessonPath() {
                     const lessonNumber = parseInt(lessonKey.split('lesson_')[1], 10);
                     const isCompleted = userLessons.includes(lessonNumber);
                     const lastCompletedLessonNumber = userLessons[userLessons.length - 1];
-                    const isUnlocked = isCompleted || (userLessons.length === 0 && globalLessonIndex === 0) || (globalLessonIndex === lastCompletedLessonNumber + 1);
+                    const isUnlocked = isCompleted || lessonNumber === lastCompletedLessonNumber + 1;
 
                     const lessonStatus = isCompleted
                       ? "bg-green-500 border-green-700"
@@ -140,7 +148,7 @@ export default function LessonPath() {
                         className={`relative flex flex-col items-center cursor-pointer transition-all transform hover:scale-105 ${
                           isRight ? "translate-x-16" : ""
                         } ${!isUnlocked ? "opacity-50 cursor-not-allowed" : ""}`}
-                        onClick={(e) => handleClick(e, lesson, isUnlocked, lessonKey)}
+                        onClick={(e) => handleClick(e, lesson, lessonKey)}
                       >
                         <div
                           className={`relative flex items-center justify-center w-16 h-16 md:w-20 md:h-20 rounded-full border-4 transition-transform duration-200 transform ${lessonStatus}`}
@@ -165,7 +173,7 @@ export default function LessonPath() {
             }`}
             style={{
               top: `${dialogPosition.top - 120}px`,
-              left: `${dialogPosition.left - 30}px`,
+              left: `${dialogPosition.left}px`,
             }}
           >
             <button
@@ -194,7 +202,7 @@ export default function LessonPath() {
                 className="px-4 py-1 bg-white text-green-700 rounded hover:bg-gray-100 transition w-full"
                 onClick={() => navigateToLesson(selectedLesson.lessonKey)}
               >
-                Go to Lesson
+                Review Lesson
               </button>
             )}
           </div>

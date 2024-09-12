@@ -24,9 +24,7 @@ if (!getApps().length) {
 
 export const verifyToken = async (token: string) => {
   try {
-    console.log("Verifying token:", token);
     const decodedToken = await getAuth().verifyIdToken(token);
-    console.log("Decoded token:", decodedToken);
     return decodedToken;
   } catch (error) {
     console.error("Token verification failed:", error);

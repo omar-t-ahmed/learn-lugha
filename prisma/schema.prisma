@@ -13,10 +13,9 @@ model User {
   name         String?
   username     String   @unique // Add this line
   gender       Gender   @default(unknown)
-  lessons      Int[]
+  lessons      Int[]    @default([0])
   achievements Achievement[]
-  transcripts  Transcript[]
-  progress     Progress?
+  progress     Json     
 }
 
 model Achievement {
@@ -28,19 +27,11 @@ model Achievement {
 }
 
 model Transcript {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  content     String
-  userId      String   @db.ObjectId
-  lessonId    Int
-  user        User     @relation(fields: [userId], references: [id])
-  createdAt   DateTime @default(now())
-}
-
-model Progress {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
-  level       Int
-  userId      String   @unique @db.ObjectId
-  user        User     @relation(fields: [userId], references: [id])
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  userId    String
+  lessonId  Int
+  createdAt DateTime @default(now())
+  messages  Json     // Store messages as JSON
 }
 
 enum Gender {

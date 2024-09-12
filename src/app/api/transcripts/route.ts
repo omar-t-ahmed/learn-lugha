@@ -15,13 +15,19 @@ export async function POST(req: Request) {
     }
 
     const verified = await verifyToken(token);
-    const { content, lessonId } = await req.json();
+    if (!verified) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { lessonId, messages } = await req.json();
+
+    const userId = verified.uid; // Use the userId from the verified token
 
     const newTranscript = await prisma.transcript.create({
       data: {
-        content,
         lessonId,
-        userId: verified.userId, // Assuming userId is available in the token
+        userId, // Use the userId from the verified token
+        messages, // Store the messages array
       },
     });
 
@@ -34,7 +40,6 @@ export async function POST(req: Request) {
   }
 }
 
-// Handle GET request to fetch all transcripts for the authenticated user
 export async function GET(req: Request) {
   try {
     const authHeader = req.headers.get('authorization');
@@ -45,15 +50,31 @@ export async function GET(req: Request) {
     }
 
     const verified = await verifyToken(token);
+    const userId = verified.uid;
 
-    const transcripts = await prisma.transcript.findMany({
-      where: { userId: verified.userId }, // Assuming userId is available in the token
+    const url = new URL(req.url);
+    const lessonId = parseInt(url.searchParams.get('lessonId') || '0', 10);
+
+    if (!lessonId) {
+      return NextResponse.json({ error: 'Lesson ID is required' }, { status: 400 });
+    }
+
+    // Fetch the transcript for the given lessonId and userId
+    const transcript = await prisma.transcript.findFirst({
+      where: {
+        userId,
+        lessonId,
+      },
     });
 
-    return NextResponse.json(transcripts, { status: 200 });
+    if (!transcript) {
+      return NextResponse.json({ error: 'Transcript not found' }, { status: 404 });
+    }
+
+    return NextResponse.json(transcript, { status: 200 });
   } catch (error) {
-    console.error('Failed to fetch transcripts:', error);
-    return NextResponse.json({ error: 'Failed to fetch transcripts' }, { status: 500 });
+    console.error('Failed to fetch transcript:', error);
+    return NextResponse.json({ error: 'Failed to fetch transcript' }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }

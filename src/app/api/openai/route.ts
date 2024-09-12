@@ -20,8 +20,9 @@ export async function POST(req: Request): Promise<NextResponse> {
         apiKey: process.env.OPENAI_API_KEY!,
     });
 
-    // Get user input, lesson details, and conversation history
-    const { input, lesson, conversation }: { input: string; lesson: Lesson; conversation?: Message[] } = await req.json();
+    // Get user input, lesson details, conversation history, and used vocabulary
+    const { input, lesson, conversation, usedVocabulary: previousUsedVocabulary = [] }: 
+        { input: string; lesson: Lesson; conversation?: Message[]; usedVocabulary?: string[] } = await req.json();
 
     const currentTime = Date.now();
 
@@ -64,15 +65,33 @@ export async function POST(req: Request): Promise<NextResponse> {
         messages,
         model: "gpt-4o-mini",
         temperature: 0.7,
-        max_tokens: 150,
+        max_tokens: 50,
     });
 
     const responseContent = completion.choices[0].message.content;
 
-    // Track used vocabulary from the response
-    const usedVocabulary: string[] = lesson.vocabulary
-        .filter((vocab) => responseContent!.includes(vocab.arabic))
-        .map((vocab) => vocab.arabic);
+    // Function to normalize Arabic words (e.g., remove "ta marbuta", handle "al" prefix, etc.)
+    const normalizeArabic = (word: string) => 
+        word.replace(/ة$/, "ه") // Replace "ta marbuta" with "ha"
+            .replace(/^(ال)/, "") // Remove "al" prefix
+            .replace(/ى$/, "ي") // Replace "alif maqsura" with "ya"
+            .normalize("NFKD") // Normalize Unicode
+            .replace(/[\u064B-\u065F]/g, ""); // Remove diacritics
+
+    // Track used vocabulary from the conversation history
+    const usedVocabulary: string[] = [
+        ...previousUsedVocabulary,
+        ...lesson.vocabulary
+            .filter((vocab) => 
+                conversationHistory.some(
+                    (message) => message.role === "user" && new RegExp(normalizeArabic(vocab.arabic), "i").test(normalizeArabic(message.content))
+                )
+            )
+            .map((vocab) => vocab.arabic)
+    ];
+
+    // Remove duplicates
+    const uniqueUsedVocabulary = Array.from(new Set(usedVocabulary));
 
     // Add the latest user input and assistant's response to conversation history
     const updatedConversation: Message[] = [
@@ -81,36 +100,35 @@ export async function POST(req: Request): Promise<NextResponse> {
         { role: "assistant", content: responseContent ?? "" }, // Ensure content is not null
     ];
 
-    // Second API call to check if all vocabulary has been used
-    const checkCompletionContent = `
-    Based on the conversation so far, has the student used all of the following vocabulary words: ${lesson.vocabulary
-        .map((vocab) => vocab.arabic)
-        .join(", ")}?
-    Respond with Yes or No.
+    // Check if all vocabulary has been used
+    const allVocabularyUsed = lesson.vocabulary.every((vocab) =>
+        uniqueUsedVocabulary.includes(vocab.arabic)
+    );
+
+    // Generate feedback in English based on the user's most recent message
+    const feedbackContent = `
+    You are an arabic teacher. Give feedback in English based on the user's most recent message, evaluating the correctness and fluency of their Arabic sentence: "${input}". Keep it general, give a short feedback, no more than one sentence. keep in mind that it is a spoken response. so dont focus on diacritics such as commas, mostly words used and whether or not it makes sense. 
     `;
 
-    const checkCompletionMessages: Message[] = [
-        { role: "system", content: checkCompletionContent },
-        ...updatedConversation,
+    const feedbackMessages: Message[] = [
+        { role: "system", content: feedbackContent },
+        { role: "user", content: input },
     ];
 
-    const completionCheck = await openai.chat.completions.create({
-        messages: checkCompletionMessages,
+    const feedbackCompletion = await openai.chat.completions.create({
+        messages: feedbackMessages,
         model: "gpt-4o-mini",
         temperature: 0.7,
         max_tokens: 50,
     });
 
-    const completionResponse = completionCheck.choices[0].message.content;
-
-    // Determine if the lesson is completed based on OpenAI's response
-    const lessonCompleted = completionResponse!.trim().toLowerCase() === "yes";
-
-    // Return the response, used vocabulary, and whether the lesson is completed
+    const feedbackResponse = feedbackCompletion.choices[0].message.content;
+    // Return the response, used vocabulary, whether the lesson is completed, and feedback
     return NextResponse.json({
         response: responseContent ?? "", // Ensure content is not null
-        usedVocabulary,
-        lessonCompleted,
+        usedVocabulary: uniqueUsedVocabulary,
+        lessonCompleted: allVocabularyUsed,
         conversation: updatedConversation,
+        feedback: feedbackResponse ?? "", // Ensure feedback is not null
     });
 }

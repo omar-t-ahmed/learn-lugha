@@ -37,11 +37,9 @@ const letterMapping: { [key: string]: { english: string, soundFile: string } } =
 const LettersPage: React.FC = () => {
   const playSound = (soundFile: string) => {
     const filePath = `/sounds/${soundFile}`; // Corrected path to reference the "sounds" folder in the public directory
-    console.log('Attempting to play sound from:', filePath); // For debugging
     const audio = new Audio(filePath);
   
     audio.play().then(() => {
-      console.log('Sound played successfully:', filePath);
     }).catch(error => {
       console.error('Error playing sound:', error.message);
     });
