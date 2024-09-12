@@ -335,6 +335,19 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson }) => {
                     }),
                 });
 
+                // Add XP after lesson completion
+                await fetch("/api/progress", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "Authorization": `Bearer ${token}`, // Include the token in the headers
+                    },
+                    body: JSON.stringify({
+                        userId: user.id,
+                        xpToAdd: 20, // Add 10 XP
+                    }),
+                });
+
                 setTimeout(() => {
                     setConfetti(false);
                 }, 5000);
@@ -373,40 +386,53 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson }) => {
 
     const endLesson = async (messages: any) => {
         setLessonCompleted(true);
-                setConfetti(true);
+        setConfetti(true);
 
-                // Get the user token
-                const token = await getCurrentUserToken();
+        // Get the user token
+        const token = await getCurrentUserToken();
 
-                // Send PATCH request to update user's lessons
-                await fetch("/api/users", {
-                    method: "PATCH",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`, // Include the token in the headers
-                    },
-                    body: JSON.stringify({
-                        lessons: [...user.lessons, lesson.lesson_id],
-                    }),
-                });
+        // Send PATCH request to update user's lessons
+        await fetch("/api/users", {
+            method: "PATCH",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`, // Include the token in the headers
+            },
+            body: JSON.stringify({
+                lessons: [...user.lessons, lesson.lesson_id],
+            }),
+        });
 
-                // Send POST request to create a new transcript
-                await fetch("/api/transcripts", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`, // Include the token in the headers
-                    },
-                    body: JSON.stringify({
-                        messages: messages,
-                        lessonId: lesson.lesson_id,
-                        userId: user.id,
-                    }),
-                });
+        // Send POST request to create a new transcript
+        await fetch("/api/transcripts", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`, // Include the token in the headers
+            },
+            body: JSON.stringify({
+                messages: messages,
+                lessonId: lesson.lesson_id,
+                userId: user.id,
+            }),
+        });
 
-                setTimeout(() => {
-                    setConfetti(false);
-                }, 5000);
+        // Add XP after lesson completion
+        await fetch("/api/progress", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`, // Include the token in the headers
+            },
+            body: JSON.stringify({
+                userId: user.id,
+                xpToAdd: 20, // Add 10 XP
+            }),
+        });
+
+        setTimeout(() => {
+            setConfetti(false);
+        }, 5000);
     };
     
     return (
@@ -562,7 +588,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson }) => {
                                 )}
                                 {lessonCompleted && (
                                     <div className="mt-6 text-green-500 w-full text-xl text-center flex justify-center">
-                                        <p>Congratulations! You&apos;ve completed the lesson!</p>
+                                        <p>You&apos;ve completed this lesson!</p>
                                     </div>
                                 )}
                             </>

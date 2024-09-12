@@ -15,19 +15,47 @@ export async function POST(req: Request) {
     }
 
     const verified = await verifyToken(token);
-    const { level } = await req.json();
+    const { xpGained } = await req.json(); // Assume xpGained is sent in the request body
 
-    const newProgress = await prisma.progress.create({
+    // Fetch the current progress of the user
+    let progress = await prisma.progress.findUnique({
+      where: { userId: verified.userId },
+    });
+
+    if (!progress) {
+      // If no progress entry exists, create one with initial values
+      progress = await prisma.progress.create({
+        data: {
+          level: 0,
+          xp: 0,
+          userId: verified.userId,
+        },
+      });
+    }
+
+    // Add XP to the user's current XP
+    let newXP = progress.xp + xpGained;
+    let newLevel = progress.level;
+
+    // Check if the XP exceeds 100 and update the level and XP accordingly
+    if (newXP >= 100) {
+      newLevel += 1;
+      newXP = newXP % 100; // Remainder becomes the new XP
+    }
+
+    // Update the user's progress
+    const updatedProgress = await prisma.progress.update({
+      where: { userId: verified.userId },
       data: {
-        level,
-        userId: verified.userId, // Assuming userId is available in the token
+        level: newLevel,
+        xp: newXP,
       },
     });
 
-    return NextResponse.json(newProgress, { status: 201 });
+    return NextResponse.json(updatedProgress, { status: 201 });
   } catch (error) {
-    console.error('Failed to create progress:', error);
-    return NextResponse.json({ error: 'Failed to create progress' }, { status: 500 });
+    console.error('Failed to update progress:', error);
+    return NextResponse.json({ error: 'Failed to update progress' }, { status: 500 });
   } finally {
     await prisma.$disconnect();
   }

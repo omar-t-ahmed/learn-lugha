@@ -19,40 +19,40 @@ export const lessons: Record<string, LessonType> = {
             "Learn basic pronouns and polite phrases",
         ],
         vocabulary: [
-            { arabic: "أَﻧَﺎ", english: "I am", type: "pronoun" },
-            { arabic: "اِسْمِي", english: "My name is", type: "phrase" },
+            { arabic: "انا", english: "I am", type: "pronoun" },
+            { arabic: "اسمي", english: "My name is", type: "phrase" },
             {
-                arabic: "مَا اِسْمُكَ؟",
+                arabic: "ما اسمك",
                 english: "What is your name? (m)",
                 type: "question",
             },
             {
-                arabic: "مَا اِسْمُكِ؟",
+                arabic: "ما اسمك",
                 english: "What is your name? (f)",
                 type: "question",
             },
             {
-                arabic: "مِنْ أَيْنَ أَنْتَ؟",
+                arabic: "من اين انت",
                 english: "Where are you from? (m)",
                 type: "question",
             },
             {
-                arabic: "مِنْ أَيْنَ أَنْتِ؟",
+                arabic: "من اين انت",
                 english: "Where are you from? (f)",
                 type: "question",
             },
             {
-                arabic: "كَيفَ حَالُكَ؟",
+                arabic: "كيف حالك",
                 english: "How are you? (m)",
                 type: "question",
             },
-            { arabic: "بِخَيْرٍ", english: "I am fine", type: "phrase" },
+            { arabic: "بخير", english: "I am fine", type: "phrase" },
             {
-                arabic: "السَّلامُ عَلَيْكُم",
+                arabic: "السلام عليكم",
                 english: "Peace be upon you",
                 type: "greeting",
             },
-            { arabic: "مَعَ السَّلامَة", english: "Goodbye", type: "farewell" },
+            { arabic: "مع السلامة", english: "Goodbye", type: "farewell" },
         ],
     },
     lesson_2: {
@@ -109,17 +109,17 @@ export const lessons: Record<string, LessonType> = {
         ],
         vocabulary: [
             {
-                arabic: "اسأل",
+                arabic: "اسال",
                 english: "Ask",
                 type: "command",
             },
             {
-                arabic: "أجب",
+                arabic: "اجب",
                 english: "Answer",
                 type: "command",
             },
             {
-                arabic: "قرأ",
+                arabic: "قرا",
                 english: "Read",
                 type: "verb",
             },
@@ -175,7 +175,7 @@ export const lessons: Record<string, LessonType> = {
                 type: "verb",
             },
             {
-                arabic: "وَضوء",
+                arabic: "وضوء",
                 english: "Wudoo (ablution)",
                 type: "noun",
             },
@@ -205,12 +205,12 @@ export const lessons: Record<string, LessonType> = {
                 type: "noun",
             },
             {
-                arabic: "أم",
+                arabic: "ام",
                 english: "Mother",
                 type: "noun",
             },
             {
-                arabic: "أب",
+                arabic: "اب",
                 english: "Father",
                 type: "noun",
             },
@@ -246,12 +246,12 @@ export const lessons: Record<string, LessonType> = {
         ],
         vocabulary: [
             {
-                arabic: "أسكن",
+                arabic: "اسكن",
                 english: "I live",
                 type: "verb",
             },
             {
-                arabic: "أريد",
+                arabic: "اريد",
                 english: "I want",
                 type: "verb",
             },
@@ -431,7 +431,7 @@ export const lessons: Record<string, LessonType> = {
         ],
         vocabulary: [
             {
-                arabic: "أكل",
+                arabic: "اكل",
                 english: "Eat",
                 type: "verb",
             },
@@ -616,7 +616,7 @@ export const lessons: Record<string, LessonType> = {
         ],
         vocabulary: [
             {
-                arabic: "أكمل",
+                arabic: "اكمل",
                 english: "Complete",
                 type: "verb",
             },
@@ -631,7 +631,7 @@ export const lessons: Record<string, LessonType> = {
                 type: "noun",
             },
             {
-                arabic: "أسبوع",
+                arabic: "اسبوع",
                 english: "Week",
                 type: "noun",
             },
@@ -656,7 +656,7 @@ export const lessons: Record<string, LessonType> = {
         ],
         vocabulary: [
             {
-                arabic: "أحب",
+                arabic: "احب",
                 english: "Love; Like",
                 type: "verb",
             },
@@ -681,7 +681,7 @@ export const lessons: Record<string, LessonType> = {
         ],
         vocabulary: [
             {
-                arabic: "أصبح",
+                arabic: "اصبح",
                 english: "Become",
                 type: "verb",
             },

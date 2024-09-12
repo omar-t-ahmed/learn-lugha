@@ -30,11 +30,15 @@ export default function LessonPath() {
           return;
         }
         setUserToken(token);
-        
+
         // Fetch user lessons progress here and set it
         const user: UserType = await fetchUser(token); // Replace with your actual fetch function
-        setUserLessons(user.lessons);
-        
+        if (user.lessons.length === 0) {
+          // If no lessons, unlock the first lesson
+          setUserLessons([0]); // Use 0 to indicate no completed lessons
+        } else {
+          setUserLessons(user.lessons);
+        }
       } catch (error) {
         console.error("Error fetching user lessons:", error);
       }
