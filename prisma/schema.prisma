@@ -15,7 +15,7 @@ model User {
   gender       Gender   @default(unknown)
   lessons      Int[]    @default([0])
   achievements Achievement[]
-  progress     Json     @default("{}") // Add this line to store progress as JSON
+  progress     Json     
 }
 
 model Achievement {

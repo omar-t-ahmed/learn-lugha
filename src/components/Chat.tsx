@@ -295,7 +295,6 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson }) => {
             const botResponse = data.response;
             setFeedback(data.feedback);
             setUsedVocabulary(data.usedVocabulary); // Update used vocabulary state
-            debugger
             setMessages((prevMessages) => [
                 ...prevMessages,
                 { content: botResponse, isUser: false, role: "system" },
@@ -309,7 +308,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson }) => {
                 // Get the user token
                 const token = await getCurrentUserToken();
 
-                // Send PATCH request to update user's lessons
+                // Send PATCH request to update user's lessons and progress
                 await fetch("/api/users", {
                     method: "PATCH",
                     headers: {
@@ -318,6 +317,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson }) => {
                     },
                     body: JSON.stringify({
                         lessons: [...user.lessons, lesson.lesson_id],
+                        completedLesson: true, // Indicate that a lesson was completed
                     }),
                 });
 
@@ -332,19 +332,6 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson }) => {
                         messages: conversation,
                         lessonId: lesson.lesson_id,
                         userId: user.id,
-                    }),
-                });
-
-                // Add XP after lesson completion
-                await fetch("/api/progress", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        "Authorization": `Bearer ${token}`, // Include the token in the headers
-                    },
-                    body: JSON.stringify({
-                        userId: user.id,
-                        xpToAdd: 20, // Add 10 XP
                     }),
                 });
 
@@ -388,51 +375,44 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson }) => {
         setLessonCompleted(true);
         setConfetti(true);
 
-        // Get the user token
-        const token = await getCurrentUserToken();
+        try {
+            // Get the user token
+            const token = await getCurrentUserToken();
 
-        // Send PATCH request to update user's lessons
-        await fetch("/api/users", {
-            method: "PATCH",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`, // Include the token in the headers
-            },
-            body: JSON.stringify({
-                lessons: [...user.lessons, lesson.lesson_id],
-            }),
-        });
+            // Send PATCH request to update user's lessons
+            await fetch("/api/users", {
+                method: "PATCH",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`, // Include the token in the headers
+                },
+                body: JSON.stringify({
+                    lessons: [...user.lessons, lesson.lesson_id],
+                    completedLesson: true, // Indicate that a lesson was completed
+                }),
+            });
 
-        // Send POST request to create a new transcript
-        await fetch("/api/transcripts", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`, // Include the token in the headers
-            },
-            body: JSON.stringify({
-                messages: messages,
-                lessonId: lesson.lesson_id,
-                userId: user.id,
-            }),
-        });
+            // Send POST request to create a new transcript
+            await fetch("/api/transcripts", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`, // Include the token in the headers
+                },
+                body: JSON.stringify({
+                    messages: messages,
+                    lessonId: lesson.lesson_id,
+                    userId: user.id,
+                }),
+            });
 
-        // Add XP after lesson completion
-        await fetch("/api/progress", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `Bearer ${token}`, // Include the token in the headers
-            },
-            body: JSON.stringify({
-                userId: user.id,
-                xpToAdd: 20, // Add 10 XP
-            }),
-        });
-
-        setTimeout(() => {
-            setConfetti(false);
-        }, 5000);
+        } catch (error) {
+            console.error("Error ending lesson:", error);
+        } finally {
+            setTimeout(() => {
+                setConfetti(false);
+            }, 5000);
+        }
     };
     
     return (

@@ -9,13 +9,18 @@ export async function POST(req: Request) {
   try {
     const { email, name, username, gender }: { email: string; name?: string; username: string; gender: Gender } = await req.json();
 
-
     const newUser = await prisma.user.create({
       data: {
         email,
         name,
         username,
-        gender
+        gender,
+        progress: {
+          create: {
+            level: 1,
+            xp: 0
+          }
+        } // Initialize progress
       },
     });
 
@@ -27,7 +32,6 @@ export async function POST(req: Request) {
     await prisma.$disconnect();
   }
 }
-
 
 // Handle GET request to fetch authenticated user's details
 export async function GET(req: Request) {
@@ -72,7 +76,27 @@ export async function PATCH(req: Request) {
     }
 
     const verified = await verifyToken(token);
-    const { email, name, username, gender, lessons, achievements, transcripts } = await req.json(); // Include all fields
+    const { email, name, username, gender, lessons, achievements, completedLesson } = await req.json(); // Include completedLesson in request body
+
+    // Fetch current progress
+    const user = await prisma.user.findUnique({
+      where: { email: verified.email },
+      select: { progress: true }
+    });
+
+    if (!user || !user.progress) {
+      return NextResponse.json({ error: 'User or progress not found' }, { status: 404 });
+    }
+
+    const progress = user.progress as { level: number; xp: number }; // Explicitly type progress
+    let { level, xp } = progress ? progress : { level: 1, xp: 0 }; // Default to level 1, 0 XP if progress doesn't exist
+    if (completedLesson) {
+      xp = (xp || 0) + 20; // Ensure xp is not null and add 20 XP
+      if (xp >= 100) {
+        level += 1; // Increment level
+        xp = 0; // Reset xp to 0
+      }
+    }
 
     const updatedUser = await prisma.user.update({
       where: { email: verified.email },
@@ -83,6 +107,10 @@ export async function PATCH(req: Request) {
         gender,
         lessons,
         achievements,
+        progress: {
+          level,
+          xp
+        }
       },
     });
 
