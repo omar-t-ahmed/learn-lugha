@@ -12,6 +12,7 @@ model User {
   email        String   @unique
   name         String?
   username     String   @unique // Add this line
+  tutorialCompleted Boolean @default(false)
   gender       Gender   @default(unknown)
   lessons      Int[]    @default([0])
   achievements Achievement[]

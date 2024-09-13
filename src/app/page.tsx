@@ -1,13 +1,40 @@
 'use client'
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
 import logo from "../../public/LEARN LUGHA.png";
 import hamburgerIcon from "../../public/icons8-hamburger-menu-50.png";
 import { FaArrowRightLong } from "react-icons/fa6";
+import { getCurrentUserToken } from "@/firebase";
 
 export default function Hero() {
+  const router = useRouter();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+
+  useEffect(() => {
+    // Fetch user authentication status
+    const fetchUser = async () => {
+      try {
+        const token = await getCurrentUserToken();
+        if (token) {
+          router.push("/home");
+          return;
+        }
+      } catch (error) {
+        console.error('Error fetching user status:', error);
+      }
+    };
+
+    fetchUser();
+  }, [router]);
+
+  useEffect(() => {
+    if (isLoggedIn) {
+      router.push('/home');
+    }
+  }, [isLoggedIn, router]);
 
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen);

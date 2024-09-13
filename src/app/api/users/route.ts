@@ -76,7 +76,7 @@ export async function PATCH(req: Request) {
     }
 
     const verified = await verifyToken(token);
-    const { email, name, username, gender, lessons, achievements, completedLesson } = await req.json(); // Include completedLesson in request body
+    const { email, name, username, gender, lessons, achievements, completedLesson, tutorialCompleted } = await req.json(); // Include tutorialCompleted in request body
 
     // Fetch current progress
     const user = await prisma.user.findUnique({
@@ -107,10 +107,8 @@ export async function PATCH(req: Request) {
         gender,
         lessons,
         achievements,
-        progress: {
-          level,
-          xp
-        }
+        progress,
+        tutorialCompleted, // Update tutorialCompleted field
       },
     });
 
