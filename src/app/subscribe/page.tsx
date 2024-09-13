@@ -49,31 +49,29 @@ export default function CheckoutPage() {
                     </span>
                 </h1>
                 <p className="mt-4 text-md md:text-lg text-gray-400 text-center">
-                    Unlock premium features to accelerate your Arabic learning
-                    journey.
+                    Unlock premium features to accelerate your Arabic learning journey.
                 </p>
 
                 {error && <p className="text-red-500 mt-4">{error}</p>}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+                <div className="grid grid-cols-1 gap-8 mt-12">
                     <div className="p-6 bg-gray-800 rounded-lg shadow-lg hover:scale-105 transform transition-all flex flex-col justify-between">
                         <div>
                             <h2 className="text-2xl font-bold text-white mb-4 text-center">
-                                Basic Plan
+                                Premium Plan
                             </h2>
                             <p className="text-gray-400 text-center mb-6">
                                 $5/month
                             </p>
                             <ul className="text-gray-400 mb-8 space-y-3 h-32">
-                                <li>✓ Access to basic lessons</li>
-                                <li>✓ Weekly progress reports</li>
-                                <li>✓ AI-powered practice sessions</li>
+                                <li>✓ Access to 50+ lessons</li>
+                                <li>✓ AI-powered conversations</li>
                             </ul>
                         </div>
                         <button
                             onClick={() =>
                                 handleCheckout({
-                                    name: "Basic Plan",
+                                    name: "Premium Plan",
                                     price: 500,
                                     interval: "month",
                                 })
@@ -81,37 +79,7 @@ export default function CheckoutPage() {
                             disabled={loading}
                             className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
                         >
-                            Subscribe to Basic
-                        </button>
-                    </div>
-
-                    <div className="p-6 bg-gray-800 rounded-lg shadow-lg hover:scale-105 transform transition-all flex flex-col justify-between">
-                        <div>
-                            <h2 className="text-2xl font-bold text-white mb-4 text-center">
-                                Pro Plan
-                            </h2>
-                            <p className="text-gray-400 text-center mb-6">
-                                $15/month
-                            </p>
-                            <ul className="text-gray-400 mb-8 space-y-3 h-32">
-                                <li>✓ Access to all lessons</li>
-                                <li>✓ Daily progress reports</li>
-                                <li>✓ Personalized learning paths</li>
-                                <li>✓ 1-on-1 AI tutoring</li>
-                            </ul>
-                        </div>
-                        <button
-                            onClick={() =>
-                                handleCheckout({
-                                    name: "Pro Plan",
-                                    price: 1500,
-                                    interval: "month",
-                                })
-                            }
-                            disabled={loading}
-                            className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
-                        >
-                            Subscribe to Pro
+                            Subscribe to Premium
                         </button>
                     </div>
                 </div>

@@ -11,12 +11,14 @@ model User {
   id           String   @id @default(auto()) @map("_id") @db.ObjectId
   email        String   @unique
   name         String?
-  username     String   @unique // Add this line
+  username     String   @unique
   gender       Gender   @default(unknown)
   lessons      Int[]    @default([0])
   achievements Achievement[]
-  progress     Json     
+  progress     Json
+  isSubscribed Boolean  @default(false) // New field to track subscription status
 }
+
 
 model Achievement {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId

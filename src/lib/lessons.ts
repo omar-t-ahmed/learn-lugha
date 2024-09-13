@@ -2757,11 +2757,6 @@ export const lessons: Record<string, LessonType> = {
                 english: "To compare",
                 type: "verb",
             },
-            {
-                arabic: "اغتصب",
-                english: "To rape, take by force",
-                type: "verb",
-            },
         ],
     },
     lesson_56: {

@@ -1,23 +1,22 @@
 import { NextResponse } from 'next/server';
 import Stripe from 'stripe';
 
-interface Plan {
-  name: string;
-  price: number; // in cents
-  interval: 'day' | 'week' | 'month' | 'year';
-}
-
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
   apiVersion: '2024-06-20',
 });
 
 export async function POST(req: Request): Promise<NextResponse> {
-  const { plan } = await req.json() as { plan: Plan };
+  const { plan, email } = await req.json() as {
+    plan: { name: string; price: number; interval: 'day' | 'week' | 'month' | 'year' };
+    email: string;
+  };
 
   try {
+    // Create a Stripe Checkout session
     const params: Stripe.Checkout.SessionCreateParams = {
       mode: 'subscription',
       payment_method_types: ['card'],
+      customer_email: email, // Pass the email to Stripe
       line_items: [
         {
           price_data: {
@@ -33,30 +32,14 @@ export async function POST(req: Request): Promise<NextResponse> {
           quantity: 1,
         },
       ],
-      success_url: `${req.headers.get('Referer')}?success=true`,
-      cancel_url: `${req.headers.get('Referer')}?canceled=true`,
+      success_url: `${req.headers.get('origin')}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${req.headers.get('origin')}/cancel`,
     };
 
     const checkoutSession = await stripe.checkout.sessions.create(params);
     return NextResponse.json(checkoutSession);
   } catch (error: any) {
     console.error('Error creating checkout session:', error);
-    return NextResponse.json({ error: { message: error.message } }, { status: 500 });
-  }
-}
-
-export async function GET(req: Request): Promise<NextResponse> {
-  const session_id = new URL(req.url).searchParams.get('session_id');
-
-  try {
-    if (!session_id) {
-      throw new Error('Session ID is required');
-    }
-
-    const checkoutSession = await stripe.checkout.sessions.retrieve(session_id);
-    return NextResponse.json(checkoutSession);
-  } catch (error: any) {
-    console.error('Error retrieving checkout session:', error);
     return NextResponse.json({ error: { message: error.message } }, { status: 500 });
   }
 }
