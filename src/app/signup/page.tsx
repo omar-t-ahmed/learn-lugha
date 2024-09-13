@@ -6,7 +6,6 @@ import { createUserWithEmailAndPassword, GoogleAuthProvider, signInWithPopup } f
 import Link from "next/link";
 import Image from "next/image";
 import logo from "../../../public/LEARN LUGHA.png";
-import hamburgerIcon from "../../../public/icons8-hamburger-menu-50.png";
 
 export default function SignUp() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -15,6 +14,7 @@ export default function SignUp() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [gender, setGender] = useState<"male" | "female" | "unknown">("unknown");
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
 
@@ -38,14 +38,15 @@ export default function SignUp() {
       const userCredential = await createUserWithEmailAndPassword(
         auth,
         email,
-        password
+        password,
+        
       );
       const userUID = userCredential.user.uid;
 
       const response = await fetch('/api/users', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, name, username }),
+        body: JSON.stringify({ email, name, username, gender }),
       });
 
       if (response.ok) {
@@ -71,6 +72,7 @@ export default function SignUp() {
           email: user.email || "",
           name: user.displayName || "Google User",
           username: user.email?.split('@')[0] || user.uid,
+          gender: "unknown", // Default to unknown for Google sign-ups
         }),
       });
 
@@ -149,26 +151,76 @@ export default function SignUp() {
               <span className="w-1/4 border-t border-gray-700"></span>
             </div>
 
-            <form onSubmit={handleSignUp}>
-              <input type="text" id="name" value={name} onChange={(e) => setName(e.target.value)} className="mb-4 w-full px-4 py-3 border border-zinc-700 bg-zinc-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Name" required />
-              <input type="text" id="username" value={username} onChange={(e) => setUsername(e.target.value)} className="mb-4 w-full px-4 py-3 border border-zinc-700 bg-zinc-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Username" required />
-              <input type="email" id="email" value={email} onChange={(e) => setEmail(e.target.value)} className="mb-4 w-full px-4 py-3 border border-zinc-700 bg-zinc-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Email" required />
-              <input type="password" id="password" value={password} onChange={(e) => setPassword(e.target.value)} className="mb-4 w-full px-4 py-3 border border-zinc-700 bg-zinc-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Password" required />
-              <input type="password" id="confirm-password" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} className="mb-6 w-full px-4 py-3 border border-zinc-700 bg-zinc-800 text-white rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" placeholder="Confirm password" required />
+            <form onSubmit={handleSignUp} className="space-y-5">
+              <div className="space-y-1">
+                <label className="text-gray-400">Name</label>
+                <input type="text" className="w-full p-3 bg-gray-800 text-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-indigo-500"
+                  placeholder="Name"
+                  value={name} onChange={(e) => setName(e.target.value)} required />
+              </div>
 
-              {error && (
-                <div className="mb-4 p-2 text-red-600 bg-red-100 rounded">
-                  {error}
+              <div className="space-y-1">
+                <label className="text-gray-400">Username</label>
+                <input type="text" className="w-full p-3 bg-gray-800 text-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-indigo-500"
+                  placeholder="Username"
+                  value={username} onChange={(e) => setUsername(e.target.value)} required />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-gray-400">Email</label>
+                <input type="email" className="w-full p-3 bg-gray-800 text-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-indigo-500"
+                  placeholder="Email"
+                  value={email} onChange={(e) => setEmail(e.target.value)} required />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-gray-400">Password</label>
+                <input type="password" className="w-full p-3 bg-gray-800 text-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-indigo-500"
+                  placeholder="Password"
+                  value={password} onChange={(e) => setPassword(e.target.value)} required />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-gray-400">Confirm Password</label>
+                <input type="password" className="w-full p-3 bg-gray-800 text-gray-300 rounded-lg focus:outline-none focus:ring focus:ring-indigo-500"
+                  placeholder="Confirm password"
+                  value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-gray-400">Gender</label>
+                <div className="flex items-center space-x-4">
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      value="male"
+                      checked={gender === "male"}
+                      onChange={() => setGender("male")}
+                      className="text-indigo-500 focus:ring-indigo-500"
+                    />
+                    <span className="text-gray-300">Male</span>
+                  </label>
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      value="female"
+                      checked={gender === "female"}
+                      onChange={() => setGender("female")}
+                      className="text-indigo-500 focus:ring-indigo-500"
+                    />
+                    <span className="text-gray-300">Female</span>
+                  </label>
                 </div>
-              )}
+              </div>
 
-              <button type="submit" className="w-full py-3 bg-white text-black font-semibold rounded-lg hover:bg-gray-200">
-                Sign up
+              <button type="submit" className="w-full py-3 bg-indigo-600 text-white rounded-lg hover:bg-indigo-500 focus:outline-none focus:ring focus:ring-indigo-500">
+                Sign Up
               </button>
+              {error && <p className="text-red-500 text-center mt-2">{error}</p>}
             </form>
 
-            <p className="mt-6 text-center text-gray-400">
-              Already have an account? <Link href="/login" className="text-purple-600 hover:underline font-semibold">Log in</Link>
+            <p className="text-gray-400 text-center mt-6">
+              Already have an account? <Link href="/signin" className="text-indigo-500 hover:text-indigo-400">Sign In</Link>
             </p>
           </div>
         </div>

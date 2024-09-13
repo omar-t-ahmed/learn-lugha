@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from "react";
 import Sidebar from "@/components/Sidebar";
 import { getCurrentUserToken } from "@/firebase"; // Adjust the import path as needed
+import Avatar from "@mui/material/Avatar";
 
 interface User {
   email: string;
@@ -28,7 +29,7 @@ const ProfilePage: React.FC = () => {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`, // Correctly formatted Bearer token
+            Authorization: `Bearer ${token}`,
           },
         });
   
@@ -49,15 +50,13 @@ const ProfilePage: React.FC = () => {
     fetchUserData();
   }, []);
   
-
   if (loading) {
     return (
       <div className="bg-gradient-to-br from-gray-900 to-black min-h-screen text-white">
         <Sidebar />
-        <div className="p-4 md:ml-64 md:p-10">
-          <h1 className="text-2xl md:text-3xl font-bold mb-6 md:mb-10">Profile</h1>
-          <div className="bg-gray-800 p-6 md:p-8 rounded-lg shadow-lg">
-            <p className="text-base md:text-lg">Loading...</p>
+        <div className="p-4 md:ml-64 md:p-10 flex items-center justify-center">
+          <div className="bg-gray-800 p-6 md:p-8 rounded-lg shadow-lg w-full max-w-md">
+            <p className="text-base md:text-lg text-center">Loading...</p>
           </div>
         </div>
       </div>
@@ -67,21 +66,17 @@ const ProfilePage: React.FC = () => {
   return (
     <div className="bg-gradient-to-br from-gray-900 to-black min-h-screen text-white">
       <Sidebar />
-      <div className="p-4 md:ml-64 md:p-10">
-        <h1 className="text-2xl md:text-3xl font-bold mb-6 md:mb-10">Profile</h1>
-        <div className="bg-gray-800 p-6 md:p-8 rounded-lg shadow-lg">
-          {user ? (
-            <>
-              <h2 className="text-xl md:text-2xl font-semibold mb-4">User Profile</h2>
-              <p className="text-base md:text-lg mb-2">Name: {user.name || "N/A"}</p>
-              <p className="text-base md:text-lg mb-2">Email: {user.email}</p>
-              <p className="text-base md:text-lg mb-2">Username: {user.username}</p>
-              <p className="text-base md:text-lg mb-2">Gender: {user.gender}</p>
-              <p className="text-base md:text-lg mb-2">Member since: {new Date(user.createdAt).toLocaleDateString()}</p>
-            </>
-          ) : (
-            <p className="text-base md:text-lg">No user data available</p>
-          )}
+      <div className="p-4 md:ml-64 flex items-center justify-center min-h-screen">
+        <div className="bg-gray-800 p-6 md:p-8 rounded-lg shadow-lg w-full max-w-md flex flex-col items-center">
+          <h2 className="text-2xl font-bold mb-4">My Profile</h2>
+          <Avatar sx={{ width: 120, height: 120, marginBottom: 2 }} />
+          <div className="text-center">
+            <p className="text-lg font-semibold mb-2">Name: {user?.name || "N/A"}</p>
+            <p className="text-lg font-semibold mb-2">Email: {user?.email}</p>
+            <p className="text-lg font-semibold mb-2">Username: {user?.username}</p>
+            <p className="text-lg font-semibold mb-2">Gender: {user?.gender}</p>
+            {/* Removed the Date Joined section */}
+          </div>
         </div>
       </div>
     </div>
