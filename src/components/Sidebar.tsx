@@ -1,16 +1,15 @@
 import React, { useState } from "react";
 import Link from "next/link";
-import { FaHome, FaUser, FaBook, FaSignOutAlt, FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaHome, FaUser, FaBook, FaSignOutAlt } from 'react-icons/fa';
 import { usePathname, useRouter } from 'next/navigation';
 import { auth } from '@/firebase';
 import { signOut } from 'firebase/auth';
 
 const Sidebar = () => {
-  const [isCollapsed, setIsCollapsed] = useState(false); // State to manage sidebar collapse
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const pathname = usePathname();
   const router = useRouter();
 
-  // Function to handle active state
   const isActive = (path: string) =>
     pathname === path
       ? isCollapsed
@@ -18,7 +17,6 @@ const Sidebar = () => {
         : "bg-gray-900 text-indigo-500"
       : "";
 
-  // Function to handle logout
   const handleLogout = async () => {
     try {
       await signOut(auth);
@@ -29,10 +27,8 @@ const Sidebar = () => {
   };
 
   return (
-    <div className={`flex z-50 h-screen bg-black text-white fixed top-0 left-0 transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'}`}>
-      <div className={`flex flex-col h-full ${isCollapsed ? 'w-16' : 'w-64'}`}>
-        <Link href="/" className={`flex items-center justify-center p-4 text-xl font-bold text-white hover:text-indigo-500 ${isActive('/')}`}>
-        </Link>
+    <div className={`flex z-50 bg-black text-white fixed transition-all duration-300 ${isCollapsed ? 'w-16' : 'w-64'} sidebar-container`}>
+      <div className={`flex flex-col ${isCollapsed ? 'w-16' : 'w-64'} sidebar-content`}>
         <nav className="flex-1 flex flex-col">
           <ul className="flex flex-col flex-1">
             <li className="flex flex-1">
@@ -65,12 +61,47 @@ const Sidebar = () => {
           </ul>
         </nav>
       </div>
-      <button
-        onClick={() => setIsCollapsed(!isCollapsed)}
-        className="absolute top-1/2 right-0 transform translate-x-full -translate-y-1/2 bg-indigo-500 text-white p-2 rounded-r-full"
-      >
-        {isCollapsed ? <FaChevronRight /> : <FaChevronLeft />}
-      </button>
+
+      <style jsx>{`
+        /* Non-mobile styles */
+        .sidebar-container {
+          top: 0;
+          left: 0;
+          height: 100vh; /* Full vertical height */
+        }
+
+        /* Mobile styles */
+        @media (max-width: 768px) {
+          .sidebar-container {
+            top: auto;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: auto;
+            flex-direction: row;
+            justify-content: space-around;
+          }
+
+          .sidebar-content {
+            flex-direction: row;
+            width: 100%;
+            height: 4rem;
+          }
+
+          .sidebar-content ul {
+            flex-direction: row;
+            width: 100%;
+          }
+
+          .sidebar-content li {
+            flex: 1;
+          }
+
+          .sidebar-content li span {
+            display: none;
+          }
+        }
+      `}</style>
     </div>
   );
 };
