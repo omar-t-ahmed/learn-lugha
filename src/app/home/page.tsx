@@ -100,7 +100,7 @@ export default function LessonPath() {
 
       {/* Progress Bar on Top Right */}
       <div className="absolute top-5 right-5 z-20">
-        <UserProgress level={1} xp={120} />
+        <UserProgress level={1} xp={20} />
       </div>
 
       {/* Main content */}

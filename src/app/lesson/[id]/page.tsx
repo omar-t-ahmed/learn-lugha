@@ -83,10 +83,14 @@ const LessonPage = () => {
     <div className="bg-gradient-to-b from-black to-gray-900 min-h-screen text-white">
       <Navbar />
       <div className="relative flex flex-col items-center justify-start p-10">
-        <h1 className="text-4xl font-bold mb-4">{lesson.title}</h1>
+        <h1 className="text-4xl text-center font-bold mb-4">{lesson.title}</h1>
         {/* <p className="text-lg mb-6">{lesson.content}</p> */}
-        {/* Include the Chatbot under the lesson heading and pass user and lesson */}
-        <Chatbot user={user} lesson={{ ...lesson, lesson_id: id }} />
+        {/* Include the Chatbot under the lesson heading and pass user, lesson, and onComplete */}
+        <Chatbot 
+          user={user} 
+          lesson={{ ...lesson, lesson_id: id }} 
+          onComplete={() => {}} 
+        />
         <button
           className="mt-6 px-4 py-2 bg-indigo-500 text-white font-semibold rounded hover:bg-gray-100 transition"
           onClick={() => router.push("/home")}

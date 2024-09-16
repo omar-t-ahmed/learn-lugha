@@ -21,7 +21,7 @@ const UserProgress: React.FC<UserProgressProps> = ({ level, xp }) => {
   return (
     <main className="container mx-auto px-4 py-8">
       <section className="bg-gray-800 rounded-lg shadow-md p-6 mb-8 text-white">
-        <h2 className="text-xl font-semibold mb-4">Your Progress</h2>
+        <h2 className="text-xl font-semibold mb-4">Omar's Progress</h2>
         <div className="flex justify-between gap-4 items-center mb-4">
           <div className="flex items-center space-x-2">
             <BarChart className="h-5 w-5 text-yellow-500" />
@@ -32,8 +32,8 @@ const UserProgress: React.FC<UserProgressProps> = ({ level, xp }) => {
             <span className="font-medium">{xp} XP</span>
           </div>
         </div>
-        <ProgressBar value={(xp / 200) * 100} />
-        <p className="text-sm text-gray-400">{(xp / 200) * 100}% to next level</p>
+        <ProgressBar value={xp} />
+        <p className="text-sm text-gray-400">{(100 - xp)}% to next level</p>
       </section>
     </main>
   );

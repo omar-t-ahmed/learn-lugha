@@ -15,12 +15,13 @@ interface ChatbotProps {
       objectives: string[];
       vocabulary: { arabic: string; english: string; type: string; }[];
     };
+    onComplete: () => void; // Add this line
   }
 
 const userProfilePic = "/arabic-user.png"; // Path relative to the public directory
 const botProfilePic = "/arabic-teacher-male-pfp.png"; // Path relative to the public directory
 
-const Chatbot: React.FC<ChatbotProps> = ({ user, lesson }) => {
+const Chatbot: React.FC<ChatbotProps> = ({ user, lesson, onComplete }) => {
     const [messages, setMessages] = useState<
         {
             content: string;
@@ -50,8 +51,8 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson }) => {
     const messageEndRef = useRef<HTMLDivElement | null>(null);
     const [modalOpen, setModalOpen] = useState(false);
     const [confetti, setConfetti] = useState(false);
-    const [loading, setLoading] = useState(true); // Add loading state
     const [feedback, setFeedback] = useState<string | null>(null); // Add feedback state
+    const [loading, setLoading] = useState(false); // Add this line
 
     const scrollToBottom = () => {
         if (messageEndRef.current) {
@@ -422,11 +423,11 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson }) => {
                 
                 <div className="flex flex-col sm:flex-row w-full h-full">
                     <div className="flex flex-col items-center w-full sm:w-1/4 h-full">
-                        <div className="flex w-full flex-col items-center pb-4 border-b border-gray-300">
+                        <div className="flex w-full flex-col items-center pb-4 border-b-2 border-gray-300">
                             <img
                                 src={botProfilePic}
                                 alt="Chatbot"
-                                className={`w-24 h-36 sm:w-40 sm:h-40 rounded-full transition-all ${
+                                className={`w-40 sm:h-40 rounded-full transition-all ${
                                     speakingIndex !== null ? `border-8 border-indigo-500` : ""
                                 }`}
                                 style={{
@@ -442,9 +443,11 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson }) => {
                         </div>
 
                         <div className="mt-4 w-full max-w-xs overflow-y-auto hidden sm:block flex-grow">
-                            <div className="bg-indigo-500 p-4 rounded shadow-lg w-full mb-4">
-                                <h3 className="text-xl text-center font-semibold">Feedback</h3>
-                                <p>{feedback}</p>
+                            <div className= " w-full mb-4 flex justify-center">
+                                <div className="w-11/12 bg-indigo-500 p-4 rounded shadow-lg">
+                                    <h3 className="text-xl text-center font-semibold">Feedback</h3>
+                                    <p className="text-center">{feedback}</p>
+                                </div>
                             </div>
                             <div className="w-full">
                         <h3 className="text-xl font-semibold text-center">Vocabulary</h3>
@@ -463,116 +466,111 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson }) => {
                         </div>
                     </div>
 
-                    <div className="border-l-2 border-gray-300 mx-4"></div> {/* Thin line between sections */}
+                    <div className="border-l-2 border-gray-300 mx-4 sm:mx-0"></div> {/* Thin line between sections */}
 
                     <div className="flex flex-col items-start w-full sm:w-3/4 h-full">
-                        {loading ? (
-                            <img src="/loading-spinner.gif" alt="Loading..." />
-                        ) : (
-                            <>
-                                <div className="flex flex-col items-start w-full overflow-y-auto pr-2 no-scrollbar flex-grow" style={{ height: '30rem' }}>
-                                    <div className="w-full px-4 sm:px-6 h-full overflow-y-auto">
-                                        {messages.map((message, index) => (
-                                            <div key={index} className="mb-2">
-                                                <div className={`flex ${message.isUser ? "justify-end" : "justify-start"}`}>
-                                                    <div
-                                                        ref={(el) => {
-                                                            messageRefs.current[index] = el; // Assign the element to the ref
-                                                        }}
-                                                        className={`inline-block p-2 sm:p-3 rounded-lg ${
-                                                            message.isUser ? "bg-blue-500 text-white" : "bg-purple-200 text-black"
-                                                        }`}
-                                                        style={{
-                                                            maxWidth: "80%",
-                                                            textAlign: "left",
-                                                            wordBreak: "break-word",
-                                                        }}
-                                                    >
-                                                        {message.content}
-                                                    </div>
-                                                    {!message.isUser && (
-                                                        <>
-                                                            <button
-                                                                onClick={() => handleSpeak(message.content, index)}
-                                                                className={`ml-2 ${
-                                                                    speakingIndex === index ? "text-black" : "text-gray-600 hover:text-gray-800"
-                                                                }`}
-                                                                title="Listen to message"
-                                                            >
-                                                                <i className="fas fa-volume-up"></i>
-                                                            </button>
-                                                            <button
-                                                                onClick={() => handleTranslate(message.content, index)}
-                                                                className="ml-2 text-gray-600 hover:text-gray-800"
-                                                                title="Translate message"
-                                                            >
-                                                                <i className="fas fa-language"></i>
-                                                            </button>
-                                                        </>
-                                                    )}
+                        <>
+                            <div className="flex flex-col items-start w-full overflow-y-auto pr-2 no-scrollbar flex-grow" style={{ height: '30rem' }}>
+                                <div className="w-full px-4 sm:px-6 h-full overflow-y-auto py-4 sm:py-0">
+                                    {messages.map((message, index) => (
+                                        <div key={index} className="mb-2">
+                                            <div className={`flex ${message.isUser ? "justify-end" : "justify-start"}`}>
+                                                <div
+                                                    ref={(el) => {
+                                                        messageRefs.current[index] = el; // Assign the element to the ref
+                                                    }}
+                                                    className={`inline-block p-2 sm:p-3 rounded-lg ${
+                                                        message.isUser ? "bg-blue-500 text-white" : "bg-purple-200 text-black"
+                                                    }`}
+                                                    style={{
+                                                        maxWidth: "80%",
+                                                        textAlign: "left",
+                                                        wordBreak: "break-word",
+                                                    }}
+                                                >
+                                                    {message.content}
                                                 </div>
-                                                {showTranslation[index] && translatedMessages[index] && (
-                                                    <div
-                                                        className="p-2 bg-purple-100 rounded-lg text-gray-500"
-                                                        style={{
-                                                            width: messageRefs.current[index]?.offsetWidth,
-                                                            textAlign: "left",
-                                                            marginTop: "0px",
-                                                            border: "1px solid #ddd",
-                                                        }}
-                                                    >
-                                                        {translatedMessages[index]}
-                                                    </div>
+                                                {!message.isUser && (
+                                                    <>
+                                                        <button
+                                                            onClick={() => handleSpeak(message.content, index)}
+                                                            className={`ml-2 ${
+                                                                speakingIndex === index ? "text-black" : "text-gray-600 hover:text-gray-800"
+                                                            }`}
+                                                            title="Listen to message"
+                                                        >
+                                                            <i className="fas fa-volume-up"></i>
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleTranslate(message.content, index)}
+                                                            className="ml-2 text-gray-600 hover:text-gray-800"
+                                                            title="Translate message"
+                                                        >
+                                                            <i className="fas fa-language"></i>
+                                                        </button>
+                                                    </>
                                                 )}
                                             </div>
-                                        ))}
-                                        {isThinking && (
-                                            <div className="mb-2 flex justify-start items-center">
-                                                <div className="inline-block p-2 sm:p-3 rounded-lg bg-purple-200 text-black" style={{ maxWidth: "80%" }}>
-                                                    <span className="animate-pulse">Thinking...</span>
+                                            {showTranslation[index] && translatedMessages[index] && (
+                                                <div
+                                                    className="p-2 bg-purple-100 rounded-lg text-gray-500 mt-2"
+                                                    style={{
+                                                        width: messageRefs.current[index]?.offsetWidth,
+                                                        textAlign: "left",
+                                                        border: "1px solid #ddd",
+                                                    }}
+                                                >
+                                                    {translatedMessages[index]}
                                                 </div>
+                                            )}
+                                        </div>
+                                    ))}
+                                    {isThinking && (
+                                        <div className="mb-2 flex justify-start items-center">
+                                            <div className="inline-block p-2 sm:p-3 rounded-lg bg-purple-200 text-black" style={{ maxWidth: "80%" }}>
+                                                <span className="animate-pulse">Thinking...</span>
                                             </div>
-                                        )}
-                                        <div ref={messageEndRef}></div>
+                                        </div>
+                                    )}
+                                    <div ref={messageEndRef}></div>
+                                </div>
+                            </div>
+                            {!lessonCompleted && (
+                                <div className="w-full mt-4">
+                                    <div className="flex p-2 border-t-2 border-gray-300 mt-2 justify-center">
+                                        <input
+                                            type="text"
+                                            className="flex-grow p-2 border border-gray-600 rounded-l-md text-white bg-gray-800"
+                                            placeholder="Type your message..."
+                                            value={input}
+                                            onChange={(e) => setInput(e.target.value)}
+                                            onKeyPress={(e) => {
+                                                if (e.key === "Enter") handleSendMessage();
+                                            }}
+                                        />
+                                        <button
+                                            onClick={handleSendMessage}
+                                            className="bg-blue-600 text-white p-2 rounded-r-md hover:bg-blue-700 active:bg-blue-800 transition-colors flex items-center "
+                                        >
+                                            <i className="fas fa-paper-plane xs:mr-2 px-2 xs:px-0"> </i>
+                                            <span className="hidden sm:inline">Send</span>
+                                        </button>
+                                        <button
+                                            onClick={toggleListening}
+                                            className={`p-2 ml-2 ${isListening ? "bg-red-600" : "bg-green-600"} text-white rounded-md flex items-center`}
+                                        >
+                                            <i className={`fas ${isListening ? "fa-microphone-slash" : "fa-microphone"} xs:mr-2 px-2 xs:px-0`}></i>
+                                            <span className="hidden sm:inline">{isListening ? "Stop Speaking" : "Start Speaking"}</span>
+                                        </button>
                                     </div>
                                 </div>
-                                {!lessonCompleted && (
-                                    <div className="w-full mt-4">
-                                        <div className="flex p-2 border-t mt-2 justify-center">
-                                            <input
-                                                type="text"
-                                                className="flex-grow p-2 border border-gray-600 rounded-l-md text-white bg-gray-800"
-                                                placeholder="Type your message..."
-                                                value={input}
-                                                onChange={(e) => setInput(e.target.value)}
-                                                onKeyPress={(e) => {
-                                                    if (e.key === "Enter") handleSendMessage();
-                                                }}
-                                            />
-                                            <button
-                                                onClick={handleSendMessage}
-                                                className="bg-blue-600 text-white p-2 rounded-r-md hover:bg-blue-700 active:bg-blue-800 transition-colors"
-                                            >
-                                                <i className="fas fa-paper-plane mr-2"> </i>
-                                                <>Send</>
-                                            </button>
-                                            <button
-                                                onClick={toggleListening}
-                                                className={`p-2 ml-2 ${isListening ? "bg-red-600" : "bg-green-600"} text-white rounded-md flex items-center`}
-                                            >
-                                                <i className={`fas ${isListening ? "fa-microphone-slash" : "fa-microphone"} mr-2`}></i>
-                                                {isListening ? "Stop Speaking" : "Start Speaking"}
-                                            </button>
-                                        </div>
-                                    </div>
-                                )}
-                                {lessonCompleted && (
-                                    <div className="mt-6 text-green-500 w-full text-xl text-center flex justify-center">
-                                        <p>You&apos;ve completed this lesson!</p>
-                                    </div>
-                                )}
-                            </>
-                        )}
+                            )}
+                            {lessonCompleted && (
+                                <div className="mt-6 text-green-500 w-full text-xl text-center flex justify-center">
+                                    <p>You&apos;ve completed this lesson!</p>
+                                </div>
+                            )}
+                        </>
                     </div>
                 </div>
 
