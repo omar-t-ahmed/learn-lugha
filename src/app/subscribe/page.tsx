@@ -1,26 +1,47 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { auth } from "@/firebase"; // Ensure this is the correct path to your firebase file
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function CheckoutPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [userEmail, setUserEmail] = useState<string | null>(null);
+
+    // Fetch the logged-in user's email
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user && user.email) {
+                setUserEmail(user.email);
+            } else {
+                setUserEmail(null);
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     const handleCheckout = async (plan: {
         name: string;
         price: number;
         interval: string;
     }) => {
+        if (!userEmail) {
+            setError("You must be logged in to subscribe.");
+            return;
+        }
+
         setLoading(true);
         setError(null);
 
         try {
-            const res = await fetch("/api/checkout", {
+            const res = await fetch("/api/stripe/checkout", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ plan }),
+                body: JSON.stringify({ plan, email: userEmail }), // Send plan and user email
             });
 
             const session = await res.json();
@@ -55,25 +76,24 @@ export default function CheckoutPage() {
 
                 {error && <p className="text-red-500 mt-4">{error}</p>}
 
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-12">
+                <div className="grid grid-cols-1 gap-8 mt-12">
                     <div className="p-6 bg-gray-800 rounded-lg shadow-lg hover:scale-105 transform transition-all flex flex-col justify-between">
                         <div>
                             <h2 className="text-2xl font-bold text-white mb-4 text-center">
-                                Basic Plan
+                                Premium Plan
                             </h2>
                             <p className="text-gray-400 text-center mb-6">
                                 $5/month
                             </p>
                             <ul className="text-gray-400 mb-8 space-y-3 h-32">
-                                <li>✓ Access to basic lessons</li>
-                                <li>✓ Weekly progress reports</li>
-                                <li>✓ AI-powered practice sessions</li>
+                                <li>✓ Access to 50+ lessons</li>
+                                <li>✓ AI-powered conversations</li>
                             </ul>
                         </div>
                         <button
                             onClick={() =>
                                 handleCheckout({
-                                    name: "Basic Plan",
+                                    name: "Premium Plan",
                                     price: 500,
                                     interval: "month",
                                 })
@@ -81,37 +101,7 @@ export default function CheckoutPage() {
                             disabled={loading}
                             className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
                         >
-                            Subscribe to Basic
-                        </button>
-                    </div>
-
-                    <div className="p-6 bg-gray-800 rounded-lg shadow-lg hover:scale-105 transform transition-all flex flex-col justify-between">
-                        <div>
-                            <h2 className="text-2xl font-bold text-white mb-4 text-center">
-                                Pro Plan
-                            </h2>
-                            <p className="text-gray-400 text-center mb-6">
-                                $15/month
-                            </p>
-                            <ul className="text-gray-400 mb-8 space-y-3 h-32">
-                                <li>✓ Access to all lessons</li>
-                                <li>✓ Daily progress reports</li>
-                                <li>✓ Personalized learning paths</li>
-                                <li>✓ 1-on-1 AI tutoring</li>
-                            </ul>
-                        </div>
-                        <button
-                            onClick={() =>
-                                handleCheckout({
-                                    name: "Pro Plan",
-                                    price: 1500,
-                                    interval: "month",
-                                })
-                            }
-                            disabled={loading}
-                            className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
-                        >
-                            Subscribe to Pro
+                            Subscribe to Premium
                         </button>
                     </div>
                 </div>
