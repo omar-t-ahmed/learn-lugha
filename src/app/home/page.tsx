@@ -26,7 +26,7 @@ export default function LessonPath() {
       try {
         const token = await getCurrentUserToken();
         if (!token) {
-          router.push("/login");
+          router.push("/");
           return;
         }
         setUserToken(token);
@@ -100,13 +100,34 @@ export default function LessonPath() {
 
       {/* Progress Bar on Top Right */}
       <div className="absolute top-5 right-5 z-20">
-        <UserProgress level={1} xp={120} />
+        <UserProgress level={1} xp={20} />
       </div>
 
       {/* Main content */}
       <div className="flex-grow p-5 md:p-10 flex flex-col items-center relative">
-        <h1 className="text-2xl md:text-3xl font-bold mb-5 md:mb-10">Lessons</h1>
         <div className="relative w-full flex flex-col space-y-16 items-center">
+          {/* Pre Lesson and Resources side by side */}
+          <div className="w-full flex flex-row justify-center space-x-10">
+            <div className="flex flex-col items-center relative z-10">
+              <h2
+                className="p-4 rounded-md text-2xl font-bold text-center bg-purple-500 cursor-pointer"
+                onClick={() => router.push('/tutorial')}
+              >
+                Tutorial
+              </h2>
+            </div>
+            <div className="flex flex-col items-center relative z-10">
+              <h2
+                className="p-4 rounded-md text-2xl font-bold text-center bg-teal-500 cursor-pointer"
+                onClick={() => router.push('/resources')}
+              >
+                Resources
+              </h2>
+            </div>
+          </div>
+
+          <h1 className="text-2xl md:text-3xl font-bold mb-5 md:mb-10">Lessons</h1>
+
           {chapters.map((chapter, chapterIndex) => {
             // Select a color for the chapter title by cycling through the color array
             const chapterColor = chapterColors[chapterIndex % chapterColors.length];

@@ -10,10 +10,10 @@ import { getCurrentUserToken } from "@/firebase";
 interface ChatbotProps {
     user: any;
     lesson: {
-        lesson_id: number;
-        title: string;
-        objectives: string[];
-        vocabulary: { arabic: string; english: string; type: string }[];
+      lesson_id: number;
+      title: string;
+      objectives: string[];
+      vocabulary: { arabic: string; english: string; type: string; }[];
     };
     onComplete: () => void; // Add this line
   }
@@ -52,7 +52,6 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson, onComplete }) => {
     const [modalOpen, setModalOpen] = useState(false);
     const [confetti, setConfetti] = useState(false);
     const [feedback, setFeedback] = useState<string | null>(null); // Add feedback state
-    const [loading, setLoading] = useState(false); // Add this line
 
     const scrollToBottom = () => {
         if (messageEndRef.current) {
@@ -65,31 +64,6 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson, onComplete }) => {
     };
 
     // Fetch existing transcript if the lesson is already completed
-    const fetchTranscript = async () => {
-        try {
-            const token = await getCurrentUserToken();
-            const response = await fetch(
-                `/api/transcripts?lessonId=${lesson.lesson_id}`,
-                {
-                    headers: {
-                        Authorization: `Bearer ${token}`,
-                    },
-                }
-            );
-
-            if (response.ok) {
-                const transcript = await response.json();
-                setMessages(transcript.messages);
-                setLessonCompleted(true);
-            } else {
-                console.error("Failed to fetch transcript");
-            }
-        } catch (error) {
-            console.error("Error fetching transcript:", error);
-        } finally {
-            setLoading(false); // Set loading to false after fetching
-        }
-    };
 
     // Handle Text-to-Speech
     const handleSpeak = async (text: string, index: number) => {
@@ -165,8 +139,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson, onComplete }) => {
         }
     };
 
-    let isHandlingResponse = false;
-
+    // Initialize Speech Recognition
     const initializeSpeechRecognition = () => {
         if (recognitionRef.current) return;
 
@@ -180,33 +153,16 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson, onComplete }) => {
 
         recognition.onend = () => {
             setIsListening(false);
-            recognition.stop();
         };
 
         recognition.onresult = (event: any) => {
-            if (isHandlingResponse) return;
-
             const transcript = event.results[0][0].transcript;
 
             setMessages((prevMessages) => {
-                const newMessages = [
-                    ...prevMessages,
-                    { content: transcript, isUser: true, role: "user" },
-                ];
-
-                if (!isHandlingResponse) {
-                    isHandlingResponse = true;
-                    handleBotResponse(transcript, newMessages);
-                }
-
-                return newMessages;
+                const newMessages = [...prevMessages, { content: transcript, isUser: true, role: "user" }];
+                handleBotResponse(transcript, newMessages);
+                return newMessages; // Set the updated messages
             });
-
-            setTimeout(() => {
-                isHandlingResponse = false;
-            }, 1000);
-
-            recognition.stop();
         };
 
         recognitionRef.current = recognition;
@@ -275,10 +231,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson, onComplete }) => {
 
         // Update the vocabulary state for the user
         setMessages((prevMessages) => {
-            const newMessages = [
-                ...prevMessages,
-                { content: input, isUser: true, role: "user" },
-            ];
+            const newMessages = [...prevMessages, { content: input, isUser: true, role: "user" }];
             handleBotResponse(input, newMessages);
             setInput(""); // Clear input after setting the new message
             return newMessages; // Set the updated messages
@@ -292,31 +245,31 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson, onComplete }) => {
         }
     };
 
-    const handleBotResponse = async (
-        userInput: string,
-        conversation: { content: string; isUser: boolean; role: string }[]
-    ) => {
-        console.log("HBR Triggered");
+    const handleBotResponse = async (userInput: string, conversation: { content: string; isUser: boolean; role: string }[]) => {
         if (lessonCompleted) return;
 
         try {
             setIsThinking(true);
 
-            const response = await fetch("/api/openai", {
+            const response = await fetch("/api/tutorial", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     input: userInput,
-                    lesson,
+                    lesson: {
+                        lesson_id: lesson.lesson_id,
+                        title: lesson.title,
+                        objectives: lesson.objectives,
+                        vocabulary: lesson.vocabulary,
+                    },
                     conversation,
                     usedVocabulary,
                 }),
             });
 
             if (response.status === 204) {
-                // Do nothing if it's a duplicate response
                 return;
             }
 
@@ -342,25 +295,10 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson, onComplete }) => {
                     method: "PATCH",
                     headers: {
                         "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`, // Include the token in the headers
+                        "Authorization": `Bearer ${token}`, // Include the token in the headers
                     },
                     body: JSON.stringify({
-                        lessons: [...user.lessons, lesson.lesson_id],
-                        completedLesson: true, // Indicate that a lesson was completed
-                    }),
-                });
-
-                // Send POST request to create a new transcript
-                await fetch("/api/transcripts", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                        Authorization: `Bearer ${token}`, // Include the token in the headers
-                    },
-                    body: JSON.stringify({
-                        messages: conversation,
-                        lessonId: lesson.lesson_id,
-                        userId: user.id,
+                        tutorialCompleted: true,
                     }),
                 });
 
@@ -382,27 +320,17 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson, onComplete }) => {
     }, [messages]);
 
     useEffect(() => {
-        const introMessage =
-            "Welcome to the lesson! Let's start learning Arabic.";
+        const introMessage = "Welcome to the tutorial! Try your best to answer in arabic! If you need to translate something, use the translate button. Please try to say 'مرحبا (marhaba)' which means 'hello' in arabic!";
         setMessages([{ content: introMessage, isUser: false, role: "system" }]);
         // handleSpeak(introMessage, 0);
     }, []);
-
-    useEffect(() => {
-        fetchTranscript();
-    }, [lesson.lesson_id]);
 
     // Helper function to check if a vocabulary word is used
     const isVocabularyUsed = (arabicWord: string) => {
         return usedVocabulary.includes(arabicWord);
     };
 
-    const closeModal = () => {
-        setModalOpen(false);
-    };
-
     const endLesson = async (messages: any) => {
-        setLessonCompleted(true);
         setConfetti(true);
 
         try {
@@ -414,27 +342,13 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson, onComplete }) => {
                 method: "PATCH",
                 headers: {
                     "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`, // Include the token in the headers
+                    "Authorization": `Bearer ${token}`, // Include the token in the headers
                 },
                 body: JSON.stringify({
-                    lessons: [...user.lessons, lesson.lesson_id],
-                    completedLesson: true, // Indicate that a lesson was completed
+                    tutorialCompleted: true,
                 }),
             });
 
-            // Send POST request to create a new transcript
-            await fetch("/api/transcripts", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`, // Include the token in the headers
-                },
-                body: JSON.stringify({
-                    messages: messages,
-                    lessonId: lesson.lesson_id,
-                    userId: user.id,
-                }),
-            });
         } catch (error) {
             console.error("Error ending lesson:", error);
         } finally {
@@ -443,34 +357,27 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson, onComplete }) => {
             }, 5000);
         }
     };
-
+    
     return (
         <div className="relative min-h-screen flex flex-col p-4 w-full max-w-screen-xl mx-auto">
             <>
                 {confetti && <Confetti />}
-
+                
                 <div className="flex flex-col sm:flex-row w-full h-full">
                     <div className="flex flex-col items-center w-full sm:w-1/4 h-full">
                         <div className="flex w-full flex-col items-center pb-4 border-b-2 border-gray-300">
                             <img
                                 src={botProfilePic}
                                 alt="Chatbot"
-
                                 className={`w-40 sm:h-40 rounded-full transition-all ${
                                     speakingIndex !== null ? `border-8 border-indigo-500` : ""
                                 }`}
                                 style={{
-                                    borderWidth: `${
-                                        speakingIndex !== null
-                                            ? (volumeLevel / 256) * 10
-                                            : 8
-                                    }px`,
+                                    borderWidth: `${speakingIndex !== null ? (volumeLevel / 256) * 10 : 8}px`,
                                 }}
                             />
                             <button
-                                onClick={() => {
-                                    endLesson(messages);
-                                }}
+                                onClick={() => { endLesson(messages) }}
                                 className="mt-2 bg-red-500 text-white p-2 rounded-md flex items-center"
                             >
                                 End Lesson
@@ -478,7 +385,6 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson, onComplete }) => {
                         </div>
 
                         <div className="mt-4 w-full max-w-xs overflow-y-auto hidden sm:block flex-grow">
-
                             <div className= " w-full mb-4 flex justify-center">
                                 <div className="w-11/12 bg-indigo-500 p-4 rounded shadow-lg">
                                     <h3 className="text-xl text-center font-semibold">Feedback</h3>
@@ -486,34 +392,21 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson, onComplete }) => {
                                 </div>
                             </div>
                             <div className="w-full">
-                                <h3 className="text-xl font-semibold text-center">
-                                    Vocabulary
-                                </h3>
-                                <ul className="list-disc list-inside mt-4">
-                                    {lesson.vocabulary.map((vocab, index) => (
-                                        <li key={index} className="mb-2">
-                                            <span
-                                                className={`font-bold ${
-                                                    isVocabularyUsed(
-                                                        vocab.arabic
-                                                    )
-                                                        ? "text-green-500"
-                                                        : "text-gray-400"
-                                                }`}
-                                            >
-                                                {vocab.arabic}
-                                            </span>
-                                            {" - "}
-                                            <span className="text-gray-700">
-                                                {vocab.english}
-                                            </span>
-                                        </li>
-                                    ))}
-                                </ul>
-                            </div>
+                        <h3 className="text-xl font-semibold text-center">Vocabulary</h3>
+                        <ul className="list-disc list-inside mt-4">
+                            {lesson.vocabulary.map((vocab, index) => (
+                                <li key={index} className="mb-2">
+                                    <span className={`font-bold ${isVocabularyUsed(vocab.arabic) ? "text-green-500" : "text-gray-400"}`}>
+                                        {vocab.arabic}
+                                    </span>
+                                    {" - "}
+                                    <span className="text-gray-700">{vocab.english}</span>
+                                </li>
+                            ))}
+                        </ul>
+                    </div>
                         </div>
                     </div>
-
 
                     <div className="border-l-2 border-gray-300 mx-4 sm:mx-0"></div> {/* Thin line between sections */}
 
@@ -626,32 +519,20 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson, onComplete }) => {
                 {/* Vocabulary Section for Mobile */}
                 <div className="block sm:hidden mt-4">
                     <div className="bg-indigo-500 p-4 rounded shadow-lg w-full mb-4 ">
-                        <h3 className="text-xl text-center font-semibold">
-                            Feedback
-                        </h3>
+                        <h3 className="text-xl text-center font-semibold">Feedback</h3>
                         <p>{feedback}</p>
                     </div>
 
                     <div className="w-full">
-                        <h3 className="text-xl font-semibold text-center">
-                            Vocabulary
-                        </h3>
+                        <h3 className="text-xl font-semibold text-center">Vocabulary</h3>
                         <ul className="list-disc list-inside mt-4">
                             {lesson.vocabulary.map((vocab, index) => (
                                 <li key={index} className="mb-2">
-                                    <span
-                                        className={`font-bold ${
-                                            isVocabularyUsed(vocab.arabic)
-                                                ? "text-green-500"
-                                                : "text-gray-400"
-                                        }`}
-                                    >
+                                    <span className={`font-bold ${isVocabularyUsed(vocab.arabic) ? "text-green-500" : "text-gray-400"}`}>
                                         {vocab.arabic}
                                     </span>
                                     {" - "}
-                                    <span className="text-gray-700">
-                                        {vocab.english}
-                                    </span>
+                                    <span className="text-gray-700">{vocab.english}</span>
                                 </li>
                             ))}
                         </ul>

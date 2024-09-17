@@ -21,45 +21,45 @@ export default function PrivacyPolicy() {
 
       {/* Privacy Policy Content */}
       <main className="flex flex-col items-center justify-center w-full max-w-6xl mx-auto px-6 pt-8 pb-16">
-        <p className="text-4xl font-bold tracking-tight text-white text-left">
+        <p className="text-4xl font-bold tracking-tight text-white text-center">
           Privacy Policy
         </p>
         <p className="mt-6 mb-14 text-lg leading-8 text-gray-400 text-center">
           At LearnLugha, your privacy is very important to us. This Privacy Policy explains how we collect, use, and protect your personal information when you use our platform.
         </p>
 
-        <section className="w-full text-left mb-10">
+        <section className="w-full text-center mb-10">
           <h2 className="text-3xl font-semibold text-white mb-4">Information We Collect</h2>
           <p className="text-lg text-gray-400 leading-8">
             We collect personal information that you provide to us directly, such as your name, email address, and learning preferences. We may also collect usage data, such as how you interact with the platform and which lessons you complete, to help us improve your experience.
           </p>
         </section>
 
-        <section className="w-full text-left mb-10">
+        <section className="w-full text-center mb-10">
           <h2 className="text-3xl font-semibold text-white mb-4">How We Use Your Information</h2>
           <p className="text-lg text-gray-400 leading-8">
             Your information is used to provide personalized learning experiences and to improve our services. We may use your email address to communicate important updates or notifications about your progress. Rest assured, we will never share your data with third parties without your consent.
           </p>
         </section>
 
-        <section className="w-full text-left mb-10">
+        <section className="w-full text-center mb-10">
           <h2 className="text-3xl font-semibold text-white mb-4">Your Data Security</h2>
           <p className="text-lg text-gray-400 leading-8">
             We use industry-standard encryption and security protocols to protect your personal information. Access to your data is restricted to authorized personnel only, and we regularly review our security practices to ensure your information is safe.
           </p>
         </section>
 
-        <section className="w-full text-left mb-10">
+        <section className="w-full text-center mb-10">
           <h2 className="text-3xl font-semibold text-white mb-4">Your Rights</h2>
           <p className="text-lg text-gray-400 leading-8">
             You have the right to access, update, or delete your personal information at any time. If you wish to exercise these rights, please contact us, and we will assist you in managing your data.
           </p>
         </section>
 
-        <section className="w-full text-left">
+        <section className="w-full text-center">
           <h2 className="text-3xl font-semibold text-white mb-4">Contact Us</h2>
           <p className="text-lg text-gray-400 leading-8">
-            If you have any questions or concerns about your data, please feel free to reach out to us. Your privacy and security are our top priorities.
+            If you have any questions or concerns about your data, please feel free to reach out to us at <a href="mailto:learnlugha.ai@gmail.com" className="text-white">learnlugha.ai@gmail.com</a>. Your privacy and security are our top priorities.
           </p>
         </section>
       </main>

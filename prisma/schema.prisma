@@ -12,11 +12,12 @@ model User {
   email        String   @unique
   name         String?
   username     String   @unique
+  tutorialCompleted Boolean @default(false)
   gender       Gender   @default(unknown)
   lessons      Int[]    @default([0])
   achievements Achievement[]
   progress     Json
-  isSubscribed Boolean  @default(false) // New field to track subscription status
+  isSubscribed Boolean  @default(false)
 }
 
 
