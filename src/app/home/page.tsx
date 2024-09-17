@@ -8,15 +8,22 @@ import { getCurrentUserToken } from "@/firebase";
 import { chapters, lessons, LessonType } from "@/lib/lessons"; // Import chapters and lessons from lessons.ts
 
 type UserType = {
-  lessons: number[]; // Change to number[]
+  lessons: number[];
+  name: string;
+  progress: {
+    level: number;
+    xp: number;
+  };
+  gender: string; // Added gender
 };
 
 export default function LessonPath() {
   const router = useRouter();
   const [userToken, setUserToken] = useState<string | null>(null);
-  const [userLessons, setUserLessons] = useState<number[]>([]); // Change to number[]
+  const [userLessons, setUserLessons] = useState<number[]>([]);
   const [selectedLesson, setSelectedLesson] = useState<any | null>(null);
   const [dialogPosition, setDialogPosition] = useState<{ top: number; left: number } | null>(null);
+  const [user, setUser] = useState<UserType | null>(null); // State for user data
 
   // Define a set of colors for the chapter titles
   const chapterColors = ["bg-indigo-500", "bg-blue-500", "bg-green-500", "bg-cyan-500", "bg-red-500", "bg-yellow-500", "bg-pink-500"];
@@ -31,14 +38,10 @@ export default function LessonPath() {
         }
         setUserToken(token);
 
-        // Fetch user lessons progress here and set it
-        const user: UserType = await fetchUser(token); // Replace with your actual fetch function
-        if (user.lessons.length === 0) {
-          // If no lessons, unlock the first lesson
-          setUserLessons([0]); // Use 0 to indicate no completed lessons
-        } else {
-          setUserLessons(user.lessons);
-        }
+        // Fetch user data including lessons, name, level, xp, and gender
+        const user: UserType = await fetchUser(token);
+        setUser(user);
+        setUserLessons(user.lessons);
       } catch (error) {
         console.error("Error fetching user lessons:", error);
       }
@@ -48,8 +51,6 @@ export default function LessonPath() {
   }, [router]);
 
   const fetchUser = async (token: string): Promise<UserType> => {
-    // Replace with your actual fetch logic
-    // Example:
     const response = await fetch('/api/users', {
       headers: {
         'Authorization': `Bearer ${token}`
@@ -69,10 +70,9 @@ export default function LessonPath() {
 
     const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
     const top = rect.bottom + window.scrollY;
-    const isOdd = lessonNumber % 2 === 0; // Use lessonNumber % 2 to determine left or right positioning
+    const isOdd = lessonNumber % 2 === 0;
 
-    // Position the dialog to the left for odd lessons and right for even lessons
-    const left = isOdd ? rect.left - 300 : rect.right + 50; // Adjust for left or right
+    const left = isOdd ? rect.left - 300 : rect.right + 50;
 
     setDialogPosition({ top, left });
     setSelectedLesson({ ...lesson, lessonKey, isCompleted, isUnlocked });
@@ -91,16 +91,16 @@ export default function LessonPath() {
     return null;
   }
 
-  let globalLessonIndex = 0; // Initialize a global lesson index
-
+  let globalLessonIndex = 0;
+  {console.log(user)}
   return (
     <div className="bg-gradient-to-br from-gray-900 to-black min-h-screen text-white flex relative">
       {/* Sidebar */}
       <Sidebar />
 
       {/* Progress Bar on Top Right */}
-      <div className="absolute top-5 right-5 z-20">
-        <UserProgress level={1} xp={20} />
+      <div className="absolute top-5 right-5 z-20 hidden md:block">
+        {user && <UserProgress name={user.name.split(' ')[0]} level={user.progress.level} xp={user.progress.xp} />}
       </div>
 
       {/* Main content */}
@@ -110,7 +110,7 @@ export default function LessonPath() {
           <div className="w-full flex flex-row justify-center space-x-10">
             <div className="flex flex-col items-center relative z-10">
               <h2
-                className="p-4 rounded-md text-2xl font-bold text-center bg-purple-500 cursor-pointer"
+                className="p-4 rounded-md text-xl md:text-2xl font-bold text-center bg-purple-500 cursor-pointer"
                 onClick={() => router.push('/tutorial')}
               >
                 Tutorial
@@ -118,7 +118,7 @@ export default function LessonPath() {
             </div>
             <div className="flex flex-col items-center relative z-10">
               <h2
-                className="p-4 rounded-md text-2xl font-bold text-center bg-teal-500 cursor-pointer"
+                className="p-4 rounded-md text-xl md:text-2xl font-bold text-center bg-teal-500 cursor-pointer"
                 onClick={() => router.push('/resources')}
               >
                 Resources
@@ -126,22 +126,20 @@ export default function LessonPath() {
             </div>
           </div>
 
-          <h1 className="text-2xl md:text-3xl font-bold mb-5 md:mb-10">Lessons</h1>
+          <h1 className="text-xl md:text-3xl font-bold mb-5 md:mb-10">Lessons</h1>
 
           {chapters.map((chapter, chapterIndex) => {
-            // Select a color for the chapter title by cycling through the color array
             const chapterColor = chapterColors[chapterIndex % chapterColors.length];
 
             return (
               <div key={chapterIndex} className="w-full flex flex-col items-center relative z-10">
                 <h2
-                  className={`p-4 rounded-md text-2xl w-1/2 font-bold mb-10 text-center ${chapterColor}`}
+                  className={`p-4 rounded-md text-xl md:text-2xl w-full md:w-2/3 lg:w-1/2 font-bold mb-10 text-center ${chapterColor}`}
                 >
                   Chapter {chapter.chapter}
                 </h2>
                 <div className="flex flex-col space-y-16 items-center">
                   {chapter.lessons.map((lessonKey, lessonIndex) => {
-                    // Ensure lessonKey is a string
                     const lesson = lessons[lessonKey as keyof typeof lessons];
                     if (!lesson) {
                       console.error(`Lesson not found for key: ${lessonKey}`);
@@ -158,10 +156,9 @@ export default function LessonPath() {
                       ? "bg-yellow-500 border-yellow-700"
                       : "bg-gray-600 border-gray-700";
 
-                    // Alternate between right-side moving and left staying in place for the squiggle
                     const isRight = globalLessonIndex % 2 !== 0;
 
-                    globalLessonIndex++; // Increment the global lesson index
+                    globalLessonIndex++;
 
                     return (
                       <div

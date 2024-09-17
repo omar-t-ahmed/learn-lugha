@@ -16,10 +16,8 @@ export async function POST(req: Request) {
         username,
         gender,
         progress: {
-          create: {
             level: 1,
             xp: 0
-          }
         } // Initialize progress
       },
     });

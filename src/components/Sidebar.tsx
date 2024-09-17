@@ -71,7 +71,7 @@ const Sidebar = () => {
         }
 
         /* Mobile styles */
-        @media (max-width: 768px) {
+        @media (max-width: 965px) {
           .sidebar-container {
             top: auto;
             bottom: 0;

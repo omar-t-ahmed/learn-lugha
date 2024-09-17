@@ -144,48 +144,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-
     lesson_4: {
-        title: "Daily Routines: Praying and Performing Wudoo",
-        objectives: [
-            "Learn how to talk about daily religious routines",
-            "Practice the vocabulary for performing wudoo and praying",
-            "Understand and use action verbs related to religious practices",
-        ],
-        vocabulary: [
-            {
-                arabic: "توضأ",
-                english: "Perform wudoo (ablution)",
-                type: "verb",
-            },
-            {
-                arabic: "يصلي",
-                english: "Pray",
-                type: "verb",
-            },
-            {
-                arabic: "افعل",
-                english: "Do",
-                type: "command",
-            },
-            {
-                arabic: "فعل",
-                english: "Did",
-                type: "verb",
-            },
-            {
-                arabic: "وضوء",
-                english: "Wudoo (ablution)",
-                type: "noun",
-            },
-            {
-                arabic: "صلاة",
-                english: "Prayer",
-                type: "noun",
-            },
-        ],
-    },
-    lesson_5: {
         title: "Family Members and Daily Life",
         objectives: [
             "Learn vocabulary for family members",
@@ -236,7 +195,7 @@ export const lessons: Record<string, LessonType> = {
         ],
     },
 
-    lesson_6: {
+    lesson_5: {
         title: "Talking About Living Spaces and Daily Needs",
         objectives: [
             "Learn how to talk about where you live",
@@ -281,7 +240,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_7: {
+    lesson_6: {
         title: "Inside the House: Objects and Appliances",
         objectives: [
             "Learn how to talk about objects and appliances in the house",
@@ -331,7 +290,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_8: {
+    lesson_7: {
         title: "Daily Routines: Waking Up and Going to Sleep",
         objectives: [
             "Learn how to talk about your daily routine",
@@ -371,7 +330,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_9: {
+    lesson_8: {
         title: "Everyday Objects and Watching TV",
         objectives: [
             "Learn vocabulary for common household objects and modes of transportation",
@@ -421,7 +380,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_10: {
+    lesson_9: {
         title: "Dining and Ordering Food",
         objectives: [
             "Learn how to order food in a restaurant",
@@ -466,7 +425,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_11: {
+    lesson_10: {
         title: "Meals and Conversations About Food",
         objectives: [
             "Discuss meals and types of food in Arabic",
@@ -516,7 +475,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_12: {
+    lesson_11: {
         title: "Daily Routines and Travel",
         objectives: [
             "Learn how to talk about daily activities like working and traveling",
@@ -571,7 +530,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_13: {
+    lesson_12: {
         title: "Starting and Finishing Actions",
         objectives: [
             "Learn how to express starting and finishing activities",
@@ -606,7 +565,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_14: {
+    lesson_13: {
         title: "Completing and Correcting",
         objectives: [
             "Learn how to express completing tasks",
@@ -646,7 +605,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_15: {
+    lesson_14: {
         title: "Expressing Preferences and Actions",
         objectives: [
             "Learn how to express liking, drawing, and choosing",
@@ -671,7 +630,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_16: {
+    lesson_15: {
         title: "Becoming, Filling, and Taking Breaks",
         objectives: [
             "Learn how to express becoming something, filling, and resting",
@@ -706,7 +665,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_17: {
+    lesson_16: {
         title: "Shopping and Vocabulary Related to Clothing",
         objectives: [
             "Learn how to talk about shopping in Arabic",
@@ -756,7 +715,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_18: {
+    lesson_17: {
         title: "Moving, Traveling, and Visits",
         objectives: [
             "Learn how to talk about moving and traveling in Arabic",
@@ -796,7 +755,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_19: {
+    lesson_18: {
         title: "Pollution, Overcrowding, and Time Management",
         objectives: [
             "Learn how to talk about environmental and social challenges",
@@ -841,7 +800,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_20: {
+    lesson_19: {
         title: "Media, Hobbies, and Exhibitions",
         objectives: [
             "Learn vocabulary related to media and publications",
@@ -896,7 +855,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_21: {
+    lesson_20: {
         title: "Booking and Travel Preparations",
         objectives: [
             "Learn vocabulary related to booking and travel arrangements",
@@ -946,7 +905,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_22: {
+    lesson_21: {
         title: "Confirmations, Visas, and Essentials for Travel",
         objectives: [
             "Learn vocabulary related to confirming bookings and travel essentials",
@@ -996,7 +955,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_23: {
+    lesson_22: {
         title: "Actions and Rituals of Umrah",
         objectives: [
             "Learn vocabulary related to the actions performed during Umrah",
@@ -1086,7 +1045,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_24: {
+    lesson_23: {
         title: "Health and Medical Visits",
         objectives: [
             "Learn vocabulary related to health and medical appointments",
@@ -1151,7 +1110,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_25: {
+    lesson_24: {
         title: "Medical Appointments and Treatment",
         objectives: [
             "Learn vocabulary related to medical appointments and treatments",
@@ -1191,7 +1150,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_26: {
+    lesson_25: {
         title: "Helping, Seeing, and Giving",
         objectives: [
             "Learn how to express actions related to helping, seeing, and giving",
@@ -1227,7 +1186,7 @@ export const lessons: Record<string, LessonType> = {
         ],
     },
 
-    lesson_27: {
+    lesson_26: {
         title: "Festivals, Sacrifices, and Locations",
         objectives: [
             "Learn vocabulary related to festivals, sacrifices, and locations",
@@ -1282,7 +1241,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_28: {
+    lesson_27: {
         title: "Visiting the Doctor and Discussing Health",
         objectives: [
             "Learn how to talk about health issues and symptoms",
@@ -1326,7 +1285,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_29: {
+    lesson_28: {
         title: "Discussing Daily Challenges and Problem Solving",
         objectives: [
             "Learn how to discuss challenges and problem-solving strategies",
@@ -1370,7 +1329,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_30: {
+    lesson_29: {
         title: "Relaxation, Recreation, and Health",
         objectives: [
             "Learn how to discuss relaxation, recreation, and health",
@@ -1424,7 +1383,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_31: {
+    lesson_30: {
         title: "Setting Goals, Walking, and Discussing Play",
         objectives: [
             "Learn how to talk about setting goals and activities",
@@ -1478,7 +1437,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_32: {
+    lesson_31: {
         title: "Emotions, Worry, and Complaints",
         objectives: [
             "Learn how to discuss emotions, worry, and making complaints",
@@ -1532,7 +1491,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_33: {
+    lesson_32: {
         title: "Knowledge, Accomplishment, and Solutions",
         objectives: [
             "Learn how to talk about gaining knowledge and solving problems",
@@ -1586,7 +1545,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_34: {
+    lesson_33: {
         title: "Moving, Departing, and Fear",
         objectives: [
             "Learn how to discuss movement, leaving, and expressing fear",
@@ -1645,7 +1604,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_35: {
+    lesson_34: {
         title: "Building, Understanding, and Establishing",
         objectives: [
             "Learn how to talk about building, establishing, and reaching goals",
@@ -1704,7 +1663,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_36: {
+    lesson_35: {
         title: "Submission, Acceptance, and Joining",
         objectives: [
             "Learn how to discuss submission, acceptance, and joining",
@@ -1763,7 +1722,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_37: {
+    lesson_36: {
         title: "Exhaustion, Success, and Attainment",
         objectives: [
             "Learn how to discuss exhaustion, success, and attaining goals",
@@ -1822,7 +1781,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_38: {
+    lesson_37: {
         title: "Optimism, Graduation, and Managing",
         objectives: [
             "Learn how to talk about optimism, graduating, and managing tasks",
@@ -1871,7 +1830,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_39: {
+    lesson_38: {
         title: "Preserving, Preventing, and Responsibility",
         objectives: [
             "Learn how to talk about preserving, preventing actions, and managing responsibilities",
@@ -1915,7 +1874,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_40: {
+    lesson_39: {
         title: "Giving Charity, Purity, and Helping",
         objectives: [
             "Learn how to talk about giving charity, maintaining purity, and helping others",
@@ -1954,7 +1913,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_41: {
+    lesson_40: {
         title: "Communication, Encouragement, and Flourishing",
         objectives: [
             "Learn how to talk about communication, encouragement, and thriving",
@@ -1998,7 +1957,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_42: {
+    lesson_41: {
         title: "Learning, Speaking, and Expression",
         objectives: [
             "Learn how to discuss learning, speaking, and expression in different forms",
@@ -2047,7 +2006,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_43: {
+    lesson_42: {
         title: "Meeting, Gathering, and Announcements",
         objectives: [
             "Learn how to talk about meetings, gatherings, and making announcements",
@@ -2096,7 +2055,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_44: {
+    lesson_43: {
         title: "Competing, Rewarding, and Characteristics",
         objectives: [
             "Learn how to talk about competing, rewarding, and accomplishments",
@@ -2145,7 +2104,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_45: {
+    lesson_44: {
         title: "Sending Messages and Exploring",
         objectives: [
             "Learn how to talk about sending messages, departing, and exploring new places",
@@ -2194,7 +2153,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_46: {
+    lesson_45: {
         title: "Making, Producing, and Forces",
         objectives: [
             "Learn how to talk about making and producing things, as well as using force",
@@ -2253,7 +2212,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_47: {
+    lesson_46: {
         title: "Daily Actions and Observations",
         objectives: [
             "Learn how to describe daily actions such as cleaning, noticing, and using items",
@@ -2317,7 +2276,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_48: {
+    lesson_47: {
         title: "Actions Related to Health and Measurement",
         objectives: [
             "Learn how to talk about measuring, repeating actions, and maintaining health",
@@ -2376,7 +2335,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_49: {
+    lesson_48: {
         title: "Responsibility and Righteousness",
         objectives: [
             "Learn how to talk about personal responsibilities and accountability",
@@ -2425,7 +2384,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_50: {
+    lesson_49: {
         title: "Communication and Understanding",
         objectives: [
             "Learn how to communicate effectively and understand others",
@@ -2489,7 +2448,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_51: {
+    lesson_50: {
         title: "Respect and Treatment",
         objectives: [
             "Learn how to talk about respect, treatment, and dealing with different situations",
@@ -2548,7 +2507,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_52: {
+    lesson_51: {
         title: "Power and Authorization",
         objectives: [
             "Learn how to discuss power, authorization, and taking control",
@@ -2602,7 +2561,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_53: {
+    lesson_52: {
         title: "Unity and Occupation",
         objectives: [
             "Learn how to discuss unity, occupation, and seeking help",
@@ -2651,7 +2610,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_54: {
+    lesson_53: {
         title: "Incitement and Action",
         objectives: [
             "Learn how to talk about provoking, committing actions, and experiencing things",
@@ -2705,7 +2664,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_55: {
+    lesson_54: {
         title: "Control and Punishment",
         objectives: [
             "Learn how to talk about controlling, punishing, and ensuring safety",
@@ -2749,7 +2708,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_56: {
+    lesson_55: {
         title: "Destruction and Consumption",
         objectives: [
             "Learn how to talk about destruction, consumption, and causing damage",
@@ -2793,7 +2752,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_57: {
+    lesson_56: {
         title: "Protection and Monitoring",
         objectives: [
             "Learn how to talk about protection, monitoring, and safety",
@@ -2842,7 +2801,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_58: {
+    lesson_57: {
         title: "Caution and Action",
         objectives: [
             "Learn how to talk about being cautious and taking action",
@@ -2896,7 +2855,7 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
-    lesson_59: {
+    lesson_58: {
         title: "Provision and Preservation",
         objectives: [
             "Learn how to talk about providing, preserving, and taking care of resources",
@@ -2950,6 +2909,11 @@ export const lessons: Record<string, LessonType> = {
             },
         ],
     },
+    lesson_59: {
+        title: "",
+        objectives: [],
+        vocabulary: [],
+    },
     lesson_60: {
         title: "",
         objectives: [],
@@ -2971,11 +2935,6 @@ export const lessons: Record<string, LessonType> = {
         vocabulary: [],
     },
     lesson_64: {
-        title: "",
-        objectives: [],
-        vocabulary: [],
-    },
-    lesson_65: {
         title: "",
         objectives: [],
         vocabulary: [],
@@ -3087,18 +3046,6 @@ export const chapters = [
             "lesson_56",
             "lesson_57",
             "lesson_58",
-            "lesson_59",
-            "lesson_60",
         ],
-    },
-    {
-        chapter: 13,
-        lessons: [
-            "lesson_61",
-            "lesson_62",
-            "lesson_63",
-            "lesson_64",
-            "lesson_65",
-        ],
-    },
+    }
 ];
