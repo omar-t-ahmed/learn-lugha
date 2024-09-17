@@ -309,6 +309,7 @@ const Chatbot: React.FC<ChatbotProps> = ({ user, lesson, onComplete }) => {
                 },
                 body: JSON.stringify({
                     input: userInput,
+                    gender: user.gender,
                     lesson,
                     conversation,
                     usedVocabulary,

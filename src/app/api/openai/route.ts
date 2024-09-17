@@ -21,8 +21,8 @@ export async function POST(req: Request): Promise<NextResponse> {
     });
 
     // Get user input, lesson details, conversation history, and used vocabulary
-    const { input, lesson, conversation, usedVocabulary: previousUsedVocabulary = [] }: 
-        { input: string; lesson: Lesson; conversation?: Message[]; usedVocabulary?: string[] } = await req.json();
+    const { input, lesson, conversation, usedVocabulary: previousUsedVocabulary = [], gender }: 
+        { input: string; lesson: Lesson; conversation?: Message[]; usedVocabulary?: string[], gender: string } = await req.json();
 
     const currentTime = Date.now();
 
@@ -41,11 +41,16 @@ export async function POST(req: Request): Promise<NextResponse> {
     const systemContent = `
     You are an Arabic language teacher named Ahmed. You are guiding a beginner-level Arabic lesson titled "${
         lesson.lesson
-    }".
+    }", where you are having a conversation with the student. Keep a natural conversation tone, and guide the student through the lesson objectives.
     You must ensure the student learns and uses the following vocabulary: ${lesson.vocabulary
         .map((vocab) => vocab.arabic)
         .join(", ")}.
-    Use short, simple sentences, and guide the student through the lesson objectives. Respond in Arabic, with no more than one sentence, and ensure the student uses the vocabulary words and stays on track.
+    The students gender is ${gender}.
+    They have the following unused vocabulary left: ${lesson.vocabulary
+        .filter(vocab => !previousUsedVocabulary.includes(vocab.arabic))
+        .map(vocab => `${vocab.arabic} (${vocab.english})`)
+        .join(", ")}.
+    Use simple sentences, and guide the student through the lesson objectives. Respond in Arabic, with no more than two sentences, and ensure the student uses the vocabulary words and stays on track. Avoid repeating anything you have already said. For example do not ask the student how they are doing more than once. Do not simply ask them to repeat after you but rather guide them through a natural conversation where they would respond with a sentence using the vocabulary.
   `;
 
     const systemMessage: Message = {

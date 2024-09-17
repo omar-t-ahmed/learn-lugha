@@ -32,27 +32,17 @@ export const lessons: Record<string, LessonType> = {
             { arabic: "اسمي", english: "My name is", type: "phrase" },
             {
                 arabic: "ما اسمك",
-                english: "What is your name? (m)",
-                type: "question",
-            },
-            {
-                arabic: "ما اسمك",
-                english: "What is your name? (f)",
+                english: "What is your name?",
                 type: "question",
             },
             {
                 arabic: "من اين انت",
-                english: "Where are you from? (m)",
-                type: "question",
-            },
-            {
-                arabic: "من اين انت",
-                english: "Where are you from? (f)",
+                english: "Where are you from?",
                 type: "question",
             },
             {
                 arabic: "كيف حالك",
-                english: "How are you? (m)",
+                english: "How are you?",
                 type: "question",
             },
             { arabic: "بخير", english: "I am fine", type: "phrase" },

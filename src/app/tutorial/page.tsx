@@ -11,7 +11,7 @@ const LessonPage = () => {
   const [userToken, setUserToken] = useState<string | null>(null);
   const [user, setUser] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showTutorial, setShowTutorial] = useState(true);
+  const [tutorialCompleted, setTutorialCompleted] = useState(false); // New state for tutorial completion
 
   // Fetch user authentication token and user details
   useEffect(() => {
@@ -36,9 +36,9 @@ const LessonPage = () => {
             setUser(userData);
             setLoading(false); // User is authenticated and data fetched, stop loading
 
-            // Check if the user has completed the lesson
-            if (userData.lessonCompleted) {
-              setShowTutorial(false);
+            // Check if the user has completed the tutorial
+            if (userData.tutorialCompleted) {
+              setTutorialCompleted(true); // Set tutorial as completed
             }
           } else {
             router.push("/login"); // Redirect to login if response is not ok
@@ -67,29 +67,37 @@ const LessonPage = () => {
       <Navbar />
       <div className="relative flex flex-col items-center justify-start p-10">
         <h1 className="text-4xl font-bold mb-4">Arabic Tutorial</h1>
-        {showTutorial ? (
-          <Tutorial
-            user={user}
-            lesson={{
-              lesson_id: 1, // Static ID for the tutorial
-              title: "Common Arabic Words",
-              objectives: ["Learn basic Arabic greetings", "Understand common phrases"], // Add objectives
-              vocabulary: [
-                { arabic: "مرحبا", english: "Hello", type: "word" },
-                { arabic: "شكرا", english: "Thank you", type: "word" },
-                { arabic: "نعم", english: "Yes", type: "word" },
-                { arabic: "لا", english: "No", type: "phrase" },
-                { arabic: "من فضلك", english: "Please", type: "phrase" },
-                { arabic: "لا أعرف", english: "I don't know", type: "phrase" },
-              ],
-            }}
-            onComplete={() => setShowTutorial(false)}
-          />
+        {tutorialCompleted ? ( // Check if tutorial is completed
+          <>
+            <p className="text-2xl mb-6 text-center">You have already completed the tutorial.</p>
+            <button
+              className="mt-6 px-4 py-2 bg-indigo-500 text-white font-semibold rounded hover:bg-indigo-400 transition mx-auto block"
+              onClick={() => router.push("/home")}
+            >
+              Back to Lessons
+            </button>
+          </>
         ) : (
           <>
-            <p className="text-lg mb-6">You have completed the tutorial. You can now proceed to the lessons.</p>
+            <Tutorial
+              user={user}
+              lesson={{
+                lesson_id: 1, // Static ID for the tutorial
+                title: "Common Arabic Words",
+                objectives: ["Learn basic Arabic greetings", "Understand common phrases"], // Add objectives
+                vocabulary: [
+                  { arabic: "مرحبا", english: "Hello", type: "word" },
+                  { arabic: "شكرا", english: "Thank you", type: "word" },
+                  { arabic: "نعم", english: "Yes", type: "word" },
+                  { arabic: "لا", english: "No", type: "phrase" },
+                  { arabic: "من فضلك", english: "Please", type: "phrase" },
+                  { arabic: "لا أعرف", english: "I don't know", type: "phrase" },
+                ],
+              }}
+              onComplete={() => setTutorialCompleted(true)} // Mark tutorial as completed
+            />
             <button
-              className="mt-6 px-4 py-2 bg-indigo-500 text-white font-semibold rounded hover:bg-gray-100 transition"
+              className="mt-6 px-4 py-2 bg-indigo-500 text-white font-semibold rounded hover:bg-indigo-400 transition"
               onClick={() => router.push("/home")}
             >
               Back to Lessons
