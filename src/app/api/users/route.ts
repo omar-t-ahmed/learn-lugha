@@ -105,7 +105,7 @@ export async function PATCH(req: Request) {
         gender,
         lessons,
         achievements,
-        progress,
+        progress: { level, xp }, // Update progress field
         tutorialCompleted, // Update tutorialCompleted field
       },
     });

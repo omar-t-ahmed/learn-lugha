@@ -37,19 +37,15 @@ export default function PricingPage() {
                     <div className="p-6 bg-gray-900 border-2 border-gray-700 rounded-lg shadow-lg hover:scale-105 transform transition-all flex flex-col justify-between">
                         <div>
                             <h2 className="text-2xl font-bold text-white mb-4 text-center">
-                                Basic Plan
+                                Free Plan
                             </h2>
                             <p className="text-gray-400 text-center mb-6">
-                                $5/month
+                                $0/month
                             </p>
                             <ul className="text-gray-300 space-y-3">
                                 <li className="flex items-start justify-center">
                                     <Image src="/check_circle.svg" alt="Check" width={15} height={15} className="mr-2 mt-1" />
-                                    <p>Access to basic lessons</p>
-                                </li>
-                                <li className="flex items-start justify-center">
-                                    <Image src="/check_circle.svg" alt="Check" width={15} height={15} className="mr-2 mt-1" />
-                                    <p>Weekly progress reports</p>
+                                    <p>Access to first 5 lessons</p>
                                 </li>
                                 <li className="flex items-start justify-center">
                                     <Image src="/check_circle.svg" alt="Check" width={15} height={15} className="mr-2 mt-1" />
@@ -58,10 +54,10 @@ export default function PricingPage() {
                             </ul>
                         </div>
                         <button
-                            disabled
+                            onClick={() => window.location.href = '/signup'}
                             className="w-full bg-gradient-to-r from-purple-500 to-indigo-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg transform hover:scale-105 transition-transform"
                         >
-                            Subscribe to Basic
+                            Get Started
                         </button>
                     </div>
 
@@ -71,7 +67,7 @@ export default function PricingPage() {
                                 Pro Plan
                             </h2>
                             <p className="text-gray-400 text-center mb-6">
-                                $15/month
+                                $4.99/month
                             </p>
                             <ul className="text-gray-300 space-y-3">
                                 <li className="flex items-start justify-center">
@@ -80,15 +76,11 @@ export default function PricingPage() {
                                 </li>
                                 <li className="flex items-start justify-center">
                                     <Image src="/check_circle.svg" alt="Check" width={15} height={15} className="mr-2 mt-1" />
-                                    <p>Daily progress reports</p>
-                                </li>
-                                <li className="flex items-start justify-center">
-                                    <Image src="/check_circle.svg" alt="Check" width={15} height={15} className="mr-2 mt-1" />
                                     <p>Personalized learning paths</p>
                                 </li>
                                 <li className="flex items-start justify-center">
-                                    <Image src="/check_circle.svg" alt="Check" width={15} height={15} className="mr-2 mt-1" />
-                                    <p>1-on-1 AI tutoring</p>
+                                    <Image src="/check_circle.svg" alt="Check" width={15} height={15} className="mr-2 mt-1 mb-5" />
+                                    <p>Personalized support</p>
                                 </li>
                             </ul>
                         </div>
