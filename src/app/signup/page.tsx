@@ -39,7 +39,6 @@ export default function SignUp() {
         auth,
         email,
         password,
-        
       );
       const userUID = userCredential.user.uid;
 
@@ -220,7 +219,7 @@ export default function SignUp() {
             </form>
 
             <p className="text-gray-400 text-center mt-6">
-              Already have an account? <Link href="/signin" className="text-indigo-500 hover:text-indigo-400">Sign In</Link>
+              Already have an account? <Link href="/login" className="text-indigo-500 hover:text-indigo-400">Sign In</Link>
             </p>
           </div>
         </div>
