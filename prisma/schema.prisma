@@ -8,16 +8,17 @@ generator client {
 }
 
 model User {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
-  email        String   @unique
-  name         String?
-  username     String   @unique
-  tutorialCompleted Boolean @default(false)
-  gender       Gender   @default(unknown)
-  lessons      Int[]    @default([0])
-  achievements Achievement[]
-  progress     Json     
-  isSubscribed Boolean  @default(false)
+  id                 String   @id @default(auto()) @map("_id") @db.ObjectId
+  email              String   @unique
+  name               String?
+  username           String   @unique
+  tutorialCompleted  Boolean  @default(false)
+  gender             Gender   @default(unknown)
+  lessons            Int[]    @default([0])
+  achievements       Achievement[]
+  progress           Json     
+  isSubscribed       Boolean  @default(false)
+  stripeSubscriptionId String? // Nullable field to store the subscription ID
 }
 
 
