@@ -27,20 +27,24 @@ export async function POST(req: Request) {
     const session = event.data.object as Stripe.Checkout.Session;
 
     const customerEmail = session.customer_email;
+    const subscriptionId = session.subscription; // Stripe Subscription ID
 
-    if (customerEmail) {
-      // Update the user's subscription status in Prisma
+    if (customerEmail && subscriptionId) {
+      // Update the user's subscription status and store the Stripe subscription ID in Prisma
       try {
         await prisma.user.update({
           where: { email: customerEmail },
-          data: { isSubscribed: true },
+          data: { 
+            isSubscribed: true,
+            stripeSubscriptionId: subscriptionId as string, // Store the subscription ID
+          },
         });
-        console.log(`User with email ${customerEmail} has been marked as subscribed.`);
+        console.log(`User with email ${customerEmail} has been marked as subscribed with subscription ID: ${subscriptionId}.`);
       } catch (error) {
         console.error('Error updating user subscription status:', error);
       }
     } else {
-      console.log("no customer email");
+      console.log("No customer email or subscription ID found");
     }
   }
 
