@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import Image from "next/image";
@@ -8,7 +8,7 @@ import logo from "../../../public/LEARN LUGHA.png";
 import { FaArrowRightLong } from "react-icons/fa6";
 import hamburgerIcon from "../../../public/icons8-hamburger-menu-50.png";
 
-export default function SuccessPage() {
+function SuccessPageContent() {
     const [session, setSession] = useState<any>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
@@ -238,5 +238,13 @@ export default function SuccessPage() {
                 <p className="text-center text-gray-400">© 2024 LearnLugha. All rights reserved.</p>
             </footer>
         </div>
+    );
+}
+
+export default function SuccessPage() {
+    return (
+        <Suspense fallback={<div>Loading...</div>}>
+            <SuccessPageContent />
+        </Suspense>
     );
 }

@@ -73,7 +73,7 @@ export default function About() {
           <h2 className="text-3xl font-semibold text-white mb-4">Join Us</h2>
           <ul className="text-gray-300 space-y-3">
             <li className="flex items-center justify-center">
-              <p>We're excited to help you on your journey to mastering Arabic. Sign up today and be a part of a growing community of learners who are transforming their lives through language.</p>
+              <p>We&apos;re excited to help you on your journey to mastering Arabic. Sign up today and be a part of a growing community of learners who are transforming their lives through language.</p>
             </li>
           </ul>
         </section>
