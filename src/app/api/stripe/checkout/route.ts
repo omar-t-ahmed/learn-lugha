@@ -6,11 +6,12 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 });
 
 export async function POST(req: Request): Promise<NextResponse> {
+  
   const { plan, email } = await req.json() as {
     plan: { name: string; price: number; interval: 'day' | 'week' | 'month' | 'year' };
     email: string;
   };
-
+  console.log(email)
   try {
     // Create a Stripe Checkout session
     const params: Stripe.Checkout.SessionCreateParams = {

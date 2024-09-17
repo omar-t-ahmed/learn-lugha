@@ -1,26 +1,47 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
+import { auth } from "@/firebase"; // Ensure this is the correct path to your firebase file
+import { onAuthStateChanged } from "firebase/auth";
 
 export default function CheckoutPage() {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState<string | null>(null);
+    const [userEmail, setUserEmail] = useState<string | null>(null);
+
+    // Fetch the logged-in user's email
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            if (user && user.email) {
+                setUserEmail(user.email);
+            } else {
+                setUserEmail(null);
+            }
+        });
+
+        return () => unsubscribe();
+    }, []);
 
     const handleCheckout = async (plan: {
         name: string;
         price: number;
         interval: string;
     }) => {
+        if (!userEmail) {
+            setError("You must be logged in to subscribe.");
+            return;
+        }
+
         setLoading(true);
         setError(null);
 
         try {
-            const res = await fetch("/api/checkout", {
+            const res = await fetch("/api/stripe/checkout", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
-                body: JSON.stringify({ plan }),
+                body: JSON.stringify({ plan, email: userEmail }), // Send plan and user email
             });
 
             const session = await res.json();
@@ -49,7 +70,8 @@ export default function CheckoutPage() {
                     </span>
                 </h1>
                 <p className="mt-4 text-md md:text-lg text-gray-400 text-center">
-                    Unlock premium features to accelerate your Arabic learning journey.
+                    Unlock premium features to accelerate your Arabic learning
+                    journey.
                 </p>
 
                 {error && <p className="text-red-500 mt-4">{error}</p>}

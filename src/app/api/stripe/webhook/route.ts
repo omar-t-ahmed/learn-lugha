@@ -9,7 +9,6 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
 
 // Handle the webhook POST request
 export async function POST(req: Request) {
-  console.log("hello")
   const sig = req.headers.get('stripe-signature');
   const body = await req.text(); // Raw body to validate the signature
 
@@ -40,6 +39,8 @@ export async function POST(req: Request) {
       } catch (error) {
         console.error('Error updating user subscription status:', error);
       }
+    } else {
+      console.log("no customer email");
     }
   }
 
