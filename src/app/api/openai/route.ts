@@ -50,8 +50,41 @@ export async function POST(req: Request): Promise<NextResponse> {
         .filter(vocab => !previousUsedVocabulary.includes(vocab.arabic))
         .map(vocab => `${vocab.arabic} (${vocab.english})`)
         .join(", ")}.
-    Use simple sentences, and guide the student through the lesson objectives. Respond in Arabic, with no more than two sentences, and ensure the student uses the vocabulary words and stays on track. Avoid repeating anything you have already said. For example do not ask the student how they are doing more than once. Do not simply ask them to repeat after you but rather guide them through a natural conversation where they would respond with a sentence using the vocabulary.
-  `;
+    Here are the guidlines for forming a response to the users input:
+    - Use simple sentences.
+    - Guide them through a natural conversation where they would respond with a sentence using the vocabulary.
+    - Respond in Arabic, with no more than two sentences.
+    - Ensure the student uses the vocabulary words and stays on track.
+    - Avoid repeating anything you have already said.
+    - Prompt the user to form their responses in a clever way based on their own input rather than just asking them to repeat a word, they should be challenged and have fun.
+    `;
+
+    // seperate prompt into diff sections
+    // here are guidliens for forming response :
+    // give it a list
+    // respond to me based on what i said here, then reinforce the model to do what you want
+    // system prompt can go off the rails
+    // list out the prompt w bullet points or dashes
+    // translate the problem into the prompt
+    // in prompt provide examples of what you want for a response
+    // lms are few shot learners
+    // form the word in a clever way rather than just repeat (tell the prompt to make or prompt the user do this) 
+
+    // check lesson objectives and see if they have completed them 
+
+    // take the convo from the lesson and give them a score 
+    // if less than 70% accurate, give them a score of 0
+    // if greater than 70% accurate, give them a score of 1
+    // if greater than 80% accurate, give them a score of 2
+    // if greater than 90% accurate, give them a score of 3
+    // if greater than 95% accurate, give them a score of 4
+    // if greater than 99% accurate, give them a score of 5
+    // if less than certain score have them retry
+
+    // incorporate memory from lesson to lesson 
+    // bring up feedback from the previous lessons
+    // make the user feel like the ai understands them 
+    // make the user feel like the ai is a good teacher
 
     const systemMessage: Message = {
         role: "system",
@@ -69,9 +102,13 @@ export async function POST(req: Request): Promise<NextResponse> {
     const completion = await openai.chat.completions.create({
         messages,
         model: "gpt-4o-mini",
-        temperature: 0.7,
+        temperature: 0.7, // play around with this
         max_tokens: 50,
     });
+
+    // AB test the temperature
+    // see who has higher satisfaction rates
+
 
     const responseContent = completion.choices[0].message.content;
 
@@ -114,6 +151,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     const feedbackContent = `
     You are an arabic teacher. Give feedback in English based on the user's most recent message, evaluating the correctness and fluency of their Arabic sentence: "${input}". Keep it general, give a short feedback, no more than one sentence. keep in mind that it is a spoken response. so dont focus on diacritics such as commas, mostly words used and whether or not it makes sense. 
     `;
+
 
     const feedbackMessages: Message[] = [
         { role: "system", content: feedbackContent },
