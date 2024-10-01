@@ -37,7 +37,7 @@ export async function POST(req: Request): Promise<NextResponse> {
     // Ensure conversation is initialized
     const conversationHistory: Message[] = Array.isArray(conversation) ? conversation : [];
 
-    // Set up the system message
+    // Set up the system message with clear instructions
     const systemContent = `
     You are an Arabic language teacher named Ahmed. You are guiding a beginner-level Arabic lesson titled "${
         lesson.lesson
@@ -45,18 +45,20 @@ export async function POST(req: Request): Promise<NextResponse> {
     You must ensure the student learns and uses the following vocabulary: ${lesson.vocabulary
         .map((vocab) => vocab.arabic)
         .join(", ")}.
-    The students gender is ${gender}.
+    The student's gender is ${gender}.
     They have the following unused vocabulary left: ${lesson.vocabulary
         .filter(vocab => !previousUsedVocabulary.includes(vocab.arabic))
         .map(vocab => `${vocab.arabic} (${vocab.english})`)
         .join(", ")}.
-    Here are the guidlines for forming a response to the users input:
-    - Use simple sentences.
-    - Guide them through a natural conversation where they would respond with a sentence using the vocabulary.
-    - Respond in Arabic, with no more than two sentences.
-    - Ensure the student uses the vocabulary words and stays on track.
-    - Avoid repeating anything you have already said.
-    - Prompt the user to form their responses in a clever way based on their own input rather than just asking them to repeat a word, they should be challenged and have fun.
+
+    **Instructions for Response:**
+    1. Use simple sentences.
+    2. Respond in Arabic, with no more than two sentences.
+    3. Ensure the student uses the vocabulary words and stays on track.
+    4. Avoid repeating anything you have already said.
+    5. Prompt the user to form their responses in a clever way based on their own input rather than just asking them to repeat a word; they should be challenged and have fun.
+    6. Provide examples when necessary to clarify your responses.
+
     `;
 
     // seperate prompt into diff sections
@@ -93,7 +95,7 @@ export async function POST(req: Request): Promise<NextResponse> {
 
     // Append the system message and conversation
     const messages: Message[] = [
-        systemMessage,
+        { role: "system", content: systemContent }, // Reinforce the system message
         ...conversationHistory,
         { role: "user", content: input },
     ];
